@@ -1,0 +1,10 @@
+{
+    "sign_in":"Войти",
+    "sign_in_label":"Вход",
+    "sign_up":"Зарегистрироваться",
+    "sign_up_label":"Регистрация",
+    "enter_email":"Введи почту",
+    "enter_password":"Введи пароль",
+    "enter_confirm_password":"Введите пароль для подтверждения",
+    "later":"позже"
+}

@@ -10,4 +10,6 @@ class AppColors {
   static const colorSecondary = Color(0xFFD4FB00);
   static const colorMainText = Color(0xFFFFFFFF);
   static const colorSecondaryText = Color(0xFFBCBDC1);
+  static const colorSplash = Color(0x80BCBDC1);
+  static const colorError = Color(0xFFFF0000);
 }

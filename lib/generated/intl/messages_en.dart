@@ -21,5 +21,16 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{};
+  static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "enter_confirm_password":
+            MessageLookupByLibrary.simpleMessage("Enter confirm password"),
+        "enter_email": MessageLookupByLibrary.simpleMessage("Enter email"),
+        "enter_password":
+            MessageLookupByLibrary.simpleMessage("Enter password"),
+        "later": MessageLookupByLibrary.simpleMessage("later"),
+        "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
+        "sign_in_label": MessageLookupByLibrary.simpleMessage("Sign In"),
+        "sign_up": MessageLookupByLibrary.simpleMessage("Sign Up"),
+        "sign_up_label": MessageLookupByLibrary.simpleMessage("Sign Up")
+      };
 }

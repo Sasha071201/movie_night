@@ -49,6 +49,86 @@ class S {
   static S? maybeOf(BuildContext context) {
     return Localizations.of<S>(context, S);
   }
+
+  /// `Sign In`
+  String get sign_in {
+    return Intl.message(
+      'Sign In',
+      name: 'sign_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign In`
+  String get sign_in_label {
+    return Intl.message(
+      'Sign In',
+      name: 'sign_in_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign Up`
+  String get sign_up {
+    return Intl.message(
+      'Sign Up',
+      name: 'sign_up',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign Up`
+  String get sign_up_label {
+    return Intl.message(
+      'Sign Up',
+      name: 'sign_up_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter email`
+  String get enter_email {
+    return Intl.message(
+      'Enter email',
+      name: 'enter_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter password`
+  String get enter_password {
+    return Intl.message(
+      'Enter password',
+      name: 'enter_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter confirm password`
+  String get enter_confirm_password {
+    return Intl.message(
+      'Enter confirm password',
+      name: 'enter_confirm_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `later`
+  String get later {
+    return Intl.message(
+      'later',
+      name: 'later',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -57,6 +137,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'ru'),
     ];
   }
 
