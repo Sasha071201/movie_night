@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movie_night/application/constants/app_dimensions.dart';
 import 'package:movie_night/application/ui/themes/app_colors.dart';
+import 'package:movie_night/application/ui/widgets/background_posters_widget.dart';
 
-import '../../../resources/resources.dart';
 import '../../themes/app_text_style.dart';
 
 class LoaderScreen extends StatelessWidget {
@@ -14,38 +13,24 @@ class LoaderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: DecoratedBox(
-              position: DecorationPosition.foreground,
-              decoration: const BoxDecoration(
-               color: Color(0xF215171F) 
-              ),
-              child: Image.asset(
-                AppImages.loader,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.mediumPadding),
-                child: Text(
-                  'Movie Night',
-                  style: AppTextStyle.header1.copyWith(
-                    color: AppColors.colorMainText,
-                  ),
+      body: BackgroundPostersWidget(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.mediumPadding),
+              child: Text(
+                'Movie Night',
+                style: AppTextStyle.header1.copyWith(
+                  color: AppColors.colorMainText,
                 ),
               ),
-              const SizedBox(height: AppDimensions.largePadding),
-              const _LoadingWidget(),
-            ],
-          ),
-        ],
+            ),
+            const SizedBox(height: AppDimensions.largePadding),
+            const _LoadingWidget(),
+          ],
+        ),
       ),
     );
   }

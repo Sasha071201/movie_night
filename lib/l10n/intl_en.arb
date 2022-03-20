@@ -1,1 +1,10 @@
-{}
+{
+    "sign_in":"Sign In",
+    "sign_in_label":"Sign In",
+    "sign_up":"Sign Up",
+    "sign_up_label":"Sign Up",
+    "enter_email":"Enter email",
+    "enter_password":"Enter password",
+    "enter_confirm_password":"Enter confirm password",
+    "later":"later"
+}

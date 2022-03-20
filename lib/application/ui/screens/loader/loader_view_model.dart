@@ -17,8 +17,8 @@ class LoaderViewModel {
     await Future.delayed(const Duration(seconds: 2));
     const isAuth = false;
     final nextScreen = isAuth ? Screens.main : Screens.signIn;
-    // Future.microtask(
-    //   () => Navigator.of(context).pushReplacementNamed(nextScreen),
-    // );
+    Future.microtask(
+      () => Navigator.of(context).pushReplacementNamed(nextScreen),
+    );
   }
 }

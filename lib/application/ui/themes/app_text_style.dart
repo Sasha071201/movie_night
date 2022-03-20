@@ -62,7 +62,7 @@ class AppTextStyle {
   );
 
   static final buttonWithoutTheme = GoogleFonts.poppins(
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w500,
     fontStyle: FontStyle.normal,
     fontSize: 14,
   );
@@ -74,8 +74,8 @@ class AppTextStyle {
   );
 
   static final header1WithoutTheme = GoogleFonts.poppins(
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w400,
     fontStyle: FontStyle.normal,
-    fontSize: 36,
+    fontSize: 46,
   );
 }
