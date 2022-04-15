@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:movie_night/application/domain/api_client/media_type.dart';
 
 import 'package:movie_night/application/ui/themes/app_colors.dart';
 import 'package:movie_night/application/ui/themes/app_text_style.dart';
 
+import '../../../../generated/l10n.dart';
+import '../../../domain/entities/search/multi_search.dart';
+
 class FilterableList extends StatelessWidget {
-  final List<dynamic> items;
+  final List<MultiSearchResult> items;
   final Widget Function(
-    List<dynamic> items,
-    void Function(String) onItemTapped,
+    List<MultiSearchResult> items,
+    void Function(int id, MediaType) onItemTapped,
     void Function() onViewAllPressed,
   ) builderSuggestions;
   final void Function() onViewAllPressed;
-  final void Function(dynamic) onItemTapped;
+  final void Function(int id, MediaType) onItemTapped;
   final double maxListHeight;
   final Color? suggestionBackgroundColor;
   final bool loading;
@@ -43,7 +47,7 @@ class FilterableList extends StatelessWidget {
                 color: Colors.transparent,
                 child: Center(
                     child: Text(
-                      'Not found',
+                      S.of(context).not_found,
                       style: AppTextStyle.header2,
                     ),
                   ),

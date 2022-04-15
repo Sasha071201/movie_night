@@ -1,50 +1,109 @@
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_night/application/domain/api_client/image_downloader.dart';
+import 'package:movie_night/application/ui/navigation/app_navigation.dart';
 import 'package:movie_night/application/ui/screens/home/movies/home_movies_view_model.dart';
+import 'package:movie_night/application/ui/screens/main/main_view_model.dart';
+import 'package:movie_night/application/ui/widgets/inkwell_material_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constants/app_dimensions.dart';
-import '../../../../resources/resources.dart';
 import '../../../themes/app_colors.dart';
-import '../../../widgets/movies_with_header_widget.dart';
+import '../../../widgets/cached_network_image_widget.dart';
+import '../../../widgets/vertical_widgets_with_header/movies_with_header_widget.dart';
 
-class HomeMoviesScreen extends StatelessWidget {
+class HomeMoviesScreen extends StatefulWidget {
   const HomeMoviesScreen({Key? key}) : super(key: key);
 
   @override
+  State<HomeMoviesScreen> createState() => _HomeMoviesScreenState();
+}
+
+class _HomeMoviesScreenState extends State<HomeMoviesScreen> with AutomaticKeepAliveClientMixin {
+  @override
+  void didChangeDependencies() {
+    context.read<HomeMoviesViewModel>().setupLocale(context);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const CustomScrollView(
-      slivers: [
-        _BodyWidget(),
+    super.build(context);
+    final mapMovies =
+        context.select((HomeMoviesViewModel vm) => vm.state.moviesWithHeader);
+    return Stack(
+      children: [
+        CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  const SizedBox(height: 16),
+                  const _HeaderMovies(),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+            const _MoviesWithCategoryWidget(),
+          ],
+        ),
+        if (mapMovies.isEmpty)
+          const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.colorMainText,
+            ),
+          ),
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
-class _BodyWidget extends StatelessWidget {
-  const _BodyWidget({
+class _MoviesWithCategoryWidget extends StatelessWidget {
+  const _MoviesWithCategoryWidget({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final vm = context.read<HomeMoviesViewModel>();
+    final isLoadingProgress =
+        context.select((HomeMoviesViewModel vm) => vm.state.isLoadingProgress);
+    final moviesWithHeader =
+        context.select((HomeMoviesViewModel vm) => vm.state.moviesWithHeader);
     return SliverList(
-      delegate: SliverChildListDelegate(
-        [
-          const SizedBox(height: 16),
-          const _HeaderMovies(),
-          const SizedBox(height: 16),
-          MoviesWithHeaderWidget(
-            header: 'New Movies',
-            onPressed: vm.onMoviePressed,
-          ),
-          const SizedBox(height: 16),
-          MoviesWithHeaderWidget(
-            header: 'Drama',
-            onPressed: vm.onMoviePressed,
-          ),
-          const SizedBox(height: 16),
-        ],
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          vm.showedCategoryAtIndex(index: index);
+          return Column(
+            children: [
+              MoviesWithHeaderWidget(
+                movieData: MovieWithHeaderData(
+                  title: moviesWithHeader[index].title,
+                  list: moviesWithHeader[index].list,
+                  movieGenres: moviesWithHeader[index].movieGenres,
+                ),
+              ),
+              if (isLoadingProgress &&
+                  index == moviesWithHeader.length - 1) ...[
+                const SizedBox(
+                  height: 8,
+                ),
+                const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.colorMainText,
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+              ],
+            ],
+          );
+        },
+        childCount: moviesWithHeader.length,
       ),
     );
   }
@@ -57,25 +116,39 @@ class _HeaderMovies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.read<HomeMoviesViewModel>();
-    final controller = vm.headerMoviesPageController;
     return Column(
-      children: [
-        SizedBox(
-          height: 168,
-          child: PageView.builder(
-            scrollDirection: Axis.horizontal,
-            controller: controller,
-            itemCount: vm.listHeaderMovies.length,
-            onPageChanged: (index) => vm.onHeaderChanged(index, controller),
-            itemBuilder: (context, index) {
-              return _HeaderMovieItemWidget(index: index);
-            },
-          ),
-        ),
-        const SizedBox(height: 8),
-        const _HeaderIndicatorsWidget(),
+      children: const [
+        _HeaderPageViewWidget(),
+        SizedBox(height: 8),
+        _HeaderIndicatorsWidget(),
       ],
+    );
+  }
+}
+
+class _HeaderPageViewWidget extends StatelessWidget {
+  const _HeaderPageViewWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.read<HomeMoviesViewModel>();
+    final headerMovies =
+        context.select((HomeMoviesViewModel vm) => vm.state.headerMovies);
+    return SizedBox(
+      height: 168,
+      child: Swiper(
+        curve: Curves.easeInOut,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return _HeaderMovieItemWidget(index: index);
+        },
+        autoplay: true,
+        onIndexChanged: vm.onIndexChanged,
+        itemCount: headerMovies.length,
+        viewportFraction: 302 / 390,
+      ),
     );
   }
 }
@@ -87,8 +160,11 @@ class _HeaderIndicatorsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<HomeMoviesViewModel>();
-    final indicators = vm.listHeaderMovies
+    final headerMovies =
+        context.select((HomeMoviesViewModel vm) => vm.state.headerMovies);
+    final currentHeaderMovieIndex = context
+        .select((HomeMoviesViewModel vm) => vm.state.currentHeaderMovieIndex);
+    final indicators = headerMovies
         .asMap()
         .map(
           (indexMovie, value) => MapEntry(
@@ -97,11 +173,11 @@ class _HeaderIndicatorsWidget extends StatelessWidget {
               width: 6,
               height: 6,
               margin: EdgeInsets.only(
-                right: indexMovie != vm.listHeaderMovies.length - 1 ? 9.0 : 0.0,
+                right: indexMovie != headerMovies.length - 1 ? 9.0 : 0.0,
               ),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppDimensions.radius15),
-                color: indexMovie == vm.currentHeaderMovieIndex
+                color: indexMovie == currentHeaderMovieIndex
                     ? AppColors.colorSecondary
                     : AppColors.colorSecondaryText,
               ),
@@ -126,35 +202,46 @@ class _HeaderMovieItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<HomeMoviesViewModel>();
-    return Stack(
-      children: [
-        Container(
+    final headerMovies =
+        context.select((HomeMoviesViewModel vm) => vm.state.headerMovies);
+    final currentHeaderMovieIndex = context
+        .select((HomeMoviesViewModel vm) => vm.state.currentHeaderMovieIndex);
+    return headerMovies.isNotEmpty ? InkWellMaterialWidget(
+      color: AppColors.colorSplash,
+      borderRadius: AppDimensions.radius5,
+      onTap: () {
+        context.read<MainViewModel>().showAdIfAvailable();
+        Navigator.of(context)
+            .pushNamed(Screens.movieDetails, arguments: headerMovies[index].id);
+      },
+      child: CachedNetworkImageWidget(
+        imageUrl:
+            ImageDownloader.imageUrl(headerMovies[index].backdropPath ?? ''),
+        imageBuilder: (context, imageProvider) => Container(
           margin: EdgeInsets.symmetric(
             horizontal: 8.0,
-            vertical: index != vm.currentHeaderMovieIndex ? 4.0 : 0,
+            vertical: index != currentHeaderMovieIndex ? 4.0 : 0,
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(
               AppDimensions.radius5,
             ),
-            color: index != vm.currentHeaderMovieIndex
+            color: index != currentHeaderMovieIndex
                 ? AppColors.colorPrimary.withOpacity(0.7)
                 : Colors.transparent,
-            image: const DecorationImage(
-              image: AssetImage(
-                AppImages.movieExample,
+            image: DecorationImage(
+              colorFilter: ColorFilter.mode(
+                index != currentHeaderMovieIndex
+                    ? AppColors.colorPrimary.withOpacity(0.7)
+                    : Colors.transparent,
+                BlendMode.darken,
               ),
+              image: imageProvider,
               fit: BoxFit.cover,
             ),
           ),
-          child: Container(
-            color: index != vm.currentHeaderMovieIndex
-                ? AppColors.colorPrimary.withOpacity(0.7)
-                : Colors.transparent,
-          ),
         ),
-      ],
-    );
+      ),
+    ) : const SizedBox.shrink();
   }
 }

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:movie_night/application/ui/navigation/app_navigation.dart';
+import 'package:movie_night/application/ui/screens/sign_in/sign_in_view_model.dart';
 import 'package:movie_night/application/ui/themes/app_colors.dart';
 import 'package:movie_night/application/ui/widgets/background_posters_widget.dart';
 import 'package:movie_night/application/ui/widgets/elevated_button_widget.dart';
 import 'package:movie_night/application/ui/widgets/text_button_widget.dart';
 import 'package:movie_night/application/ui/widgets/text_field_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
 import '../../themes/app_text_style.dart';
-import '../../widgets/sliver_app_bar_delegate.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -39,48 +40,24 @@ class _BodyWidget extends StatelessWidget {
     final insetsBottom = MediaQuery.of(context).viewInsets.bottom;
     return CustomScrollView(
       slivers: [
-        const _AppBar(),
         SliverFillRemaining(
           hasScrollBody: false,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               children: [
-                const SizedBox(height: 159),
+                const SizedBox(height: 215),
                 Text(
                   S.of(context).sign_in_label,
                   style: AppTextStyle.header1,
                 ),
                 const SizedBox(height: 70),
-                TextFieldWidget(
-                  hintText: S.of(context).enter_email,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.emailAddress,
-                  enableSuggestions: true,
-                  maxLines: 1,
-                ),
+                const _EmailTextFieldWidget(),
                 const SizedBox(height: 16),
-                TextFieldWidget(
-                  hintText: S.of(context).enter_password,
-                  textInputAction: TextInputAction.done,
-                  obscureText: true,
-                  keyboardType: TextInputType.visiblePassword,
-                  enableSuggestions: true,
-                  maxLines: 1,
-                ),
+                const _PasswordTextFieldWidget(),
                 const Spacer(),
                 const SizedBox(height: 16),
-                ElevatedButtonWidget(
-                  onPressed: () => Navigator.of(context).pushReplacementNamed(Screens.main),
-                  backgroundColor: AppColors.colorSecondary,
-                  overlayColor: AppColors.colorSplash,
-                  child: Text(
-                    S.of(context).sign_in,
-                    style: AppTextStyle.button.copyWith(
-                      color: AppColors.colorBackground,
-                    ),
-                  ),
-                ),
+                const _AuthButtonWigdet(),
                 TextButtonWidget(
                   child: Text(
                     S.of(context).sign_up,
@@ -101,44 +78,64 @@ class _BodyWidget extends StatelessWidget {
   }
 }
 
-class _AppBar extends StatelessWidget {
-  const _AppBar({
+class _AuthButtonWigdet extends StatelessWidget {
+  const _AuthButtonWigdet({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SliverPersistentHeader(
-      pinned: true,
-      floating: true,
-      delegate: SliverAppBarDelegate(
-        const _LaterButtonWidget(),
+    final vm = context.watch<SignInViewModel>();
+    return ElevatedButtonWidget(
+      onPressed: vm.canStartAuth ? () => vm.auth(context) : null,
+      backgroundColor: AppColors.colorSecondary,
+      overlayColor: AppColors.colorSplash,
+      child: vm.isAuthProgress ? const CircularProgressIndicator() :  Text(
+        S.of(context).sign_in,
+        style: AppTextStyle.button.copyWith(
+          color: AppColors.colorBackground,
+        ),
       ),
     );
   }
 }
 
-class _LaterButtonWidget extends StatelessWidget {
-  const _LaterButtonWidget({
+class _PasswordTextFieldWidget extends StatelessWidget {
+  const _PasswordTextFieldWidget({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
-      child: Align(
-        alignment: Alignment.topRight,
-        child: TextButtonWidget(
-          child: Text(
-            S.of(context).later,
-            style: AppTextStyle.button.copyWith(
-              color: AppColors.colorSecondary,
-            ),
-          ),
-          onPressed: () {},
-        ),
-      ),
+    final vm = context.watch<SignInViewModel>();
+    return TextFieldWidget(
+      controller: vm.passwordTextController,
+      hintText: S.of(context).enter_password,
+      textInputAction: TextInputAction.done,
+      obscureText: true,
+      keyboardType: TextInputType.visiblePassword,
+      enableSuggestions: true,
+      onSubmitted: vm.canStartAuth ? (text) => vm.auth(context) : null,
+      maxLines: 1,
+    );
+  }
+}
+
+class _EmailTextFieldWidget extends StatelessWidget {
+  const _EmailTextFieldWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.read<SignInViewModel>();
+    return TextFieldWidget(
+      controller: vm.emailTextController,
+      hintText: S.of(context).enter_email,
+      textInputAction: TextInputAction.next,
+      keyboardType: TextInputType.emailAddress,
+      enableSuggestions: true,
+      maxLines: 1,
     );
   }
 }

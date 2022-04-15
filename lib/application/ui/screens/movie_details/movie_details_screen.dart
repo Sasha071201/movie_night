@@ -1,62 +1,239 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import 'package:movie_night/application/constants/app_dimensions.dart';
 import 'package:movie_night/application/resources/resources.dart';
+import 'package:movie_night/application/ui/screens/movie_details/movie_details_view_model.dart';
+import 'package:movie_night/application/ui/screens/view_movies/view_movies_view_model.dart';
 import 'package:movie_night/application/ui/themes/app_colors.dart';
 import 'package:movie_night/application/ui/themes/app_text_style.dart';
-import 'package:movie_night/application/ui/widgets/back_button_widget.dart';
-import 'package:movie_night/application/ui/widgets/circular_progress_indicator_widget.dart';
-import 'package:movie_night/application/ui/widgets/dialog_widget.dart';
-import 'package:movie_night/application/ui/widgets/icon_button_widget.dart';
-import 'package:movie_night/application/ui/widgets/inkwell_material_widget.dart';
-import 'package:movie_night/application/ui/widgets/movies_with_header_widget.dart';
-import 'package:movie_night/application/ui/widgets/text_button_widget.dart';
-import 'package:movie_night/application/ui/widgets/text_more_widget.dart';
+import 'package:movie_night/application/ui/widgets/details/buttons_widget.dart';
+import 'package:movie_night/application/ui/widgets/details/tagline_widget.dart';
+import 'package:movie_night/application/ui/widgets/details/title_widget.dart';
 
+import '../../../../generated/l10n.dart';
+import '../../../domain/api_client/media_type.dart';
+import '../../../domain/entities/genre.dart';
 import '../../navigation/app_navigation.dart';
-import '../../widgets/action_chip_widget.dart';
+import '../../widgets/adult_onboarding_widget.dart';
+import '../../widgets/details/chips_with_header_widget.dart';
+import '../../widgets/details/external_sources_widget.dart';
+import '../../widgets/details/list_credits_simple_widget.dart';
+import '../../widgets/details/media_widget.dart';
+import '../../widgets/details/overview_widget.dart';
+import '../../widgets/details/row_main_info_widget.dart';
+import '../../widgets/header_poster_widget.dart';
+import '../../widgets/review_sliver_widget.dart';
+import '../../widgets/review_text_field_widget.dart';
+import '../../widgets/vertical_widgets_with_header/movies_with_header_widget.dart';
+import '../view_all_movies/view_all_movies_view_model.dart';
 
-class MovieDetailsScreen extends StatelessWidget {
+class MovieDetailsScreen extends StatefulWidget {
   const MovieDetailsScreen({Key? key}) : super(key: key);
 
   @override
+  State<MovieDetailsScreen> createState() => _MovieDetailsScreenState();
+}
+
+class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
+  @override
+  void didChangeDependencies() async {
+    await context.read<MovieDetailsViewModel>().setupLocale(context);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final vm = context.read<MovieDetailsViewModel>();
+    final showAdultContent =
+        context.select((MovieDetailsViewModel vm) => vm.state.showAdultContent);
+    final movie =
+        context.select((MovieDetailsViewModel vm) => vm.state.movieDetails);
+    final isLoaded =
+        context.select((MovieDetailsViewModel vm) => vm.state.isLoaded);
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          children: const [
-            _PosterWidget(),
-            _MovieDetailsWidget(),
-            SizedBox(height: 8),
-            _MediaWidget(),
-            SizedBox(height: 8),
-            _MainRolesWidget(),
-            SizedBox(height: AppDimensions.mediumPadding),
-            Divider(
-              height: 1,
-              color: AppColors.colorSecondaryText,
-            ),
-            _SeeAlsoWidget(),
-          ],
-        ),
+        child: movie != null && isLoaded
+            ? CustomScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        AdultOnboardingWidget(
+                          onPressed: vm.enableAdultContent,
+                          show: movie.adult != null &&
+                              movie.adult == true &&
+                              !showAdultContent,
+                          child: Column(
+                            children: const [
+                              _HeaderPosterWidget(),
+                              _MovieDetailsWidget(),
+                              SizedBox(height: 8),
+                              _MediaWidget(),
+                              SizedBox(height: 8),
+                              _ListCastsWidget(),
+                              _ListCrewsWidget(),
+                              SizedBox(height: AppDimensions.mediumPadding),
+                              Divider(
+                                height: 1,
+                                color: AppColors.colorSecondaryText,
+                              ),
+                              _SimilarWidget(),
+                              _RecommendationWidget(),
+                              SizedBox(height: 8),
+                              Divider(
+                                height: 1,
+                                color: AppColors.colorSecondaryText,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 16),
+                              Text(
+                                S.of(context).reviews,
+                                style: AppTextStyle.header3,
+                              ),
+                              const SizedBox(height: 8),
+                              const _ReviewTextFieldWidget(),
+                              const SizedBox(height: 24),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const _ReviewsWidget(),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        const _BottomPaddingWidget(),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : const Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.colorMainText,
+                ),
+              ),
       ),
     );
   }
 }
 
-class _SeeAlsoWidget extends StatelessWidget {
-  const _SeeAlsoWidget({
+class _ReviewTextFieldWidget extends StatelessWidget {
+  const _ReviewTextFieldWidget({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
-        MoviesWithHeaderWidget(header: 'See Also'),
-        SizedBox(height: AppDimensions.mediumPadding),
-      ],
+    final vm = context.read<MovieDetailsViewModel>();
+    final isProgressSending = context
+        .select((MovieDetailsViewModel vm) => vm.state.isProgressSending);
+    return ReviewTextFieldWidget(
+      isProgressSending: isProgressSending,
+      sendReview: vm.sendReview,
+      controller: vm.reviewTextController,
     );
+  }
+}
+
+class _ReviewsWidget extends StatelessWidget {
+  const _ReviewsWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.read<MovieDetailsViewModel>();
+    final reviews = context.select((MovieDetailsViewModel vm) => vm.reviews);
+    return ReviewsSliverWidget(
+      reviews: reviews,
+      timeAgoFromDate: vm.timeAgoFromDate,
+      deleteReview: vm.deleteReview,
+      sendComplaintToReview: vm.sendComplaintToReview,
+      complaintReviewTextController: vm.complaintReviewTextController,
+    );
+  }
+}
+
+class _BottomPaddingWidget extends StatelessWidget {
+  const _BottomPaddingWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final insetsBottom = MediaQuery.of(context).viewInsets.bottom;
+    return Padding(
+        padding: EdgeInsets.only(
+            bottom: insetsBottom == 0 ? 32 : insetsBottom + 16));
+  }
+}
+
+class _RecommendationWidget extends StatelessWidget {
+  const _RecommendationWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final details = context.read<MovieDetailsViewModel>();
+    final recommendations = context.select(
+        (MovieDetailsViewModel vm) => vm.state.movieDetails?.recommendations);
+    return recommendations != null && recommendations.results.isNotEmpty
+        ? MoviesWithHeaderWidget(
+            movieData: MovieWithHeaderData(
+              title: S.of(context).recommendation,
+              list: recommendations.results,
+              viewMediaType: ViewMediaType.recommendation,
+              movieId: details.movieId,
+            ),
+            onPressed: () =>
+                context.read<MovieDetailsViewModel>().showAdIfAvailable(),
+          )
+        : const SizedBox.shrink();
+  }
+}
+
+class _SimilarWidget extends StatelessWidget {
+  const _SimilarWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final details = context.read<MovieDetailsViewModel>();
+    final similar = context
+        .select((MovieDetailsViewModel vm) => vm.state.movieDetails?.similar);
+    return similar != null && similar.results.isNotEmpty
+        ? MoviesWithHeaderWidget(
+            movieData: MovieWithHeaderData(
+              title: S.of(context).similar,
+              list: similar.results,
+              viewMediaType: ViewMediaType.similar,
+              movieId: details.movieId,
+            ),
+            onPressed: () =>
+                context.read<MovieDetailsViewModel>().showAdIfAvailable(),
+          )
+        : const SizedBox.shrink();
   }
 }
 
@@ -78,67 +255,144 @@ class _MovieDetailsWidget extends StatelessWidget {
           SizedBox(height: 8),
           _RowMainInfoWidget(),
           SizedBox(height: 8),
-          _ListChipsWidget(),
+          _GenresWidget(),
           SizedBox(height: 8),
           _TaglineWidget(),
           SizedBox(height: 8),
-          _DescriptionWidget(),
+          _OverviewWidget(),
+          SizedBox(height: 8),
+          _ProductionCountriesWidget(),
+          SizedBox(height: 8),
+          _ProductionCompaniesWidget(),
+          SizedBox(height: 8),
+          _KeywordsWidget(),
+          SizedBox(height: 8),
+          _ExternalSourcesWidget(),
         ],
       ),
     );
   }
 }
 
-class _TaglineWidget extends StatelessWidget {
-  const _TaglineWidget({
-    Key? key,
-  }) : super(key: key);
+class _TitleWidget extends StatelessWidget {
+  const _TitleWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Tagline',
-          style: AppTextStyle.header3,
-        ),
-        const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Text(
-            'Мультивселенная на свободе',
-            style: AppTextStyle.small
-                .copyWith(color: AppColors.colorSecondaryText),
-          ),
-        ),
-      ],
+    final title = context
+        .select((MovieDetailsViewModel vm) => vm.state.movieDetails!.title);
+    return TitleWidget(title: title ?? 'Unknown');
+  }
+}
+
+class _TaglineWidget extends StatelessWidget {
+  const _TaglineWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final tagline = context
+        .select((MovieDetailsViewModel vm) => vm.state.movieDetails!.tagline);
+    return TaglineWidget(
+      tagline: tagline ?? '',
     );
   }
 }
 
-class _DescriptionWidget extends StatelessWidget {
-  const _DescriptionWidget({
+class _ExternalSourcesWidget extends StatelessWidget {
+  const _ExternalSourcesWidget({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Description',
-          style: AppTextStyle.header3,
-        ),
-        const SizedBox(height: 8),
-        const Padding(
-          padding: EdgeInsets.only(left: 8.0),
-          child: TextMoreWidget(
-            'Мистерио удаётся выяснить истинную личность Человека-паука. С этого момента жизнь Питера Паркера становится невыносимой. Если ранее он мог успешно переключаться между своими амплуа, то сейчас это сделать невозможно. Переворачивается с ног на голову не только жизнь Человека-пауку, но и репутация. Понимая, что так жить невозможно, главный герой фильма «Человек-паук: Нет пути домой» принимает решение обратиться за помощью к своему давнему знакомому Стивену Стрэнджу. Питер Паркер надеется, что с помощью магии он сможет восстановить его анонимность. Стрэндж соглашается помочь.',
-          ),
-        ),
-      ],
+    final externalIds = context.select(
+        (MovieDetailsViewModel vm) => vm.state.movieDetails!.externalIds);
+    final allIsNull = (externalIds?.facebookId ?? '').isEmpty  &&
+        (externalIds?.instagramId ?? '').isEmpty &&
+        (externalIds?.twitterId ?? '').isEmpty;
+    final data = [
+      ExternalSourcesData(
+        type: ExternalSourcesType.facebook,
+        source: externalIds?.facebookId ?? '',
+      ),
+      ExternalSourcesData(
+        type: ExternalSourcesType.instagram,
+        source: externalIds?.instagramId ?? '',
+      ),
+      ExternalSourcesData(
+        type: ExternalSourcesType.twitter,
+        source: externalIds?.twitterId ?? '',
+      ),
+    ];
+    return ExternalSourcesWidget(allIsNull: allIsNull, data: data);
+  }
+}
+
+class _ProductionCompaniesWidget extends StatelessWidget {
+  const _ProductionCompaniesWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final productionCompanies = context.select((MovieDetailsViewModel vm) =>
+        vm.state.movieDetails!.productionCompanies);
+    return productionCompanies != null
+        ? ChipsWithHeaderWidget(
+            title: S.of(context).production_companies,
+            data: productionCompanies.map((data) => data.name).toList(),
+            onPressed: (index) {},
+          )
+        : const SizedBox.shrink();
+  }
+}
+
+class _ProductionCountriesWidget extends StatelessWidget {
+  const _ProductionCountriesWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final productionCountries = context.select((MovieDetailsViewModel vm) =>
+        vm.state.movieDetails!.productionCountries);
+    return productionCountries != null
+        ? ChipsWithHeaderWidget(
+            title:  S.of(context).production_countries,
+            data: productionCountries.map((data) => data.name).toList(),
+            onPressed: (index) {},
+          )
+        : const SizedBox.shrink();
+  }
+}
+
+class _KeywordsWidget extends StatelessWidget {
+  const _KeywordsWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final keywords = context
+        .select((MovieDetailsViewModel vm) => vm.state.movieDetails!.keywords);
+    return ChipsWithHeaderWidget(
+      title: S.of(context).keywords,
+      data: keywords?.keywords.map((keyword) => keyword.name).toList(),
+      onPressed: (index) {},
+    );
+  }
+}
+
+class _OverviewWidget extends StatelessWidget {
+  const _OverviewWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final overview = context
+        .select((MovieDetailsViewModel vm) => vm.state.movieDetails?.overview);
+    return LargeTextWithHeaderWidget(
+      header: S.of(context).description,
+      overview: overview ?? '',
     );
   }
 }
@@ -150,194 +404,110 @@ class _MediaWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: AppDimensions.mediumPadding),
-          child: Text(
-            'Media',
-            style: AppTextStyle.header3,
+    final backdrops = context
+        .select((MovieDetailsViewModel vm) => vm.state.movieImages?.backdrops);
+    return MediaWidget(
+      aspectRatios: backdrops
+          ?.map(
+            (backdrop) => backdrop.aspectRatio,
+          )
+          .toList(),
+      backdrops: backdrops?.map((backdrop) => backdrop.filePath).toList(),
+    );
+  }
+}
+
+class _ListCastsWidget extends StatelessWidget {
+  const _ListCastsWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final cast = context.select(
+        (MovieDetailsViewModel vm) => vm.state.movieDetails!.credits?.cast);
+    final list = cast
+        ?.map(
+          (item) => CreditsItemSimpleData(
+            id: item.id,
+            name: item.name,
+            posterPath: item.profilePath ?? '',
+            value: item.character,
           ),
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 110,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.largePadding,
-            ),
-            scrollDirection: Axis.horizontal,
-            itemCount: 10,
-            separatorBuilder: (context, index) => const SizedBox(width: 8),
-            itemBuilder: (context, index) {
-              return Container(
-                height: 110,
-                width: 170,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    AppDimensions.radius5,
-                  ),
+        )
+        .toList();
+    if (list != null) {
+      final data = ListCreditsSimpleData(
+        title: S.of(context).cast,
+        list: list,
+      );
+      return ListCreditsSimpleWidget(
+        data: data,
+      );
+    }
+    return const SizedBox.shrink();
+  }
+}
+
+class _ListCrewsWidget extends StatelessWidget {
+  const _ListCrewsWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final crew = context.select(
+        (MovieDetailsViewModel vm) => vm.state.movieDetails!.credits?.crew);
+    final list = crew
+        ?.map(
+          (item) => CreditsItemSimpleData(
+            id: item.id,
+            name: item.name,
+            posterPath: item.profilePath ?? '',
+            value: item.job,
+          ),
+        )
+        .toList();
+    if (list != null) {
+      final data = ListCreditsSimpleData(
+        title: S.of(context).crew,
+        list: list,
+      );
+      return ListCreditsSimpleWidget(
+        data: data,
+      );
+    }
+    return const SizedBox.shrink();
+  }
+}
+
+class _GenresWidget extends StatelessWidget {
+  const _GenresWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final genres = context
+        .select((MovieDetailsViewModel vm) => vm.state.movieDetails!.genres);
+    return genres != null
+        ? ChipsWithHeaderWidget(
+            title: S.of(context).genres,
+            data: genres.map((genre) => genre.name).toList(),
+            onPressed: (index) {
+              context.read<MovieDetailsViewModel>().showAdIfAvailable();
+              final genre = Genre.fromIdToGenre(genres[index].id);
+              Navigator.of(context)
+                  .pushNamed(Screens.viewAllMovies, arguments: [
+                ViewAllMoviesData(
+                  withGenres: [
+                    Genre(genre: genre),
+                  ],
                 ),
-                child: Image.asset(
-                  AppImages.movieExample,
-                  fit: BoxFit.cover,
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _MainRolesWidget extends StatelessWidget {
-  const _MainRolesWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: AppDimensions.mediumPadding),
-          child: Text(
-            'Starring',
-            style: AppTextStyle.header3,
-          ),
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 174,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.largePadding,
-            ),
-            scrollDirection: Axis.horizontal,
-            itemCount: 10,
-            separatorBuilder: (context, index) => const SizedBox(width: 8),
-            itemBuilder: (context, index) {
-              return _MainRoleWidget(index: index);
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _MainRoleWidget extends StatelessWidget {
-  final int index;
-  const _MainRoleWidget({
-    Key? key,
-    required this.index,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWellMaterialWidget(
-      onTap: () {
-        Navigator.of(context).pushNamed(Screens.actorDetails);
-      },
-      borderRadius: AppDimensions.radius5,
-      color: AppColors.colorSplash,
-      child: Column(
-        children: [
-          Container(
-            height: 140,
-            width: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                AppDimensions.radius5,
-              ),
-            ),
-            child: Image.asset(
-              AppImages.personExample,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            'Daniel Stisen',
-            style: AppTextStyle.subheader,
-          ),
-          const SizedBox(height: 2),
-          Text(
-            'John Wood',
-            style: AppTextStyle.subheader2.copyWith(
-              color: AppColors.colorSecondaryText,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ListChipsWidget extends StatelessWidget {
-  const _ListChipsWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        ActionChipWidget(
-          onPressed: () {},
-          child: Text(
-            'Action',
-            style: AppTextStyle.small
-                .copyWith(color: AppColors.colorSecondaryText),
-          ),
-        ),
-        ActionChipWidget(
-          onPressed: () {},
-          child: Text(
-            'Action',
-            style: AppTextStyle.small
-                .copyWith(color: AppColors.colorSecondaryText),
-          ),
-        ),
-        ActionChipWidget(
-          onPressed: () {},
-          child: Text(
-            'Action',
-            style: AppTextStyle.small
-                .copyWith(color: AppColors.colorSecondaryText),
-          ),
-        ),
-        ActionChipWidget(
-          onPressed: () {},
-          child: Text(
-            'Action',
-            style: AppTextStyle.small
-                .copyWith(color: AppColors.colorSecondaryText),
-          ),
-        ),
-        ActionChipWidget(
-          onPressed: () {},
-          child: Text(
-            'Action',
-            style: AppTextStyle.small
-                .copyWith(color: AppColors.colorSecondaryText),
-          ),
-        ),
-        ActionChipWidget(
-          onPressed: () {},
-          child: Text(
-            'Action',
-            style: AppTextStyle.small
-                .copyWith(color: AppColors.colorSecondaryText),
-          ),
-        ),
-      ],
-    );
+                MediaType.movie,
+              ]);
+            })
+        : const SizedBox.shrink();
   }
 }
 
@@ -348,57 +518,32 @@ class _RowMainInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.calendar_month,
-              color: AppColors.colorSecondary,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              '17.12.2021',
-              style: AppTextStyle.small,
-            ),
-          ],
-        ),
-        const SizedBox(width: 8),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.timer,
-              color: AppColors.colorSecondary,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              '160 mins',
-              style: AppTextStyle.small,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
+    final vm = context.read<MovieDetailsViewModel>();
+    final movie =
+        context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!);
 
-class _TitleWidget extends StatelessWidget {
-  const _TitleWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      'Jumanji',
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      style: AppTextStyle.header2.copyWith(
-        color: AppColors.colorSecondary,
+    final movieInfoData = <RowMainInfoData>[
+      RowMainInfoData(
+        icon: Icons.calendar_month,
+        title: vm.stringFromDate(movie.releaseDate),
       ),
-    );
+      if (movie.runtime != null)
+        RowMainInfoData(
+          icon: Icons.timer,
+          title: '${movie.runtime} ${S.of(context).mins}',
+        ),
+      if (movie.budget != null && movie.budget != 0)
+        RowMainInfoData(
+          icon: Icons.monetization_on_outlined,
+          title: NumberFormat().format(movie.budget),
+        ),
+      if (movie.status != null)
+        RowMainInfoData(
+          icon: Icons.star,
+          title: movie.status!,
+        ),
+    ];
+    return RowMainInfoWidget(data: movieInfoData);
   }
 }
 
@@ -409,128 +554,39 @@ class _ButtonsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        TextButtonWidget(
-          onPressed: () {},
-          backgroundColor: AppColors.colorPrimary,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.play_arrow,
-                color: AppColors.colorSecondary,
-              ),
-              Text(
-                'Play',
-                style: AppTextStyle.small,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 8),
-        TextButtonWidget(
-          onPressed: () {},
-          backgroundColor: AppColors.colorPrimary,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.remove_red_eye,
-                color: AppColors.colorSecondary,
-              ),
-              const SizedBox(width: 4),
-              Text(
-                'Watched',
-                style: AppTextStyle.small,
-              ),
-            ],
-          ),
-        ),
-      ],
+    final vm = context.read<MovieDetailsViewModel>();
+    final videos = context
+        .select((MovieDetailsViewModel vm) => vm.state.movieDetails!.videos);
+    final isWatched =
+        context.select((MovieDetailsViewModel vm) => vm.state.isWatched);
+    return ButtonsWidget(
+      videos: videos?.results ?? [],
+      onPressedWatch: vm.watchMovie,
+      isWatched: isWatched,
     );
   }
 }
 
-class _PosterWidget extends StatelessWidget {
-  const _PosterWidget({
+class _HeaderPosterWidget extends StatelessWidget {
+  const _HeaderPosterWidget({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        AspectRatio(
-          aspectRatio: 389 / 218,
-          child: DecoratedBox(
-            position: DecorationPosition.foreground,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.colorBackground,
-                  Colors.transparent,
-                ],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                stops: [0.1, 0.5],
-              ),
-            ),
-            child: Image.asset(
-              AppImages.movieExample,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        Positioned(
-          left: 16,
-          bottom: 8,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(AppDimensions.radius5),
-            child: Image.asset(
-              AppImages.movieExample,
-              width: 100,
-              height: 140,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const BackButtonWidget(),
-              IconButtonWidget(
-                icon: const Icon(
-                  Icons.favorite,
-                  color: AppColors.colorSecondaryText,
-                  size: 32,
-                ),
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          bottom: 0,
-          right: 16,
-          child: InkWellMaterialWidget(
-            onTap: () => DialogWidget.showDialogRateMovie(context),
-            borderRadius: 90,
-            color: AppColors.colorSplash,
-            child: CircularProgressIndicatorWidget(
-              child: Text(
-                '8.3',
-                style: AppTextStyle.medium,
-              ),
-              width: 45,
-              height: 45,
-              percent: 0.83,
-            ),
-          ),
-        ),
-      ],
+    final vm = context.read<MovieDetailsViewModel>();
+    final isFavorite =
+        context.select((MovieDetailsViewModel vm) => vm.state.isFavorite);
+    final movie =
+        context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!);
+    return HeaderPosterWidget(
+      data: HeaderPosterData(
+        isFavorite: isFavorite,
+        onFavoritePressed: vm.favoriteMovie,
+        posterPath: movie.posterPath ?? '',
+        backdropPath: movie.backdropPath ?? '',
+        voteAverage: movie.voteAverage ?? 0,
+      ),
     );
   }
 }

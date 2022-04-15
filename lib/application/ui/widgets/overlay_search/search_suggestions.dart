@@ -2,13 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_night/application/domain/api_client/media_type.dart';
+import 'package:movie_night/application/domain/entities/search/multi_search.dart';
 
 import 'filterable_list.dart';
 
 class SearchSuggestions extends StatefulWidget implements PreferredSizeWidget {
-  final void Function(dynamic, Type) onTapped;
-  final void Function(String, Type) onSearch;
-  final Future<List<dynamic>> Function(String value) suggestions;
+  final void Function(int id, MediaType) onTapped;
+  final void Function(String) onSearch;
+  final Future<MultiSearch> Function(String value) suggestions;
   final Color? suggestionBackgroundColor;
   final Duration debounceDuration;
   final Widget Function(
@@ -19,8 +21,8 @@ class SearchSuggestions extends StatefulWidget implements PreferredSizeWidget {
     bool canCancel,
   ) builderTextField;
   final Widget Function(
-    List<dynamic> items,
-    void Function(String) onItemTapped,
+    List<MultiSearchResult> items,
+    void Function(int id, MediaType) onItemTapped,
     void Function() onViewAllPressed,
   ) builderSuggestions;
 
@@ -49,7 +51,7 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
   bool _isOpen = false;
   bool _canCancel = false;
   OverlayEntry? _overlayEntry;
-  List<dynamic> _suggestions = [];
+  List<MultiSearchResult> _suggestions = [];
   Timer? _debounce;
   String _previousAsyncSearchText = '';
   final FocusNode _focusNode = FocusNode();
@@ -83,9 +85,10 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
       }
     });
     _searchController.addListener(() async {
-      if (_searchController.text.isNotEmpty) {
+      final text = _searchController.text.trim();
+      if (text.isNotEmpty) {
         _toggleDropdown();
-        updateSuggestions(_searchController.text);
+        updateSuggestions(text);
       } else {
         _previousAsyncSearchText = '';
         _toggleDropdown(close: true);
@@ -114,11 +117,8 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
 
   void _search() {
     setState(() {});
-    final type = _suggestions.isEmpty || _suggestions.first == null
-        ? Null
-        : _suggestions.first.runtimeType;
-    if (type != Null) {
-      widget.onSearch(_searchController.text, type);
+    if (_suggestions.isNotEmpty) {
+      widget.onSearch(_searchController.text.trim());
     }
     _searchController.clear();
     _focusNode.unfocus();
@@ -152,13 +152,8 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
                     builderSuggestions: widget.builderSuggestions,
                     suggestionBackgroundColor: widget.suggestionBackgroundColor,
                     onViewAllPressed: _search,
-                    onItemTapped: (value) {
-                      final type = _suggestions.first == null
-                          ? Null
-                          : _suggestions.first.runtimeType;
-                      if (type != Null) {
-                        widget.onTapped(value, type);
-                      }
+                    onItemTapped: (value, type) {
+                      widget.onTapped(value, type);
                       _searchController.clear();
                       _focusNode.unfocus();
                       _toggleDropdown(close: true);
@@ -172,6 +167,26 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
       ),
     );
   }
+
+  // Widget _scrollConfiguration(Widget child) => ScrollConfiguration(
+  //     behavior: ScrollConfiguration.of(context).copyWith(
+  //       scrollbars: false,
+  //       overscroll: false,
+  //       physics: const ClampingScrollPhysics(),
+  //       platform: Theme.of(context).platform,
+  //     ),
+  //     child: PrimaryScrollController(
+  //       controller: _scrollController,
+  //       child: RawScrollbar(
+  //         radius: const Radius.circular(2),
+  //         thickness: 4,
+  //         crossAxisMargin: 4,
+  //         thumbColor: AppColors.colorMainText,
+  //         isAlwaysShown: true,
+  //         child: child,
+  //       ),
+  //     ),
+  //   );
 
   void _toggleDropdown({bool close = false}) async {
     if (close) {
@@ -190,15 +205,19 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
   }
 
   void updateSuggestions(String text) async {
-    _debounce?.cancel();
     _isLoading = true;
     setState(() {});
+    _debounce?.cancel();
     _debounce = Timer(widget.debounceDuration, () async {
       final searchText = text.isNotEmpty ? text : null;
-      if (searchText == _previousAsyncSearchText) return;
-      _suggestions = await widget.suggestions(text);
-      _isLoading = false;
+      if (searchText == _previousAsyncSearchText) {
+        _isLoading = false;
+        setState(() {});
+        return;
+      }
+      _suggestions = (await widget.suggestions(text)).results;
       _previousAsyncSearchText = text;
+      _isLoading = false;
       setState(() {});
       rebuildOverlay();
     });

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:movie_night/application/domain/entities/actor.dart';
 
-import '../../../domain/entities/movie.dart';
+
+import '../../../../generated/l10n.dart';
+import '../../../domain/entities/search/multi_search.dart';
 import '../../themes/app_colors.dart';
 import '../../themes/app_text_style.dart';
 
 class ActorSuggestionItemWidget extends StatelessWidget {
-  final Actor item;
+  final MultiSearchResult item;
 
   const ActorSuggestionItemWidget({
     Key? key,
@@ -15,6 +16,7 @@ class ActorSuggestionItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gender = item.gender == 1 ? S.of(context).female : S.of(context).male;
     return Row(
       children: [
         const Icon(
@@ -22,10 +24,27 @@ class ActorSuggestionItemWidget extends StatelessWidget {
           color: AppColors.colorSecondary,
         ),
         const SizedBox(width: 4),
-        Text(
-          item.name,
-          style: AppTextStyle.small.copyWith(
-            color: AppColors.colorMainText,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.name!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyle.small.copyWith(
+                  color: AppColors.colorMainText,
+                ),
+              ),
+              Text(
+                "${S.of(context).person}: $gender",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyle.subheader2.copyWith(
+                  color: AppColors.colorSecondaryText,
+                ),
+              ),
+            ],
           ),
         ),
       ],

@@ -9,7 +9,7 @@ import 'actors/favorite_actors_screen.dart';
 import 'favorite_view_model.dart';
 import 'movies/favorite_movies_screen.dart';
 
-class FavoriteScreen extends StatelessWidget {
+class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({
     Key? key,
   }) : super(key: key);
@@ -21,6 +21,17 @@ class FavoriteScreen extends StatelessWidget {
   ];
 
   @override
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
+}
+
+class _FavoriteScreenState extends State<FavoriteScreen> {
+  @override
+  void didChangeDependencies() {
+    context.read<FavoriteViewModel>().setupLocale(context);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final vm = context.read<FavoriteViewModel>();
     return NestedScrollView(
@@ -28,7 +39,7 @@ class FavoriteScreen extends StatelessWidget {
         const _AppBar(),
       ],
       body: PageView(
-        children: _children,
+        children: FavoriteScreen._children,
         onPageChanged: (index) => vm.selectCategory(index, context),
         controller: vm.categoryController,
       ),
@@ -65,11 +76,11 @@ class _TabsCategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final length = context.read<FavoriteViewModel>().listCategory.length;
-    return SizedBox(
-      height: 21,
+    final listCategory =context.select((FavoriteViewModel vm) => vm.listCategory);
+    return listCategory.isNotEmpty ? SizedBox(
+      height: 48,
       child: ListView.separated(
-        itemCount: length,
+        itemCount: listCategory.length,
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         separatorBuilder: (context, index) => const SizedBox(width: 8.0),
@@ -77,11 +88,11 @@ class _TabsCategoryWidget extends StatelessWidget {
           builder: (context, vm, _) => TabCategoryItemWidget(
             index: index,
             currentIndex: vm.currentCategoryIndex,
-            items: vm.listCategory,
+            items: listCategory,
             selectCategory: vm.selectCategory,
           ),
         ),
       ),
-    );
+    ) : const SizedBox.shrink();
   }
 }

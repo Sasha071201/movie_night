@@ -18,14 +18,19 @@ class TabCategoryItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => selectCategory(index, context),
-      child: Text(
-        items[index],
-        style: AppTextStyle.small.copyWith(
-          color: currentIndex == index
-              ? AppColors.colorSecondary
-              : AppColors.colorMainText,
+    return SizedBox(
+      height: 48,
+      child: GestureDetector(
+        onTap: () => selectCategory(index, context),
+        child: Center(
+          child: Text(
+            items[index],
+            style: AppTextStyle.small.copyWith(
+              color: currentIndex == index
+                  ? AppColors.colorSecondary
+                  : AppColors.colorMainText,
+            ),
+          ),
         ),
       ),
     );

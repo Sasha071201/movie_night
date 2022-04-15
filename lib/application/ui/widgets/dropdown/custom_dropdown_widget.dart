@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_night/application/ui/themes/app_colors.dart';
 
 class CustomDropdownWidget<T> extends StatefulWidget {
   final Widget Function(
@@ -8,6 +9,7 @@ class CustomDropdownWidget<T> extends StatefulWidget {
   final Widget Function(
     int currentIndex,
     void Function(int index) onTap,
+    Widget Function(Widget child) scrollConfiguration,
   ) builderDropdown;
   final void Function(int currentIndex) onChanged;
   final int initialIndex;
@@ -50,11 +52,12 @@ class _CustomDropdownWidgetState<T> extends State<CustomDropdownWidget<T>>
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
   late Animation<double> _rotateAnimation;
-  final scrollController = ScrollController();
+  late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
     _currentIndex = widget.initialIndex;
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200));
@@ -68,6 +71,12 @@ class _CustomDropdownWidgetState<T> extends State<CustomDropdownWidget<T>>
         curve: Curves.easeInOut,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -121,30 +130,15 @@ class _CustomDropdownWidgetState<T> extends State<CustomDropdownWidget<T>>
                         constraints: BoxConstraints(
                           maxHeight: widget.heightDropdown ?? 120,
                         ),
-                        child: ScrollConfiguration(
-                          behavior: ScrollConfiguration.of(context).copyWith(
-                            scrollbars: false,
-                            overscroll: false,
-                            physics: const ClampingScrollPhysics(),
-                            platform: Theme.of(context).platform,
-                          ),
-                          child: PrimaryScrollController(
-                            controller: scrollController,
-                            child: Scrollbar(
-                              radius: const Radius.circular(2),
-                              thickness: 3,
-                              isAlwaysShown: true,
-                              child: Padding(
-                                padding: widget.paddingDropdown ??
-                                    const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                    ),
-                                child: widget.builderDropdown(
-                                  _currentIndex,
-                                  onTap,
-                                ),
+                        child: Padding(
+                          padding: widget.paddingDropdown ??
+                              const EdgeInsets.symmetric(
+                                vertical: 10,
                               ),
-                            ),
+                          child: widget.builderDropdown(
+                            _currentIndex,
+                            onTap,
+                            _scrollConfiguration,
                           ),
                         ),
                       ),
@@ -158,6 +152,26 @@ class _CustomDropdownWidgetState<T> extends State<CustomDropdownWidget<T>>
       ),
     );
   }
+
+  Widget _scrollConfiguration(Widget child) => ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(
+          scrollbars: false,
+          overscroll: false,
+          physics: const ClampingScrollPhysics(),
+          platform: Theme.of(context).platform,
+        ),
+        child: PrimaryScrollController(
+          controller: _scrollController,
+          child: RawScrollbar(
+            radius: const Radius.circular(2),
+            thickness: 4,
+            crossAxisMargin: 4,
+            thumbColor: AppColors.colorMainText,
+            isAlwaysShown: true,
+            child: child,
+          ),
+        ),
+      );
 
   void onTap(int index) {
     setState(() => _currentIndex = index);

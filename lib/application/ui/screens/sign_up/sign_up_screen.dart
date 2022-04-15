@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movie_night/application/ui/screens/sign_up/sign_up_view_model.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
 import '../../themes/app_colors.dart';
@@ -7,7 +9,6 @@ import '../../widgets/back_button_widget.dart';
 import '../../widgets/background_posters_widget.dart';
 import '../../widgets/elevated_button_widget.dart';
 import '../../widgets/sliver_app_bar_delegate.dart';
-import '../../widgets/text_button_widget.dart';
 import '../../widgets/text_field_widget.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -52,50 +53,102 @@ class _BodyWidget extends StatelessWidget {
                   style: AppTextStyle.header1,
                 ),
                 const SizedBox(height: 70),
-                TextFieldWidget(
-                  hintText: S.of(context).enter_email,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.emailAddress,
-                  enableSuggestions: true,
-                  maxLines: 1,
-                ),
+                const _EmailTextFiledWidget(),
                 const SizedBox(height: 16),
-                TextFieldWidget(
-                  hintText: S.of(context).enter_password,
-                  textInputAction: TextInputAction.next,
-                  obscureText: true,
-                  keyboardType: TextInputType.visiblePassword,
-                  enableSuggestions: true,
-                  maxLines: 1,
-                ),
+                const _PasswordTextFieldWidget(),
                 const SizedBox(height: 16),
-                TextFieldWidget(
-                  hintText: S.of(context).enter_confirm_password,
-                  textInputAction: TextInputAction.done,
-                  obscureText: true,
-                  keyboardType: TextInputType.visiblePassword,
-                  enableSuggestions: true,
-                  maxLines: 1,
-                ),
+                const _ConfirmPasswordTextFieldWidget(),
                 const Spacer(),
                 const SizedBox(height: 16),
-                ElevatedButtonWidget(
-                  onPressed: () {},
-                  backgroundColor: AppColors.colorSecondary,
-                  overlayColor: AppColors.colorSplash,
-                  child: Text(
-                    S.of(context).sign_up,
-                    style: AppTextStyle.button.copyWith(
-                      color: AppColors.colorBackground,
-                    ),
-                  ),
-                ),
+                const _SignUpButtonWidget(),
                 SizedBox(height: insetsBottom == 0 ? 32 : insetsBottom + 16),
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+class _SignUpButtonWidget extends StatelessWidget {
+  const _SignUpButtonWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<SignUpViewModel>();
+    return ElevatedButtonWidget(
+      onPressed: vm.canStartAuth ? () => vm.auth(context) : null,
+      backgroundColor: AppColors.colorSecondary,
+      overlayColor: AppColors.colorSplash,
+      child: vm.isAuthProgress ? const CircularProgressIndicator() : Text(
+        S.of(context).sign_up,
+        style: AppTextStyle.button.copyWith(
+          color: AppColors.colorBackground,
+        ),
+      ),
+    );
+  }
+}
+
+class _ConfirmPasswordTextFieldWidget extends StatelessWidget {
+  const _ConfirmPasswordTextFieldWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.read<SignUpViewModel>();
+    return TextFieldWidget(
+      controller: vm.confirmPasswordTextController,
+      hintText: S.of(context).enter_confirm_password,
+      textInputAction: TextInputAction.done,
+      obscureText: true,
+      keyboardType: TextInputType.visiblePassword,
+      onSubmitted: vm.canStartAuth ? (text) => vm.auth(context) : null,
+      enableSuggestions: true,
+      maxLines: 1,
+    );
+  }
+}
+
+class _PasswordTextFieldWidget extends StatelessWidget {
+  const _PasswordTextFieldWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.read<SignUpViewModel>();
+    return TextFieldWidget(
+      controller: vm.passwordTextController,
+      hintText: S.of(context).enter_password,
+      textInputAction: TextInputAction.next,
+      obscureText: true,
+      keyboardType: TextInputType.visiblePassword,
+      enableSuggestions: true,
+      maxLines: 1,
+    );
+  }
+}
+
+class _EmailTextFiledWidget extends StatelessWidget {
+  const _EmailTextFiledWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.read<SignUpViewModel>();
+    return TextFieldWidget(
+      controller: vm.emailTextController,
+      hintText: S.of(context).enter_email,
+      textInputAction: TextInputAction.next,
+      keyboardType: TextInputType.emailAddress,
+      enableSuggestions: true,
+      maxLines: 1,
     );
   }
 }
@@ -112,35 +165,14 @@ class _AppBar extends StatelessWidget {
       floating: true,
       delegate: SliverAppBarDelegate(
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 8,vertical:8 ),
           child: Row(
             children: const [
               BackButtonWidget(),
-              Spacer(),
-              _LaterButtonWidget(),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class _LaterButtonWidget extends StatelessWidget {
-  const _LaterButtonWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButtonWidget(
-      child: Text(
-        S.of(context).later,
-        style: AppTextStyle.button.copyWith(
-          color: AppColors.colorSecondary,
-        ),
-      ),
-      onPressed: () {},
     );
   }
 }
