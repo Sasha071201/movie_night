@@ -23,7 +23,7 @@ class ActionChipWidget extends StatelessWidget {
       color: AppColors.colorSplash,
       onTap: onPressed,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
         decoration: BoxDecoration(
           color: backgroundColor ?? AppColors.colorPrimary,
           borderRadius: BorderRadius.circular(

@@ -28,13 +28,13 @@ class AppTextStyle {
   static final subheader2WithoutTheme = GoogleFonts.poppins(
     fontWeight: FontWeight.w400,
     fontStyle: FontStyle.normal,
-    fontSize: 10,
+    fontSize: 12,
   );
 
   static final subheaderWithoutTheme = GoogleFonts.poppins(
     fontWeight: FontWeight.w700,
     fontStyle: FontStyle.normal,
-    fontSize: 10,
+    fontSize: 12,
   );
 
   static final header3WithoutTheme = GoogleFonts.poppins(

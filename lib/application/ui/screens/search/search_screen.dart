@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'package:movie_night/application/domain/entities/actor.dart';
+import 'package:movie_night/application/domain/api_client/media_type.dart';
+import 'package:movie_night/application/domain/entities/search/multi_search.dart';
 import 'package:movie_night/application/ui/navigation/app_navigation.dart';
 import 'package:movie_night/application/ui/screens/search/search_view_model.dart';
-import 'package:movie_night/application/ui/screens/search/tv_shows/favorite_tv_shows_screen.dart';
+import 'package:movie_night/application/ui/screens/search/tv_shows/search_tv_shows_screen.dart';
 import 'package:movie_night/application/ui/themes/app_text_style.dart';
 import 'package:movie_night/application/ui/widgets/text_button_widget.dart';
 import 'package:movie_night/application/ui/widgets/text_field_widget.dart';
 
-import '../../../domain/entities/movie.dart';
+import '../../../../generated/l10n.dart';
 import '../../themes/app_colors.dart';
 import '../../widgets/appbar/tab_category_iten_widget.dart';
 import '../../widgets/overlay_search/actor_suggestion_item_widget.dart';
 import '../../widgets/overlay_search/movie_suggestion_item_widget.dart';
 import '../../widgets/overlay_search/search_suggestions.dart';
+import '../../widgets/overlay_search/tv_show_suggestion_item.dart';
 import '../../widgets/sliver_app_bar_delegate.dart';
 import 'actors/search_actors_screen.dart';
 import 'movies/search_movies_screen.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({
     Key? key,
   }) : super(key: key);
@@ -31,19 +34,27 @@ class SearchScreen extends StatelessWidget {
   ];
 
   @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  @override
+  void didChangeDependencies() {
+    context.read<SearchViewModel>().setupLocale(context);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final vm = context.read<SearchViewModel>();
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          const _AppBar(),
-        ],
-        body: PageView(
-          children: _children,
-          onPageChanged: (index) => vm.selectCategory(index, context),
-          controller: vm.categoryController,
-        ),
+    return NestedScrollView(
+      headerSliverBuilder: (context, innerBoxIsScrolled) => [
+        const _AppBar(),
+      ],
+      body: PageView(
+        children: SearchScreen._children,
+        onPageChanged: (index) => vm.selectCategory(index, context),
+        controller: vm.categoryController,
       ),
     );
   }
@@ -64,16 +75,14 @@ class _AppBar extends StatelessWidget {
           color: AppColors.colorPrimary,
           child: Column(
             children: const [
-              Spacer(flex: 24),
+              SizedBox(height: 24),
               _SearchAppBarWidget(),
-              Spacer(flex: 10),
               _TabsCategoryWidget(),
-              Spacer(flex: 18),
             ],
           ),
         ),
-        maxHeight: 100,
-        minHeight: 100,
+        maxHeight: 128, //100
+        minHeight: 128, //100
       ),
     );
   }
@@ -93,6 +102,7 @@ class _SearchAppBarWidget extends StatelessWidget {
         items: items,
         onItemTapped: onItemTapped,
         onViewAllPressed: onViewAllPressed,
+        dateFormat: vm.dateFormat,
       ),
       builderTextField: (
         controller,
@@ -110,21 +120,24 @@ class _SearchAppBarWidget extends StatelessWidget {
       ),
       suggestionBackgroundColor: AppColors.colorPrimary,
       onTapped: (result, type) {
-        if (type == Movie) {
-          Navigator.of(context).pushNamed(Screens.movieDetails);
-        } else if (type == Actor) {
-          Navigator.of(context).pushNamed(Screens.actorDetails);
-        }
-      },
-      onSearch: (result, type) {
-        if (type == Movie) {
-          Navigator.of(context).pushNamed(Screens.viewAllMovies);
-        } else if (type == Actor) {
+        if (type == MediaType.movie) {
           Navigator.of(context)
-              .pushNamed(Screens.viewAllMovies); //TODO create viewAllActors
+              .pushNamed(Screens.movieDetails, arguments: result);
+        } else if (type == MediaType.tv) {
+          Navigator.of(context)
+              .pushNamed(Screens.tvShowDetails, arguments: result);
+        } else if (type == MediaType.person) {
+          Navigator.of(context)
+              .pushNamed(Screens.actorDetails, arguments: result);
         }
       },
-      suggestions: (value) async => await vm.fetchSuggestions(value),
+      onSearch: (result) {
+        if (result.isNotEmpty) {
+          Navigator.of(context)
+              .pushNamed(Screens.viewSearchResult, arguments: result);
+        }
+      },
+      suggestions: (value) => vm.fetchSuggestions(value),
     );
   }
 }
@@ -159,7 +172,8 @@ class _AppBarTextFieldWidget extends StatelessWidget {
             showSuffixIcon: controller.text.isNotEmpty,
             controller: controller,
             focusNode: focusNode,
-            hintText: 'Enter movies, TV shows, actors',
+            textCapitalization: TextCapitalization.words,
+            hintText: S.of(context).enter_movie_tv_show_person,
             textInputAction: TextInputAction.search,
             keyboardType: TextInputType.text,
             enableSuggestions: true,
@@ -174,7 +188,7 @@ class _AppBarTextFieldWidget extends StatelessWidget {
           const Spacer(flex: 8),
           TextButtonWidget(
             child: Text(
-              'Cancel',
+              S.of(context).cancel,
               style: AppTextStyle.medium,
             ),
             onPressed: onClose,
@@ -187,15 +201,17 @@ class _AppBarTextFieldWidget extends StatelessWidget {
 }
 
 class _SuggestionsWidget extends StatelessWidget {
-  final List<dynamic> items;
-  final void Function(String itemName) onItemTapped;
+  final List<MultiSearchResult> items;
+  final void Function(int id, MediaType) onItemTapped;
   final void Function() onViewAllPressed;
+  final DateFormat dateFormat;
 
   const _SuggestionsWidget({
     Key? key,
     required this.items,
     required this.onItemTapped,
     required this.onViewAllPressed,
+    required this.dateFormat,
   }) : super(key: key);
 
   @override
@@ -211,12 +227,14 @@ class _SuggestionsWidget extends StatelessWidget {
               itemCount: items.length,
               itemBuilder: (context, index) {
                 Widget child = const CircularProgressIndicator();
-                if (items[index] is Movie) {
-                  Movie item = items[index] as Movie;
-                  child = MovieSuggestionItemWidget(item: item);
-                } else if (items[index] is Actor) {
-                  Actor item = items[index] as Actor;
-                  child = ActorSuggestionItemWidget(item: item);
+                if (items[index].mediaType == MediaType.movie) {
+                  child = MovieSuggestionItemWidget(
+                      item: items[index], dateFormat: dateFormat);
+                } else if (items[index].mediaType == MediaType.tv) {
+                  child = TvShowSuggestionItemWidget(
+                      item: items[index], dateFormat: dateFormat);
+                } else if (items[index].mediaType == MediaType.person) {
+                  child = ActorSuggestionItemWidget(item: items[index]);
                 }
                 return InkWell(
                     child: Container(
@@ -225,13 +243,7 @@ class _SuggestionsWidget extends StatelessWidget {
                       child: child,
                     ),
                     onTap: () {
-                      if (items[index] is Movie) {
-                        final item = items[index] as Movie;
-                        onItemTapped(item.title);
-                      } else if (items[index] is Actor) {
-                        final item = items[index] as Actor;
-                        onItemTapped(item.name);
-                      }
+                      onItemTapped(items[index].id, items[index].mediaType!);
                     });
               },
             ),
@@ -240,7 +252,7 @@ class _SuggestionsWidget extends StatelessWidget {
             padding: const EdgeInsets.only(left: 8.0),
             child: TextButtonWidget(
               child: Text(
-                'View All',
+                S.of(context).view_all,
                 style: AppTextStyle.medium.copyWith(
                   color: AppColors.colorSecondary,
                 ),
@@ -261,11 +273,11 @@ class _TabsCategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final length = context.read<SearchViewModel>().listCategory.length;
-    return SizedBox(
-      height: 21,
+    final listCategory = context.select((SearchViewModel vm) => vm.listCategory);
+    return listCategory.isNotEmpty ? SizedBox(
+      height: 48,
       child: ListView.separated(
-        itemCount: length,
+        itemCount: listCategory.length,
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         separatorBuilder: (context, index) => const SizedBox(width: 8.0),
@@ -273,11 +285,11 @@ class _TabsCategoryWidget extends StatelessWidget {
           builder: (context, vm, _) => TabCategoryItemWidget(
             index: index,
             currentIndex: vm.currentCategoryIndex,
-            items: vm.listCategory,
+            items: listCategory,
             selectCategory: vm.selectCategory,
           ),
         ),
       ),
-    );
+    ) : const SizedBox.shrink();
   }
 }

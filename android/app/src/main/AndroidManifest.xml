@@ -1,9 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.movie_night">
+    package="com.sstreltsov.movie_night">
+     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+     <uses-permission android:name="android.permission.WAKE_LOCK" />
+     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+
    <application
-        android:label="movie_night"
+        android:label="Movie Night"
+        android:usesCleartextTraffic="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-4436119465305644~9364986993"/>
+        <service android:name="com.pravera.flutter_foreground_task.service.ForegroundService" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -30,5 +41,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+            <activity
+    android:name="com.yalantis.ucrop.UCropActivity"
+    android:screenOrientation="portrait"
+    android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 </manifest>

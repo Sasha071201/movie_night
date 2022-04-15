@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:movie_night/application/domain/entities/actor.dart';
-import 'package:movie_night/application/domain/entities/movie.dart';
+import 'package:intl/intl.dart';
+import 'package:movie_night/application/domain/entities/search/multi_search.dart';
+import 'package:movie_night/application/repository/search_repository.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../generated/l10n.dart';
+import '../main/main_view_model.dart';
 
 class SearchViewModel extends ChangeNotifier {
+  final _repository = SearchRepository();
   final _categoryController = PageController(initialPage: 0);
   PageController get categoryController => _categoryController;
+  String _locale = '';
+  String get locale => _locale;
+  late DateFormat _dateFormat;
+  DateFormat get dateFormat => _dateFormat;
+
+  String stringFromDate(DateTime? date) =>
+      date != null ? _dateFormat.format(date) : '';
 
   final _listCategory = <String>[
     'Movies',
-    'TV shows',
-    'Actors',
+    'TV Shows',
+    'People',
   ];
   List<String> get listCategory => _listCategory;
 
@@ -17,49 +30,24 @@ class SearchViewModel extends ChangeNotifier {
   int get currentCategoryIndex => _currentCategoryIndex;
 
   void selectCategory(int index, BuildContext context) {
+    context.read<MainViewModel>().showAdIfAvailable();
     _currentCategoryIndex = index;
     _categoryController.jumpToPage(_currentCategoryIndex);
-    notifyListeners();
+    Future.microtask(() => notifyListeners());
   }
 
-  final List<Movie> _suggestionMovies = [
-    Movie(
-      title: 'Heroes',
-      description: '2021, US, Drama',
-    ),
-    Movie(
-      title: 'Heroes now',
-      description: '2021, US, Drama',
-    ),
-    Movie(
-      title: 'Jumanji',
-      description: '2021, US, Drama',
-    ),
-  ];
+  Future<void> setupLocale(BuildContext context) async {
+    final locale = Localizations.localeOf(context).toLanguageTag();
+    if (_locale == locale) return;
+    _locale = locale;
+    _dateFormat = DateFormat.yMd(_locale);
+    _listCategory[0] = S.of(context).movies;
+    _listCategory[1] = S.of(context).tv_shows;
+    _listCategory[2] = S.of(context).people;
+    Future.microtask(() => notifyListeners());
+  }
 
-  final List<Actor> _suggestionActors = [
-    Actor(name: 'John Cena'),
-    Actor(name: 'Carlos Pena'),
-    Actor(name: 'James Maslow'),
-    Actor(name: 'kendall Smith'),
-  ];
-
-  Future<List<dynamic>> fetchSuggestions(String searchValue) async {
-    await Future.delayed(const Duration(milliseconds: 750));
-    switch (_currentCategoryIndex) {
-      case 0:
-      case 1:
-        return _suggestionMovies.where((element) {
-          return element.title
-              .toLowerCase()
-              .contains(searchValue.toLowerCase());
-        }).toList();
-      case 2:
-        return _suggestionActors.where((element) {
-          return element.name.toLowerCase().contains(searchValue.toLowerCase());
-        }).toList();
-      default:
-        return [];
-    }
+  Future<MultiSearch> fetchSuggestions(String searchValue) async {
+    return _repository.searchMulti(locale: _locale, query: searchValue);
   }
 }

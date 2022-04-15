@@ -10,7 +10,7 @@ import '../../widgets/appbar/tab_category_iten_widget.dart';
 import '../../widgets/sliver_app_bar_delegate.dart';
 import 'home_view_model.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({
     Key? key,
   }) : super(key: key);
@@ -22,6 +22,18 @@ class HomeScreen extends StatelessWidget {
   ];
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+  void didChangeDependencies() {
+    context.read<HomeViewModel>().setupLocale(context);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final vm = context.read<HomeViewModel>();
     return NestedScrollView(
@@ -29,7 +41,7 @@ class HomeScreen extends StatelessWidget {
         const _AppBar(),
       ],
       body: PageView(
-        children: _children,
+        children: HomeScreen._children,
         onPageChanged: (index) => vm.selectCategory(index, context),
         controller: vm.categoryController,
       ),
@@ -66,11 +78,11 @@ class _TabsCategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final length = context.read<HomeViewModel>().listCategory.length;
-    return SizedBox(
-      height: 21,
+    final listCategory =context.select((HomeViewModel vm) => vm.listCategory);
+    return listCategory.isNotEmpty ? SizedBox(
+      height: 48,
       child: ListView.separated(
-        itemCount: length,
+        itemCount: listCategory.length,
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         separatorBuilder: (context, index) => const SizedBox(width: 8.0),
@@ -78,11 +90,11 @@ class _TabsCategoryWidget extends StatelessWidget {
           builder: (context, vm, _) => TabCategoryItemWidget(
             index: index,
             currentIndex: vm.currentCategoryIndex,
-            items: vm.listCategory,
+            items: listCategory,
             selectCategory: vm.selectCategory,
           ),
         ),
       ),
-    );
+    ) : const SizedBox.shrink();
   }
 }

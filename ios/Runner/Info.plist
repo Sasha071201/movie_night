@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>movie_night</string>
+	<string>Movie Night</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -43,5 +43,24 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	
+	<key>UIBackgroundModes</key>
+	<array>
+   		<string>fetch</string>
+   		<string>remote-notification</string>
+	</array>
+
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Explain why your app uses music</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Explain why your app uses photo library</string>
+
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+  		<string>https</string>
+  		<string>http</string>
+	</array>
+	
 </dict>
 </plist>

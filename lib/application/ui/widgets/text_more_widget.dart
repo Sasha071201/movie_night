@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:readmore/readmore.dart';
 
+import '../../../generated/l10n.dart';
 import '../themes/app_colors.dart';
 import '../themes/app_text_style.dart';
 
@@ -17,8 +18,8 @@ class TextMoreWidget extends StatelessWidget {
       text,
       trimMode: TrimMode.Length,
       trimLength: 154,
-      trimCollapsedText: 'more',
-      trimExpandedText: 'less',
+      trimCollapsedText: S.of(context).more,
+      trimExpandedText: S.of(context).less,
       delimiter: '   ',
       style: AppTextStyle.small.copyWith(
         color: AppColors.colorSecondaryText,
