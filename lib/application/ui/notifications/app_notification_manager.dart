@@ -53,7 +53,7 @@ class AppNotificationManager {
   }
 
   static Future init({bool initScheduled = false}) async {
-    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const android = AndroidInitializationSettings('ic_notification');
     const iOS = IOSInitializationSettings();
     const settings = InitializationSettings(android: android, iOS: iOS);
 
