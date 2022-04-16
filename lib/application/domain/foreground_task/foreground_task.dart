@@ -12,8 +12,8 @@ import 'check_update_task_handler.dart';
 class ForegroundTask {
   ForegroundTask._();
 
-  static const Duration durationUpdate =
-      Duration(minutes: 1); //Duration(hours: 11);
+  static const Duration durationUpdate =  Duration(minutes: 1);
+      // Duration(hours: 11); 
 
   static Future<void> initForegroundTask() async {
     await FlutterForegroundTask.init(
@@ -27,9 +27,9 @@ class ForegroundTask {
         isSticky: true,
         visibility: NotificationVisibility.VISIBILITY_PUBLIC,
         iconData: const NotificationIconData(
-          resType: ResourceType.mipmap,
+          resType: ResourceType.drawable,
           resPrefix: ResourcePrefix.ic,
-          name: 'launcher',
+          name: 'notification',
         ),
       ),
       foregroundTaskOptions: const ForegroundTaskOptions(

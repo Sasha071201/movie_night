@@ -129,9 +129,9 @@ class CheckUpdateTaskHandler extends TaskHandler {
       }
     } else if (resultStatusCompare != 0) {
       if (locale.compareTo('ru') == 0) {
-        textUpdated = 'Статус изменился на ${newMovieDetails.status}';
+        textUpdated = 'Статус изменился на ${newMovieDetails.status ?? 'Неизвестный'}';
       } else {
-        textUpdated = 'Status changed to ${newMovieDetails.status}';
+        textUpdated = 'Status changed to ${newMovieDetails.status ?? 'Unknown'}';
       }
     } else if (videosFromDB != null &&
         videosFromDB.results.isEmpty &&
@@ -320,10 +320,10 @@ class CheckUpdateTaskHandler extends TaskHandler {
                   : 'series';
           if (locale.compareTo('ru') == 0) {
             textUpdated =
-                'Появился новый $mediaTypeString ${items[i].title}, в котором он играл ${items[i].character}';
+                'Появился новый $mediaTypeString${items[i].title ?? ''}${items[i].character != null ? ', в котором он играл ${items[i].character}' : ''}';
           } else {
             textUpdated =
-                'There was a new $mediaTypeString ${items[i].title}, in which he played ${items[i].character}';
+                'There was a new $mediaTypeString ${items[i].title ?? ''}${items[i].character != null ? ', in which he played ${items[i].character}' : ''}';
           }
         }
       }
@@ -341,10 +341,10 @@ class CheckUpdateTaskHandler extends TaskHandler {
                   : 'series';
           if (locale.compareTo('ru') == 0) {
             textUpdated =
-                'Появился новый $mediaTypeString ${items[i].title}, в котором он играл ${items[i].job}';
+                'Появился новый $mediaTypeString ${items[i].title ?? ''}${items[i].job != null ? ', в котором он был ${items[i].job}' : ''}';
           } else {
             textUpdated =
-                'There was a new $mediaTypeString ${items[i].title}, in which he was the ${items[i].job}';
+                'There was a new $mediaTypeString ${items[i].title ?? ''}${items[i].job != null ? ', in which he was the ${items[i].job}' : ''}';
           }
         }
       }
