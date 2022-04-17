@@ -57,6 +57,8 @@ class TvShowDetailsViewModel extends ChangeNotifier {
   final _complaintReviewTextController = TextEditingController();
   TextEditingController get complaintReviewTextController =>
       _complaintReviewTextController;
+  bool _isDisposed = false;
+
   Timer? _timer;
 
   final _controllerNeedUpdate = StreamController<bool>();
@@ -175,7 +177,8 @@ class TvShowDetailsViewModel extends ChangeNotifier {
         locale: _locale,
         tvShowId: tvShowId,
       );
-      await _updateTvShow(tvShowDetails);
+      state.tvShowDetails = tvShowDetails;
+      _updateTvShow(tvShowDetails);
       final tvShowImages =
           await _tvShowRepository.fetchTvShowImages(tvShowId: tvShowId);
       state.tvShowImages = tvShowImages;
@@ -225,16 +228,23 @@ class TvShowDetailsViewModel extends ChangeNotifier {
           ),
         );
       }
-
+      final tagline = await _translator.translate(
+        tvShowDetails.tagline,
+        to: _locale,
+      );
       tvShowDetails = tvShowDetails.copyWith(
         status: status.text,
         productionCountries: productionCountries,
         keywords: keywords,
+        tagline: tagline.text,
       );
     } catch (e) {
       print(e);
     }
     state.tvShowDetails = tvShowDetails;
+    if (!_isDisposed) {
+      notifyListeners();
+    }
   }
 
   void enableAdultContent() {
@@ -284,6 +294,7 @@ class TvShowDetailsViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
     _timer?.cancel();
     _streamNeedUpdateSubscription?.cancel();
     _streamNeedUpdateSubscription = null;

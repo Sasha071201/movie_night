@@ -1779,6 +1779,56 @@ class S {
       args: [],
     );
   }
+
+  /// `Tagline`
+  String get tagline {
+    return Intl.message(
+      'Tagline',
+      name: 'tagline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Forgot Password?`
+  String get forgot_password {
+    return Intl.message(
+      'Forgot Password?',
+      name: 'forgot_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send Request`
+  String get send_request {
+    return Intl.message(
+      'Send Request',
+      name: 'send_request',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset Password`
+  String get reset_password {
+    return Intl.message(
+      'Reset Password',
+      name: 'reset_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request has been sent`
+  String get request_has_been_sent {
+    return Intl.message(
+      'Request has been sent',
+      name: 'request_has_been_sent',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

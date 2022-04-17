@@ -610,7 +610,7 @@ class _ListCastWidget extends StatelessWidget {
         )
         .toList();
     final data = ListCreditsComplexData(
-      title: S.of(context).creators,
+      title: S.of(context).cast,
       list: list,
     );
     return ListCreditsComplexWidget(

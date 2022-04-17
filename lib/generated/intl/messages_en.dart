@@ -91,6 +91,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "fill_in_the_password":
             MessageLookupByLibrary.simpleMessage("Fill in the password"),
         "filter": MessageLookupByLibrary.simpleMessage("Filter"),
+        "forgot_password":
+            MessageLookupByLibrary.simpleMessage("Forgot Password?"),
         "from": MessageLookupByLibrary.simpleMessage("From"),
         "gender": MessageLookupByLibrary.simpleMessage("Gender"),
         "genres": MessageLookupByLibrary.simpleMessage("Genres"),
@@ -170,7 +172,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Release date desc"),
         "release_date_has_changed":
             MessageLookupByLibrary.simpleMessage("Release date has changed"),
+        "request_has_been_sent":
+            MessageLookupByLibrary.simpleMessage("Request has been sent"),
         "reset_filters": MessageLookupByLibrary.simpleMessage("Reset filters"),
+        "reset_password":
+            MessageLookupByLibrary.simpleMessage("Reset Password"),
         "revenue_asc": MessageLookupByLibrary.simpleMessage("Revenue asc"),
         "revenue_desc": MessageLookupByLibrary.simpleMessage("Revenue desc"),
         "reviews": MessageLookupByLibrary.simpleMessage("Reviews"),
@@ -188,6 +194,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage(
                 "See what others are currently watching at on the search page"),
         "send": MessageLookupByLibrary.simpleMessage("Send"),
+        "send_request": MessageLookupByLibrary.simpleMessage("Send Request"),
         "sent_successfully":
             MessageLookupByLibrary.simpleMessage("Sent successfully"),
         "serial_details_not_saved":
@@ -206,6 +213,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "status": MessageLookupByLibrary.simpleMessage("Status"),
         "status_changed_to":
             MessageLookupByLibrary.simpleMessage("Status changed to"),
+        "tagline": MessageLookupByLibrary.simpleMessage("Tagline"),
         "talk": MessageLookupByLibrary.simpleMessage("Talk"),
         "text_of_complaint":
             MessageLookupByLibrary.simpleMessage("Complaint text (optional)"),

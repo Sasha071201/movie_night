@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_night/application/ui/screens/reset_password/reset_password_view_model.dart';
 import 'package:movie_night/application/ui/screens/sign_up/sign_up_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +12,8 @@ import '../../widgets/elevated_button_widget.dart';
 import '../../widgets/sliver_app_bar_delegate.dart';
 import '../../widgets/text_field_widget.dart';
 
-class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class ResetPasswordScreen extends StatelessWidget {
+  const ResetPasswordScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,20 +50,14 @@ class _BodyWidget extends StatelessWidget {
               children: [
                 const SizedBox(height: 159),
                 Text(
-                  S.of(context).sign_up_label,
+                  S.of(context).reset_password,
                   style: AppTextStyle.header1,
                 ),
                 const SizedBox(height: 70),
-                const _NameTextFieldWidget(),
-                const SizedBox(height: 16),
                 const _EmailTextFiledWidget(),
-                const SizedBox(height: 16),
-                const _PasswordTextFieldWidget(),
-                const SizedBox(height: 16),
-                const _ConfirmPasswordTextFieldWidget(),
                 const Spacer(),
                 const SizedBox(height: 16),
-                const _SignUpButtonWidget(),
+                const _ResetButtonWidget(),
                 SizedBox(height: insetsBottom == 0 ? 32 : insetsBottom + 16),
               ],
             ),
@@ -73,87 +68,24 @@ class _BodyWidget extends StatelessWidget {
   }
 }
 
-class _NameTextFieldWidget extends StatelessWidget {
-  const _NameTextFieldWidget({
+class _ResetButtonWidget extends StatelessWidget {
+  const _ResetButtonWidget({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.read<SignUpViewModel>();
-    return TextFieldWidget(
-      controller: vm.nameController,
-      hintText: S.of(context).enter_your_name,
-      textCapitalization: TextCapitalization.words,
-      textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.text,
-      enableSuggestions: true,
-      maxLines: 1,
-    );
-  }
-}
-
-class _SignUpButtonWidget extends StatelessWidget {
-  const _SignUpButtonWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final vm = context.watch<SignUpViewModel>();
+    final vm = context.watch<ResetPasswordViewModel>();
     return ElevatedButtonWidget(
-      onPressed: vm.canStartAuth ? () => vm.auth(context) : null,
+      onPressed: vm.canStartAuth ? () => vm.reset(context) : null,
       backgroundColor: AppColors.colorSecondary,
       overlayColor: AppColors.colorSplash,
-      child: vm.isAuthProgress
-          ? const CircularProgressIndicator()
-          : Text(
-              S.of(context).sign_up,
-              style: AppTextStyle.button.copyWith(
-                color: AppColors.colorBackground,
-              ),
-            ),
-    );
-  }
-}
-
-class _ConfirmPasswordTextFieldWidget extends StatelessWidget {
-  const _ConfirmPasswordTextFieldWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final vm = context.read<SignUpViewModel>();
-    return TextFieldWidget(
-      controller: vm.confirmPasswordTextController,
-      hintText: S.of(context).enter_confirm_password,
-      textInputAction: TextInputAction.done,
-      obscureText: true,
-      keyboardType: TextInputType.visiblePassword,
-      onSubmitted: vm.canStartAuth ? (text) => vm.auth(context) : null,
-      enableSuggestions: true,
-      maxLines: 1,
-    );
-  }
-}
-
-class _PasswordTextFieldWidget extends StatelessWidget {
-  const _PasswordTextFieldWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final vm = context.read<SignUpViewModel>();
-    return TextFieldWidget(
-      controller: vm.passwordTextController,
-      hintText: S.of(context).enter_password,
-      textInputAction: TextInputAction.next,
-      obscureText: true,
-      keyboardType: TextInputType.visiblePassword,
-      enableSuggestions: true,
-      maxLines: 1,
+      child: vm.isAuthProgress ? const CircularProgressIndicator() : Text(
+        S.of(context).send_request,
+        style: AppTextStyle.button.copyWith(
+          color: AppColors.colorBackground,
+        ),
+      ),
     );
   }
 }
@@ -165,7 +97,7 @@ class _EmailTextFiledWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.read<SignUpViewModel>();
+    final vm = context.read<ResetPasswordViewModel>();
     return TextFieldWidget(
       controller: vm.emailTextController,
       hintText: S.of(context).enter_email,
@@ -189,7 +121,7 @@ class _AppBar extends StatelessWidget {
       floating: true,
       delegate: SliverAppBarDelegate(
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8,vertical:8 ),
           child: Row(
             children: const [
               BackButtonWidget(),

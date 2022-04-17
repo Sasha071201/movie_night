@@ -29,6 +29,8 @@ import '../screens/favorite/movies/favorite_movies_view_model.dart';
 import '../screens/favorite/tv_shows/favorite_tv_shows_view_model.dart';
 import '../screens/filter/filter_screen.dart';
 import '../screens/filter/filter_view_model.dart';
+import '../screens/reset_password/reset_password_screen.dart';
+import '../screens/reset_password/reset_password_view_model.dart';
 import '../screens/search/actors/search_actors_view_model.dart';
 import '../screens/search/movies/search_movies_view_model.dart';
 import '../screens/search/search_view_model.dart';
@@ -120,6 +122,13 @@ class ScreenFactory {
     return ChangeNotifierProvider(
       create: (context) => SignUpViewModel(context),
       child: const SignUpScreen(),
+    );
+  }
+
+  Widget makeResetPassword() {
+    return ChangeNotifierProvider(
+      create: (context) => ResetPasswordViewModel(context),
+      child: const ResetPasswordScreen(),
     );
   }
 

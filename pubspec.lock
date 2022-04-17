@@ -510,6 +510,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.3.2"
+  flutter_jailbreak_detection:
+    dependency: "direct main"
+    description:
+      name: flutter_jailbreak_detection
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.8.0"
   flutter_lints:
     dependency: "direct dev"
     description:

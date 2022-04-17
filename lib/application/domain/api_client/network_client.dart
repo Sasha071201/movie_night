@@ -26,7 +26,7 @@ class NetworkClient {
   ]) async {
     try {
       final url = _makeUri(path, urlParameters);
-      print('request');
+      // print('request');
       // print(url);
       final file =
           await NetworkCacheManager.instance.getSingleFile(url.toString());

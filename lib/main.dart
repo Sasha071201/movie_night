@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'package:movie_night/application/domain/database/database.dart';
 import 'package:movie_night/application/domain/foreground_task/foreground_task.dart';
 import 'package:movie_night/application/ui/app/app.dart';
@@ -19,6 +20,8 @@ void main() async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
+      await _checkJailbreak();
+      
       // MobileAds.instance.initialize();
       await Firebase.initializeApp();
 
@@ -61,6 +64,13 @@ void main() async {
       );
     },
   );
+}
+
+Future<void> _checkJailbreak() async {
+  bool jailbroken = await FlutterJailbreakDetection.jailbroken;
+  if (jailbroken) {
+    exit(0);
+  }
 }
 
 Future<void> _initDatabaser() async {

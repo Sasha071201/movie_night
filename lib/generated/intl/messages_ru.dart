@@ -70,10 +70,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Пусто. Напиши отзыв первым!"),
         "enter_confirm_password": MessageLookupByLibrary.simpleMessage(
             "Введите пароль для подтверждения"),
-        "enter_email": MessageLookupByLibrary.simpleMessage("Введи почту"),
+        "enter_email": MessageLookupByLibrary.simpleMessage("Введите почту"),
         "enter_movie_tv_show_person": MessageLookupByLibrary.simpleMessage(
             "Введите фильм, сериал, человека"),
-        "enter_password": MessageLookupByLibrary.simpleMessage("Введи пароль"),
+        "enter_password":
+            MessageLookupByLibrary.simpleMessage("Введите пароль"),
         "enter_your_name":
             MessageLookupByLibrary.simpleMessage("Введите ваше имя"),
         "episode": MessageLookupByLibrary.simpleMessage("Эпизод"),
@@ -92,6 +93,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "fill_in_the_password":
             MessageLookupByLibrary.simpleMessage("Заполните пароль"),
         "filter": MessageLookupByLibrary.simpleMessage("Фильтр"),
+        "forgot_password":
+            MessageLookupByLibrary.simpleMessage("Забыли пароль?"),
         "from": MessageLookupByLibrary.simpleMessage("От"),
         "gender": MessageLookupByLibrary.simpleMessage("Пол"),
         "genres": MessageLookupByLibrary.simpleMessage("Жанры"),
@@ -172,8 +175,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Дата выпуска по убыванию"),
         "release_date_has_changed":
             MessageLookupByLibrary.simpleMessage("Дата релиза изменилась"),
+        "request_has_been_sent":
+            MessageLookupByLibrary.simpleMessage("Запрос был отправлен"),
         "reset_filters":
             MessageLookupByLibrary.simpleMessage("Сбросить фильтры"),
+        "reset_password":
+            MessageLookupByLibrary.simpleMessage("Сбросить пароль"),
         "revenue_asc":
             MessageLookupByLibrary.simpleMessage("Доход по возрастанию"),
         "revenue_desc":
@@ -193,6 +200,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage(
                 "Посмотрите, что другие в данный момент смотрят на странице поиска"),
         "send": MessageLookupByLibrary.simpleMessage("Отправить"),
+        "send_request":
+            MessageLookupByLibrary.simpleMessage("Отправить запрос"),
         "sent_successfully":
             MessageLookupByLibrary.simpleMessage("Отправлено успешно"),
         "serial_details_not_saved": MessageLookupByLibrary.simpleMessage(
@@ -211,6 +220,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "status": MessageLookupByLibrary.simpleMessage("Статус"),
         "status_changed_to":
             MessageLookupByLibrary.simpleMessage("Статус изменился на"),
+        "tagline": MessageLookupByLibrary.simpleMessage("Слоган"),
         "talk": MessageLookupByLibrary.simpleMessage("Ток-шоу"),
         "text_of_complaint": MessageLookupByLibrary.simpleMessage(
             "Текст жалобы (необязательно)"),

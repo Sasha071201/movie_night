@@ -29,7 +29,7 @@ class _HomeTvShowsScreenState extends State<HomeTvShowsScreen> with AutomaticKee
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final mapTvShows =
+    final tvShowsWithHeader =
         context.select((HomeTvShowsViewModel vm) => vm.state.tvShowsWithHeader);
     return Stack(
       children: [
@@ -47,7 +47,7 @@ class _HomeTvShowsScreenState extends State<HomeTvShowsScreen> with AutomaticKee
             const _TvShowsWithCategoryWidget(),
           ],
         ),
-        if (mapTvShows.isEmpty)
+        if (tvShowsWithHeader.isEmpty)
           const Center(
             child: CircularProgressIndicator(
               color: AppColors.colorMainText,
@@ -140,7 +140,7 @@ class _HeaderPageViewWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           return _HeaderTvShowsItemWidget(index: index);
         },
-        autoplay: true,
+        autoplay: headerTvShows.isNotEmpty ? true : false,
         onIndexChanged: vm.onIndexChanged,
         itemCount: headerTvShows.length,
         viewportFraction: 302 / 390,

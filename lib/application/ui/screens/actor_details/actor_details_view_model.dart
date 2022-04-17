@@ -24,7 +24,6 @@ import '../../widgets/dialog_widget.dart';
 class ActorDetailsState {
   ActorDetails? actorDetails;
   ActorImages? actorImages;
-  ActorTaggedImages? actorTaggedImages;
   bool showAdultContent;
   bool isFavorite;
   bool isLoaded;
@@ -33,7 +32,6 @@ class ActorDetailsState {
   ActorDetailsState({
     this.actorDetails,
     this.actorImages,
-    this.actorTaggedImages,
     this.showAdultContent = false,
     this.isFavorite = false,
     this.isLoaded = false,
@@ -56,6 +54,8 @@ class ActorDetailsViewModel extends ChangeNotifier {
   final _complaintReviewTextController = TextEditingController();
   TextEditingController get complaintReviewTextController =>
       _complaintReviewTextController;
+  bool _isDisposed = false;
+
   Timer? _timer;
 
   final _controllerNeedUpdate = StreamController<bool>();
@@ -82,6 +82,44 @@ class ActorDetailsViewModel extends ChangeNotifier {
     connectReviewsStream();
     state.isLoaded = true;
     notifyListeners();
+    _sort();
+  }
+
+  void _sort() {
+    final cast = state.actorDetails?.combinedCredits.cast;
+    if (cast != null) {
+      state.actorDetails?.combinedCredits.cast = cast
+        ..sort((a, b) {
+          final date1 = a.releaseDate;
+          final date2 = b.releaseDate;
+          if (date1 == null && date2 == null) {
+            return 0;
+          } else if (date1 == null) {
+            return 1;
+          } else if (date2 == null) {
+            return -1;
+          }
+          return date2.compareTo(date1);
+        });
+      notifyListeners();
+    }
+    final crew = state.actorDetails?.combinedCredits.crew;
+    if (crew != null) {
+      state.actorDetails?.combinedCredits.crew = crew
+        ..sort((a, b) {
+          final date1 = a.releaseDate;
+          final date2 = b.releaseDate;
+          if (date1 == null && date2 == null) {
+            return 0;
+          } else if (date1 == null) {
+            return 1;
+          } else if (date2 == null) {
+            return -1;
+          }
+          return date2.compareTo(date1);
+        });
+      notifyListeners();
+    }
   }
 
   void _listenNeedUpdate() {
@@ -96,6 +134,7 @@ class ActorDetailsViewModel extends ChangeNotifier {
           connectReviewsStream();
           state.isLoaded = true;
           notifyListeners();
+          _sort();
         });
       }
     });
@@ -167,46 +206,11 @@ class ActorDetailsViewModel extends ChangeNotifier {
         locale: _locale,
         actorId: _actorId,
       );
-      try {
-        final country = await _translator
-            .translate(actorDetails.placeOfBirth ?? '', to: _locale);
-        actorDetails = actorDetails.copyWith(placeOfBirth: country.text);
-      } catch (e) {
-        print(e);
-      }
+      _translate(actorDetails);
+      state.actorDetails = actorDetails;
       final actorImages =
           await _actorRepository.fetchActorImages(actorId: _actorId);
-      final actorTaggedImages = await _actorRepository.fetchActorTaggedImages(
-          actorId: _actorId, page: 1);
-      state.actorDetails = actorDetails;
-      actorDetails.combinedCredits.cast = actorDetails.combinedCredits.cast
-        ..sort((a, b) {
-          final date1 = a.releaseDate;
-          final date2 = b.releaseDate;
-          if (date1 == null && date2 == null) {
-            return 0;
-          } else if (date1 == null) {
-            return 1;
-          } else if (date2 == null) {
-            return -1;
-          }
-          return date2.compareTo(date1);
-        });
-      actorDetails.combinedCredits.crew = actorDetails.combinedCredits.crew
-        ..sort((a, b) {
-          final date1 = a.releaseDate;
-          final date2 = b.releaseDate;
-          if (date1 == null && date2 == null) {
-            return 0;
-          } else if (date1 == null) {
-            return 1;
-          } else if (date2 == null) {
-            return -1;
-          }
-          return date2.compareTo(date1);
-        });
       state.actorImages = actorImages;
-      state.actorTaggedImages = actorTaggedImages;
       notifyListeners();
     } on ApiClientException catch (e) {
       _controllerNeedUpdate.add(true);
@@ -217,6 +221,20 @@ class ActorDetailsViewModel extends ChangeNotifier {
       );
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> _translate(ActorDetails actorDetails) async {
+    try {
+      final country = await _translator
+          .translate(actorDetails.placeOfBirth ?? '', to: _locale);
+      actorDetails = actorDetails.copyWith(placeOfBirth: country.text);
+    } catch (e) {
+      print(e);
+    }
+    state.actorDetails = actorDetails;
+    if (!_isDisposed) {
+      notifyListeners();
     }
   }
 
@@ -249,6 +267,7 @@ class ActorDetailsViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
     _timer?.cancel();
     _streamNeedUpdateSubscription?.cancel();
     _streamNeedUpdateSubscription = null;
