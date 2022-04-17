@@ -52,8 +52,8 @@ class MainViewModel extends ChangeNotifier {
       context,
     ); //TODO delete this on release
     _timer?.cancel();
-    _timer = Timer.periodic(//ForegroundTask.durationUpdate,
-      const Duration(seconds: 30),
+    _timer = Timer.periodic(ForegroundTask.durationUpdate,
+      // const Duration(seconds: 30),
       (timer) {
         ForegroundTask.startForegroundTask(context);
       },

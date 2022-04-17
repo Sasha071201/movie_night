@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_night/generated/l10n.dart';
 
 import '../../themes/app_colors.dart';
 import '../../themes/app_text_style.dart';
@@ -17,7 +18,7 @@ class TaglineWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Tagline',
+                S.of(context).tagline,
                 style: AppTextStyle.header3,
               ),
               const SizedBox(height: 8),

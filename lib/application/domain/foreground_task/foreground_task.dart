@@ -12,8 +12,8 @@ import 'check_update_task_handler.dart';
 class ForegroundTask {
   ForegroundTask._();
 
-  static const Duration durationUpdate =  Duration(minutes: 1);
-      // Duration(hours: 11); 
+  static const Duration durationUpdate = // Duration(minutes: 1);
+      Duration(hours: 11); 
 
   static Future<void> initForegroundTask() async {
     await FlutterForegroundTask.init(

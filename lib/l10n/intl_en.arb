@@ -171,5 +171,10 @@
     "text_of_complaint":"Complaint text (optional)",
     "send":"Send",
     "sent_successfully":"Sent successfully",
-    "something_went_wrong":"Something went wrong"
+    "something_went_wrong":"Something went wrong",
+    "tagline":"Tagline",
+    "forgot_password":"Forgot Password?",
+    "send_request":"Send Request",
+    "reset_password":"Reset Password",
+    "request_has_been_sent":"Request has been sent"
 }

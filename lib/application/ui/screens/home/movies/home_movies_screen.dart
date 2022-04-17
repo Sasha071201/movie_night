@@ -29,7 +29,7 @@ class _HomeMoviesScreenState extends State<HomeMoviesScreen> with AutomaticKeepA
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final mapMovies =
+    final moviesWithHeader =
         context.select((HomeMoviesViewModel vm) => vm.state.moviesWithHeader);
     return Stack(
       children: [
@@ -47,7 +47,7 @@ class _HomeMoviesScreenState extends State<HomeMoviesScreen> with AutomaticKeepA
             const _MoviesWithCategoryWidget(),
           ],
         ),
-        if (mapMovies.isEmpty)
+        if (moviesWithHeader.isEmpty)
           const Center(
             child: CircularProgressIndicator(
               color: AppColors.colorMainText,
@@ -144,7 +144,7 @@ class _HeaderPageViewWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           return _HeaderMovieItemWidget(index: index);
         },
-        autoplay: true,
+        autoplay: headerMovies.isNotEmpty ? true : false,
         onIndexChanged: vm.onIndexChanged,
         itemCount: headerMovies.length,
         viewportFraction: 302 / 390,

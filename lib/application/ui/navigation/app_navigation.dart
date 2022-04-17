@@ -13,6 +13,7 @@ abstract class Screens {
   static const aboutMe = "/about_me";
   static const subscription = "/subscription";
   static const signUp = "/sign_in/sign_up";
+  static const resetPassword = "/sign_in/reset_password";
   static const viewAllMovies = "/view_all_movies";
   static const viewFavorite = "/view_favorite";
   static const viewSearchResult = "/view_search_result";
@@ -37,6 +38,8 @@ class AppNavigation {
         return _getScreenRoute(_screenFactory.makeInitial());
       case Screens.signUp:
         return _getScreenRoute(_screenFactory.makeSignUp());
+      case Screens.resetPassword:
+        return _getScreenRoute(_screenFactory.makeResetPassword());
       case Screens.aboutMe:
         return _getScreenRoute(_screenFactory.makeAboutMe());
       case Screens.subscription:

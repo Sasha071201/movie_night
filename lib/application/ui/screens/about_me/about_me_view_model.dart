@@ -2,11 +2,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:movie_night/application/repository/account_repository.dart';
-import 'package:movie_night/application/ui/themes/app_colors.dart';
 import 'package:movie_night/application/utils/image_helper.dart';
-import 'package:movie_night/generated/l10n.dart';
 import 'package:path/path.dart' as path;
 
 class AboutMeViewModel extends ChangeNotifier {

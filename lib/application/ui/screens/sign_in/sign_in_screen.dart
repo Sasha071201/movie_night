@@ -55,6 +55,7 @@ class _BodyWidget extends StatelessWidget {
                 const _EmailTextFieldWidget(),
                 const SizedBox(height: 16),
                 const _PasswordTextFieldWidget(),
+                const ForgotPasswordWidget(),
                 const Spacer(),
                 const SizedBox(height: 16),
                 const _AuthButtonWigdet(),
@@ -78,6 +79,28 @@ class _BodyWidget extends StatelessWidget {
   }
 }
 
+class ForgotPasswordWidget extends StatelessWidget {
+  const ForgotPasswordWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: TextButtonWidget(
+        child: Text(
+          S.of(context).forgot_password,
+          style: AppTextStyle.button.copyWith(
+            color: AppColors.colorSecondary,
+          ),
+        ),
+        onPressed: () => Navigator.of(context).pushNamed(Screens.resetPassword),
+      ),
+    );
+  }
+}
+
 class _AuthButtonWigdet extends StatelessWidget {
   const _AuthButtonWigdet({
     Key? key,
@@ -90,12 +113,14 @@ class _AuthButtonWigdet extends StatelessWidget {
       onPressed: vm.canStartAuth ? () => vm.auth(context) : null,
       backgroundColor: AppColors.colorSecondary,
       overlayColor: AppColors.colorSplash,
-      child: vm.isAuthProgress ? const CircularProgressIndicator() :  Text(
-        S.of(context).sign_in,
-        style: AppTextStyle.button.copyWith(
-          color: AppColors.colorBackground,
-        ),
-      ),
+      child: vm.isAuthProgress
+          ? const CircularProgressIndicator()
+          : Text(
+              S.of(context).sign_in,
+              style: AppTextStyle.button.copyWith(
+                color: AppColors.colorBackground,
+              ),
+            ),
     );
   }
 }

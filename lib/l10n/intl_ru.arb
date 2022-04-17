@@ -3,8 +3,8 @@
     "sign_in_label":"Вход",
     "sign_up":"Зарегистрироваться",
     "sign_up_label":"Регистрация",
-    "enter_email":"Введи почту",
-    "enter_password":"Введи пароль",
+    "enter_email":"Введите почту",
+    "enter_password":"Введите пароль",
     "fill_in_the_mail":"Заполните почту",
     "fill_in_the_password":"Заполните пароль",
     "passwords_do_not_match":"Пароли не совпадают",
@@ -171,5 +171,10 @@
     "text_of_complaint":"Текст жалобы (необязательно)",
     "send":"Отправить",
     "sent_successfully":"Отправлено успешно",
-    "something_went_wrong":"Что-то пошло не так"
+    "something_went_wrong":"Что-то пошло не так",
+    "tagline":"Слоган",
+    "forgot_password":"Забыли пароль?",
+    "send_request":"Отправить запрос",
+    "reset_password":"Сбросить пароль",
+    "request_has_been_sent":"Запрос был отправлен"
 }

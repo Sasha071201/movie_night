@@ -100,7 +100,9 @@ class MovieRepository {
     return ConnectivityHelper.connectivity<MovieDetails>(
       onConnectionYes: () async {
         return _movieApiClient.fetchMovieDetails(
-            locale: locale, movieId: movieId);
+          locale: locale,
+          movieId: movieId,
+        );
       },
       onConnectionNo: () async {
         try {

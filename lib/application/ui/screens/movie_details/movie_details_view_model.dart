@@ -58,6 +58,7 @@ class MovieDetailsViewModel extends ChangeNotifier {
   final _complaintReviewTextController = TextEditingController();
   TextEditingController get complaintReviewTextController =>
       _complaintReviewTextController;
+  bool _isDisposed = false;
 
   Timer? _timer;
 
@@ -121,7 +122,8 @@ class MovieDetailsViewModel extends ChangeNotifier {
         locale: _locale,
         movieId: movieId,
       );
-      await _updateMovie(movieDetails);
+      state.movieDetails = movieDetails;
+      _updateMovie(movieDetails);
       final movieImages =
           await _movieRepository.fetchMovieImages(movieId: movieId);
       state.movieImages = movieImages;
@@ -169,15 +171,24 @@ class MovieDetailsViewModel extends ChangeNotifier {
           movieDetails.keywords!.keywords[i].copyWith(name: keywordText.text),
         );
       }
+
+      final tagline = await _translator.translate(
+        movieDetails.tagline ?? '',
+        to: _locale,
+      );
       movieDetails = movieDetails.copyWith(
         status: status.text,
         productionCountries: productionCountries,
         keywords: keywords,
+        tagline: tagline.text,
       );
     } catch (e) {
       print(e);
     }
     state.movieDetails = movieDetails;
+    if (!_isDisposed) {
+      notifyListeners();
+    }
   }
 
   void enableAdultContent() {
@@ -291,6 +302,7 @@ class MovieDetailsViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
     _timer?.cancel();
     _streamNeedUpdateSubscription?.cancel();
     _streamNeedUpdateSubscription = null;
