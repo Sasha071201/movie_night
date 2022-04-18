@@ -96,9 +96,11 @@ class _SaveButtonWidget extends StatelessWidget {
                 color: AppColors.colorPrimary,
               ),
             )
-          : const CircularProgressIndicator(
-              color: AppColors.colorPrimary,
-            ),
+          : const RepaintBoundary(
+            child: CircularProgressIndicator(
+                color: AppColors.colorPrimary,
+              ),
+          ),
       onPressed: !isLoadingSave ? vm.save : null,
       backgroundColor: AppColors.colorSecondary,
       overlayColor: AppColors.colorSplash,

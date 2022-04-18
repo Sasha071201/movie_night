@@ -109,8 +109,10 @@ class _ActorDetailsScreenState extends State<ActorDetailsScreen> {
               ],
             )
           : const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.colorMainText,
+              child: RepaintBoundary(
+                child: CircularProgressIndicator(
+                  color: AppColors.colorMainText,
+                ),
               ),
             ),
     );

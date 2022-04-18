@@ -95,8 +95,10 @@ class _ListMoviesWidget extends StatelessWidget {
                 ),
               )
         : const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.colorMainText,
+            child: RepaintBoundary(
+              child: CircularProgressIndicator(
+                color: AppColors.colorMainText,
+              ),
             ),
           );
   }

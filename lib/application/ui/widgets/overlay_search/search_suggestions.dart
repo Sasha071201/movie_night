@@ -205,8 +205,6 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
   }
 
   void updateSuggestions(String text) async {
-    _isLoading = true;
-    setState(() {});
     _debounce?.cancel();
     _debounce = Timer(widget.debounceDuration, () async {
       final searchText = text.isNotEmpty ? text : null;
@@ -215,6 +213,8 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
         setState(() {});
         return;
       }
+      _isLoading = true;
+      setState(() {});
       _suggestions = (await widget.suggestions(text)).results;
       _previousAsyncSearchText = text;
       _isLoading = false;

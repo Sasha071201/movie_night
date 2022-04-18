@@ -304,13 +304,10 @@ class AccountRepository {
             }
             break;
         }
-        print('Был удален id: $imdbId');
       }
       return;
     } catch (e) {
-      print('Нет медиа для удаления');
     }
-    print('Ни один медиа не был удален');
   }
 
   Future<List<TvShow>> fetchFavoriteTvShows(
@@ -482,16 +479,13 @@ class AccountRepository {
           locale: locale,
           movieId: movie.id!,
         );
-        print('Фильм новый');
         await _insertMovieToDB(movieDetails, type);
         return;
       } else {
         return;
       }
     } catch (e) {
-      print(e);
     }
-    print('Фильм новый');
     final movieDetails = await _movieApiClient.fetchMovieDetails(
       locale: locale,
       movieId: movie.id!,
@@ -530,7 +524,6 @@ class AccountRepository {
           break;
       }
       if (tvShowFromDB == null) {
-        print('Сериал новый');
         final tvShowDetails = await _tvShowApiClient.fetchTvShowDetails(
           locale: locale,
           tvShowId: tvShow.id!,
@@ -541,9 +534,7 @@ class AccountRepository {
         return;
       }
     } catch (e) {
-      print(e);
     }
-    print('Сериал новый');
     final tvShowDetails = await _tvShowApiClient.fetchTvShowDetails(
       locale: locale,
       tvShowId: tvShow.id!,
@@ -576,7 +567,6 @@ class AccountRepository {
           break;
       }
       if (personFromDB == null) {
-        print('Актер новый');
         final personDetails = await _actorApiClient.fetchActorDetails(
           locale: locale,
           actorId: person.id!,
@@ -587,9 +577,7 @@ class AccountRepository {
         return;
       }
     } catch (e) {
-      print(e);
     }
-    print('Актер новый');
     final personDetails = await _actorApiClient.fetchActorDetails(
       locale: locale,
       actorId: person.id!,

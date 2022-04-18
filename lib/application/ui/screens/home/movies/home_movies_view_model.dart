@@ -93,7 +93,6 @@ class HomeMoviesViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
-      print(e);
     }
   }
 
@@ -112,7 +111,6 @@ class HomeMoviesViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
-      print(e);
     }
     state.isLoadingProgress = false;
     notifyListeners();

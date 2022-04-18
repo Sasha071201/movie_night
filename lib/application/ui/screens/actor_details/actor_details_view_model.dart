@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
-import 'package:movie_night/application/domain/entities/actor/actor_tagged_images.dart';
 import 'package:movie_night/application/repository/account_repository.dart';
 import 'package:translator/translator.dart';
 
@@ -220,7 +219,6 @@ class ActorDetailsViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
-      print(e);
     }
   }
 
@@ -230,7 +228,6 @@ class ActorDetailsViewModel extends ChangeNotifier {
           .translate(actorDetails.placeOfBirth ?? '', to: _locale);
       actorDetails = actorDetails.copyWith(placeOfBirth: country.text);
     } catch (e) {
-      print(e);
     }
     state.actorDetails = actorDetails;
     if (!_isDisposed) {

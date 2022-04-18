@@ -7,8 +7,6 @@ import 'package:image_cropper/image_cropper.dart';
 import '../../generated/l10n.dart';
 import '../ui/themes/app_colors.dart';
 
-import 'package:path_provider/path_provider.dart' as path;
-
 class ImageHelper {
   ImageHelper._();
 

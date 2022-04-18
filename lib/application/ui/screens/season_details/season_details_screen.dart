@@ -53,8 +53,10 @@ class _SeasonDetailsScreenState extends State<SeasonDetailsScreen> {
                 ],
               )
             : const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.colorMainText,
+                child: RepaintBoundary(
+                  child: CircularProgressIndicator(
+                    color: AppColors.colorMainText,
+                  ),
                 ),
               ),
       ),

@@ -43,8 +43,10 @@ class ReviewTextFieldWidget extends StatelessWidget {
                   size: 32,
                 ),
               )
-            : const CircularProgressIndicator(
-                color: AppColors.colorSecondary,
+            : const RepaintBoundary(
+                child: CircularProgressIndicator(
+                  color: AppColors.colorSecondary,
+                ),
               ),
       ],
     );

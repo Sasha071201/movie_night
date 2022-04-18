@@ -48,12 +48,8 @@ class MainViewModel extends ChangeNotifier {
 
   void _initNotification() {
     final context = scaffoldKey!.currentState!.context;
-    ForegroundTask.startForegroundTask(
-      context,
-    ); //TODO delete this on release
     _timer?.cancel();
     _timer = Timer.periodic(ForegroundTask.durationUpdate,
-      // const Duration(seconds: 30),
       (timer) {
         ForegroundTask.startForegroundTask(context);
       },

@@ -74,7 +74,6 @@ class ForegroundTask {
             });
           } catch (e) {
             completer.completeError(e);
-            print(e);
             rethrow;
           }
           await completer.future;

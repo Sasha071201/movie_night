@@ -39,9 +39,11 @@ class FilterableList extends StatelessWidget {
       height: maxListHeight,
       child: loading
           ? const Center(
-              child: CircularProgressIndicator(
-              color: AppColors.colorMainText,
-            ))
+              child: RepaintBoundary(
+                child: CircularProgressIndicator(
+                color: AppColors.colorMainText,
+                          ),
+              ))
           : items.isEmpty
               ? Material(
                 color: Colors.transparent,

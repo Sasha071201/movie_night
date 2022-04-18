@@ -42,8 +42,10 @@ class _FavoriteTvShowsScreenState extends State<FavoriteTvShowsScreen>
         ),
         if (!isLoaded)
           const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.colorMainText,
+            child: RepaintBoundary(
+              child: CircularProgressIndicator(
+                color: AppColors.colorMainText,
+              ),
             ),
           ),
       ],

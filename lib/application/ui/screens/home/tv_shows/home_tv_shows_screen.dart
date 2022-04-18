@@ -49,8 +49,10 @@ class _HomeTvShowsScreenState extends State<HomeTvShowsScreen> with AutomaticKee
         ),
         if (tvShowsWithHeader.isEmpty)
           const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.colorMainText,
+            child: RepaintBoundary(
+              child: CircularProgressIndicator(
+                color: AppColors.colorMainText,
+              ),
             ),
           ),
       ],
@@ -88,8 +90,10 @@ class _TvShowsWithCategoryWidget extends StatelessWidget {
                   height: 8,
                 ),
                 const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.colorMainText,
+                  child: RepaintBoundary(
+                    child: CircularProgressIndicator(
+                      color: AppColors.colorMainText,
+                    ),
                   ),
                 ),
                 const SizedBox(

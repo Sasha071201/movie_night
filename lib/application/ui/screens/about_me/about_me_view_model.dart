@@ -58,7 +58,6 @@ class AboutMeViewModel extends ChangeNotifier {
         }
       }
     } catch (e) {
-      print(e);
     }
   }
 

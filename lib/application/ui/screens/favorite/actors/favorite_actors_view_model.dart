@@ -9,7 +9,6 @@ import '../../../../domain/api_client/api_client_exception.dart';
 import '../../../../domain/connectivity/app_connectivity_reactor.dart';
 import '../../../../repository/account_repository.dart';
 import '../../../themes/app_colors.dart';
-import '../../../themes/app_text_style.dart';
 import '../../../widgets/dialog_widget.dart';
 import '../../../widgets/vertical_widgets_with_header/actors_with_header_widget.dart';
 
@@ -129,7 +128,6 @@ class FavoriteActorsViewModel extends ChangeNotifier {
         );
       }
     } catch (e) {
-      print(e);
     }
     final newActors = List<ActorWithHeaderData>.from(state.actorsWithHeader);
     newActors.addAll(tempActors);

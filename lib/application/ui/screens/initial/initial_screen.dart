@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:movie_night/application/ui/factories/screen_factory.dart';
 import 'package:movie_night/application/ui/screens/initial/initial_view_model.dart';
 import 'package:movie_night/application/ui/screens/loader/loader_screen.dart';
-import 'package:movie_night/application/ui/screens/main/main_screen.dart';
 import 'package:movie_night/application/ui/screens/sign_in/sign_in_screen.dart';
 import 'package:provider/provider.dart';
 

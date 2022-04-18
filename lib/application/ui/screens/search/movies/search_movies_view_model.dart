@@ -98,7 +98,6 @@ class SearchMoviesViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
-      print(e);
     }
     state.isLoadingProgress = false;
     notifyListeners();

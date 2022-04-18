@@ -42,8 +42,10 @@ class _FavoriteMoviesScreenState extends State<FavoriteMoviesScreen>
         ),
         if (!isLoaded)
           const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.colorMainText,
+            child: RepaintBoundary(
+              child: CircularProgressIndicator(
+                color: AppColors.colorMainText,
+              ),
             ),
           ),
       ],

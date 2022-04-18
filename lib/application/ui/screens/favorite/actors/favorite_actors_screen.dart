@@ -42,8 +42,10 @@ class _FavoriteActorsScreenState extends State<FavoriteActorsScreen> with Automa
         ),
         if (!isLoaded)
           const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.colorMainText,
+            child: RepaintBoundary(
+              child: CircularProgressIndicator(
+                color: AppColors.colorMainText,
+              ),
             ),
           ),
       ],
