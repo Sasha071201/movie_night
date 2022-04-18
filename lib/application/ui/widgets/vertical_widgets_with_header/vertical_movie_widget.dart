@@ -28,7 +28,7 @@ class VerticalMovieWidget extends StatelessWidget {
     final rating = (movie.voteAverage! * 10).toInt();
     final text = rating == 0 ? 'NR' : '$rating';
     return SizedBox(
-      width: 130,
+      // width: 130,
       child: InkWellMaterialWidget(
         onTap: () async {
           try {
@@ -45,17 +45,20 @@ class VerticalMovieWidget extends StatelessWidget {
           children: [
             Stack(
               children: [
-                CachedNetworkImageWidget(
-                  height: 170,
-                  imageUrl: ImageDownloader.imageUrl(movie.posterPath ?? ''),
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
+                AspectRatio(
+                  aspectRatio: 130 / 190,
+                  child: CachedNetworkImageWidget(
+                    // height: 170,
+                    imageUrl: ImageDownloader.imageUrl(movie.posterPath ?? ''),
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius:
+                            BorderRadius.circular(AppDimensions.radius5),
                       ),
-                      borderRadius:
-                          BorderRadius.circular(AppDimensions.radius5),
                     ),
                   ),
                 ),

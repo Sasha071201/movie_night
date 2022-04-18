@@ -106,7 +106,7 @@ class _SignUpButtonWidget extends StatelessWidget {
       backgroundColor: AppColors.colorSecondary,
       overlayColor: AppColors.colorSplash,
       child: vm.isAuthProgress
-          ? const CircularProgressIndicator()
+          ? const RepaintBoundary(child: CircularProgressIndicator())
           : Text(
               S.of(context).sign_up,
               style: AppTextStyle.button.copyWith(

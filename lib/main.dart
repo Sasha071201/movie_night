@@ -9,6 +9,7 @@ import 'package:movie_night/application/domain/foreground_task/foreground_task.d
 import 'package:movie_night/application/ui/app/app.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:device_preview/device_preview.dart';
 
 import 'application/ui/notifications/app_notification_manager.dart';
 
@@ -21,7 +22,7 @@ void main() async {
       WidgetsFlutterBinding.ensureInitialized();
 
       await _checkJailbreak();
-      
+
       // MobileAds.instance.initialize();
       await Firebase.initializeApp();
 
@@ -43,7 +44,6 @@ void main() async {
             reason: 'Error HttpException: ${errorDetails.exception}',
           );
         } else if (errorDetails.exception is SocketException) {
-          print('help');
         } else {
           await FirebaseCrashlytics.instance.recordError(
             errorDetails.exception,
@@ -54,7 +54,12 @@ void main() async {
       };
 
       const app = App();
-      runApp(app);
+      runApp(
+        DevicePreview(
+          enabled: true,
+          builder: (context) => app,
+        ),
+      );
     },
     (exception, stackTrace) async {
       await FirebaseCrashlytics.instance.recordError(

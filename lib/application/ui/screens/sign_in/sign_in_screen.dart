@@ -114,7 +114,7 @@ class _AuthButtonWigdet extends StatelessWidget {
       backgroundColor: AppColors.colorSecondary,
       overlayColor: AppColors.colorSplash,
       child: vm.isAuthProgress
-          ? const CircularProgressIndicator()
+          ? const RepaintBoundary(child: CircularProgressIndicator())
           : Text(
               S.of(context).sign_in,
               style: AppTextStyle.button.copyWith(

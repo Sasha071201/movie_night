@@ -6,7 +6,6 @@ import 'package:movie_night/application/domain/api_client/api_client_exception.d
 import 'package:movie_night/application/domain/connectivity/app_connectivity_reactor.dart';
 import 'package:movie_night/application/ui/screens/view_favorite/view_favorite_view_model.dart';
 import 'package:movie_night/application/ui/themes/app_colors.dart';
-import 'package:movie_night/application/ui/themes/app_text_style.dart';
 import 'package:movie_night/application/ui/widgets/dialog_widget.dart';
 
 import '../../../../../generated/l10n.dart';
@@ -148,7 +147,6 @@ class FavoriteMoviesViewModel extends ChangeNotifier {
         );
       }
     } catch (e) {
-      print(e);
     }
     final newMovies = List<MovieWithHeaderData>.from(state.moviesWithHeader);
     newMovies.addAll(tempMovies);

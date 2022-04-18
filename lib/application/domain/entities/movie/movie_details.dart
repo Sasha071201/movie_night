@@ -115,6 +115,7 @@ class MovieDetails {
     ExternalIds? externalIds,
     Keywords? keywords,
     MoviesRecommendations? recommendations,
+    MoviesSimilar? similar,
   }) {
     return MovieDetails(
       adult: adult ?? this.adult,
@@ -147,6 +148,7 @@ class MovieDetails {
       externalIds: externalIds ?? this.externalIds,
       keywords: keywords ?? this.keywords,
       recommendations: recommendations ?? this.recommendations,
+      similar: similar ?? this.similar,
     );
   }
 }

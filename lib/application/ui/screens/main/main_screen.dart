@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:movie_night/application/ui/screens/home/home_screen.dart';
 import 'package:movie_night/application/ui/screens/profile/profile_screen.dart';
 import 'package:movie_night/application/ui/screens/search/search_screen.dart';
-import 'package:movie_night/application/ui/widgets/bottom_navigation_bar/main_bottom_navigation_bar_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../../widgets/bottom_navigation_bar/main_bottom_navigation_bar_2_widget.dart';
 import '../favorite/favotite_screen.dart';
 import 'main_view_model.dart';
 
@@ -41,7 +41,7 @@ class _MainScreenState extends State<MainScreen> {
           body: const SafeArea(
             child: _BodyWidget(),
           ),
-          bottomNavigationBar: const MainBottomNavigationBarWidget(),
+          bottomNavigationBar: const MainBottomNavigationBar2Widget(),
         ),
       ),
     );

@@ -191,7 +191,6 @@ class TvShowDetailsViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
-      print(e);
     }
   }
 
@@ -199,7 +198,12 @@ class TvShowDetailsViewModel extends ChangeNotifier {
     try {
       final status =
           await _translator.translate(tvShowDetails.status, to: _locale);
-
+      tvShowDetails = tvShowDetails.copyWith(
+        status: status.text,
+      );
+    } catch (e) {
+    }
+    try {
       final productionCountries = <ProductionCountrie>[];
       final productionCountriesLength =
           tvShowDetails.productionCountries.length;
@@ -214,7 +218,12 @@ class TvShowDetailsViewModel extends ChangeNotifier {
           ),
         );
       }
-
+      tvShowDetails = tvShowDetails.copyWith(
+        productionCountries: productionCountries,
+      );
+    } catch (e) {
+    }
+    try {
       final keywords = Keywords(keywords: []);
       final keywordsLength = tvShowDetails.keywords.keywords?.length ?? 0;
       for (var i = 0; i < keywordsLength; i++) {
@@ -228,18 +237,20 @@ class TvShowDetailsViewModel extends ChangeNotifier {
           ),
         );
       }
+      tvShowDetails = tvShowDetails.copyWith(
+        keywords: keywords,
+      );
+    } catch (e) {
+    }
+    try {
       final tagline = await _translator.translate(
         tvShowDetails.tagline,
         to: _locale,
       );
       tvShowDetails = tvShowDetails.copyWith(
-        status: status.text,
-        productionCountries: productionCountries,
-        keywords: keywords,
         tagline: tagline.text,
       );
     } catch (e) {
-      print(e);
     }
     state.tvShowDetails = tvShowDetails;
     if (!_isDisposed) {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -108,7 +109,7 @@ class ViewMoviesViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
     state.isLoadingProgress = false;
     notifyListeners();

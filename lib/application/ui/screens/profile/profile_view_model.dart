@@ -4,8 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:movie_night/application/domain/api_client/api_client_exception.dart';
 import 'package:movie_night/application/repository/auth_repository.dart';
 import 'package:movie_night/application/ui/navigation/app_navigation.dart';
-import 'package:movie_night/application/ui/screens/main/main_view_model.dart';
-import 'package:provider/provider.dart';
 
 import '../../../repository/account_repository.dart';
 import '../../widgets/dialog_widget.dart';

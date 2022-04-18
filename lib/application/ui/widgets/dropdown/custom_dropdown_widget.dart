@@ -51,7 +51,6 @@ class _CustomDropdownWidgetState<T> extends State<CustomDropdownWidget<T>>
   int _currentIndex = -1;
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
-  late Animation<double> _rotateAnimation;
   late ScrollController _scrollController;
 
   @override
@@ -64,12 +63,6 @@ class _CustomDropdownWidgetState<T> extends State<CustomDropdownWidget<T>>
     _expandAnimation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
-    );
-    _rotateAnimation = Tween(begin: 0.0, end: 0.5).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
     );
   }
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movie_night/application/ui/screens/reset_password/reset_password_view_model.dart';
-import 'package:movie_night/application/ui/screens/sign_up/sign_up_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
@@ -80,7 +79,7 @@ class _ResetButtonWidget extends StatelessWidget {
       onPressed: vm.canStartAuth ? () => vm.reset(context) : null,
       backgroundColor: AppColors.colorSecondary,
       overlayColor: AppColors.colorSplash,
-      child: vm.isAuthProgress ? const CircularProgressIndicator() : Text(
+      child: vm.isAuthProgress ? const RepaintBoundary(child: CircularProgressIndicator()) : Text(
         S.of(context).send_request,
         style: AppTextStyle.button.copyWith(
           color: AppColors.colorBackground,

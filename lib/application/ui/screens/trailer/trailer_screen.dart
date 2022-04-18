@@ -14,6 +14,19 @@ class TrailerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final _controller = context.read<TrailerViewModel>().controller;
     final player = YoutubePlayer(
+      progressIndicatorColor: AppColors.colorSecondary,
+      progressColors: const ProgressBarColors(
+        handleColor: AppColors.colorSecondary,
+        playedColor: AppColors.colorSecondary,
+      ),
+      actionsPadding: const EdgeInsets.only(
+        left: 16,
+        right: 16,
+        bottom: 8,
+      ),
+      onEnded: (meta) {
+        _controller.toggleFullScreenMode();
+      },
       controller: _controller,
       showVideoProgressIndicator: true,
     );

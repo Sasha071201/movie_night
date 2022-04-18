@@ -1,7 +1,6 @@
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 
-import 'package:movie_night/application/domain/api_client/media_type.dart';
 import 'package:movie_night/application/ui/widgets/inkwell_material_widget.dart';
 
 import '../../constants/app_dimensions.dart';

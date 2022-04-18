@@ -11,7 +11,6 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../../../generated/l10n.dart';
 import '../../themes/app_text_style.dart';
-import '../../widgets/back_button_widget.dart';
 import 'filter_view_model.dart';
 
 class FilterScreen extends StatefulWidget {
@@ -53,9 +52,7 @@ class _FilterScreenState extends State<FilterScreen> {
                       const _ResetButtonWidget(),
                       if (mediaType == MediaType.movie) ...[
                         const SizedBox(height: 16),
-                        if (false) ...[
-                          const _IncludeAdultWidget(),
-                        ],
+                        
                       ],
                       const _ReleaseDateWidget(),
                       const _WithGenresWidget(),
@@ -124,36 +121,6 @@ class _RatingWidget extends StatelessWidget {
             stepSize: 5,
             values: SfRangeValues(voteAverageFrom, voteAverageBefore),
             onChanged: vm.onChangedVoteAverage,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _IncludeAdultWidget extends StatelessWidget {
-  const _IncludeAdultWidget({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final vm = context.read<FilterViewModel>();
-    final includeAdult =
-        context.select((FilterViewModel vm) => vm.state.data.includeAdult);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Include Adult',
-          style: AppTextStyle.header3,
-        ),
-        const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Switch(
-            value: includeAdult,
-            onChanged: vm.selectIncludeAdult,
           ),
         ),
       ],
@@ -285,8 +252,6 @@ class _RowSelectDateWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<FilterViewModel>();
-    final _currentIndexReleaseDate = context
-        .select((FilterViewModel vm) => vm.state.data.currentIndexReleaseDate);
     final fromReleaseDate =
         context.select((FilterViewModel vm) => vm.state.data.fromReleaseDate);
     final beforeReleaseDate =

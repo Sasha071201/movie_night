@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -16,6 +17,7 @@ class App extends StatelessWidget {
       darkTheme: AppTheme.dark,
       debugShowCheckedModeBanner: false,
       // showPerformanceOverlay: true,
+      useInheritedMediaQuery: true,
       title: 'Movie Night',
       localizationsDelegates: const [
         S.delegate,
@@ -24,12 +26,13 @@ class App extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: S.delegate.supportedLocales,
+      locale: DevicePreview.locale(context),
       initialRoute: AppNavigation.initial,
       onGenerateRoute: AppNavigation.onGenerateRoute,
-      builder: (_, child) => WithForegroundTask(
+      builder: (context, child) => WithForegroundTask(
         child: Stack(
           children: [
-            if (child != null) child,
+            if (child != null) DevicePreview.appBuilder(context, child),
           ],
         ),
       ),

@@ -88,8 +88,10 @@ class _CircularProgressIndicatorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SliverToBoxAdapter(
       child: Center(
-        child: CircularProgressIndicator(
-          color: AppColors.colorMainText,
+        child: RepaintBoundary(
+          child: CircularProgressIndicator(
+            color: AppColors.colorMainText,
+          ),
         ),
       ),
     );

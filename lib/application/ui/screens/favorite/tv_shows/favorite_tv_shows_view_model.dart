@@ -150,7 +150,6 @@ class FavoriteTvShowsViewModel extends ChangeNotifier {
         );
       }
     } catch (e) {
-      print(e);
     }
     final newMovies = List<TvShowWithHeaderData>.from(state.tvShowsWithHeader);
     newMovies.addAll(tempTvShows);

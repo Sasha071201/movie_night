@@ -53,8 +53,10 @@ class _SearchMoviesScreenState extends State<SearchMoviesScreen> with AutomaticK
         ),
         if (moviesWithHeader.isEmpty)
           const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.colorMainText,
+            child: RepaintBoundary(
+              child: CircularProgressIndicator(
+                color: AppColors.colorMainText,
+              ),
             ),
           ),
       ],
@@ -95,8 +97,10 @@ class _MoviesWithHeaderWidget extends StatelessWidget {
                   height: 8,
                 ),
                 const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.colorMainText,
+                  child: RepaintBoundary(
+                    child: CircularProgressIndicator(
+                      color: AppColors.colorMainText,
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -143,8 +147,10 @@ class _MoviesWithGenresWidget extends StatelessWidget {
                   height: 8,
                 ),
                 const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.colorMainText,
+                  child: RepaintBoundary(
+                    child: CircularProgressIndicator(
+                      color: AppColors.colorMainText,
+                    ),
                   ),
                 ),
               ],

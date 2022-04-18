@@ -83,16 +83,20 @@ class _ListActorsWidget extends StatelessWidget {
                 const Positioned(
                   bottom: 16,
                   child: Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.colorMainText,
+                    child: RepaintBoundary(
+                      child: CircularProgressIndicator(
+                        color: AppColors.colorMainText,
+                      ),
                     ),
                   ),
                 ),
             ],
           )
         : const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.colorMainText,
+            child: RepaintBoundary(
+              child: CircularProgressIndicator(
+                color: AppColors.colorMainText,
+              ),
             ),
           );
   }

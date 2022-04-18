@@ -88,7 +88,6 @@ class HomeActorsViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
-      print(e);
     }
     notifyListeners();
   }

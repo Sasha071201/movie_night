@@ -136,7 +136,6 @@ class MovieDetailsViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
-      print(e);
     }
   }
 
@@ -144,7 +143,12 @@ class MovieDetailsViewModel extends ChangeNotifier {
     try {
       final status =
           await _translator.translate(movieDetails.status ?? '', to: _locale);
-
+      movieDetails = movieDetails.copyWith(
+        status: status.text,
+      );
+    } catch (e) {
+    }
+    try {
       final productionCountries = <ProductionCountrie>[];
       final productionCountriesLength =
           movieDetails.productionCountries?.length ?? 0;
@@ -159,7 +163,12 @@ class MovieDetailsViewModel extends ChangeNotifier {
           ),
         );
       }
-
+      movieDetails = movieDetails.copyWith(
+        productionCountries: productionCountries,
+      );
+    } catch (e) {
+    }
+    try {
       final keywords = Keywords(keywords: []);
       final keywordsLength = movieDetails.keywords?.keywords.length ?? 0;
       for (var i = 0; i < keywordsLength; i++) {
@@ -171,19 +180,20 @@ class MovieDetailsViewModel extends ChangeNotifier {
           movieDetails.keywords!.keywords[i].copyWith(name: keywordText.text),
         );
       }
-
+      movieDetails = movieDetails.copyWith(
+        keywords: keywords,
+      );
+    } catch (e) {
+    }
+    try {
       final tagline = await _translator.translate(
         movieDetails.tagline ?? '',
         to: _locale,
       );
       movieDetails = movieDetails.copyWith(
-        status: status.text,
-        productionCountries: productionCountries,
-        keywords: keywords,
         tagline: tagline.text,
       );
     } catch (e) {
-      print(e);
     }
     state.movieDetails = movieDetails;
     if (!_isDisposed) {

@@ -36,6 +36,32 @@ class SeasonDetails {
 
   factory SeasonDetails.fromJson(Map<String, dynamic> json) =>
       _$SeasonDetailsFromJson(json);
+
+  SeasonDetails copyWith({
+    String? id1,
+    DateTime? airDate,
+    List<Episode>? episodes,
+    String? name,
+    String? overview,
+    int? id2,
+    String? posterPath,
+    int? seasonNumber,
+    AggregateCredits? aggregateCredits,
+    Videos? videos,
+  }) {
+    return SeasonDetails(
+      id1: id1 ?? this.id1,
+      airDate: airDate ?? this.airDate,
+      episodes: episodes ?? this.episodes,
+      name: name ?? this.name,
+      overview: overview ?? this.overview,
+      id2: id2 ?? this.id2,
+      posterPath: posterPath ?? this.posterPath,
+      seasonNumber: seasonNumber ?? this.seasonNumber,
+      aggregateCredits: aggregateCredits ?? this.aggregateCredits,
+      videos: videos ?? this.videos,
+    );
+  }
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake)

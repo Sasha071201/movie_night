@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'package:movie_night/application/constants/app_dimensions.dart';
-import 'package:movie_night/application/resources/resources.dart';
 import 'package:movie_night/application/ui/screens/movie_details/movie_details_view_model.dart';
 import 'package:movie_night/application/ui/screens/view_movies/view_movies_view_model.dart';
 import 'package:movie_night/application/ui/themes/app_colors.dart';
@@ -127,8 +126,10 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                 ],
               )
             : const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.colorMainText,
+                child: RepaintBoundary(
+                  child: CircularProgressIndicator(
+                    color: AppColors.colorMainText,
+                  ),
                 ),
               ),
       ),

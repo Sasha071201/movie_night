@@ -27,7 +27,6 @@ class CheckUpdateTaskHandler extends TaskHandler {
   @override
   Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
     SharedPreferencesAndroid.registerWith();
-    print('foreground onStart');
     final completer = Completer<bool>();
     try {
       final spawnerReceivePort = ReceivePort();
@@ -40,7 +39,6 @@ class CheckUpdateTaskHandler extends TaskHandler {
       });
     } catch (e) {
       completer.completeError(e);
-      print(e);
     }
     await completer.future;
     try {
@@ -49,9 +47,7 @@ class CheckUpdateTaskHandler extends TaskHandler {
       await _addMoviesToDatabaseAndCheckUpdates();
       await _addTvShowsToDatabaseAndCheckUpdates();
       await _addPeopleToDatabaseAndCheckUpdates();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
 
     await FlutterForegroundTask.stopService();
   }
@@ -65,14 +61,10 @@ class CheckUpdateTaskHandler extends TaskHandler {
   }
 
   @override
-  Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
-    print('foreground onEvent');
-  }
+  Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {}
 
   @override
-  Future<void> onDestroy(DateTime timestamp) async {
-    print('foreground onDestroy');
-  }
+  Future<void> onDestroy(DateTime timestamp) async {}
 
   Future<void> _addMoviesToDatabaseAndCheckUpdates() async {
     try {
@@ -90,9 +82,7 @@ class CheckUpdateTaskHandler extends TaskHandler {
           );
         }
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<void> _checkUpdateMovie(
@@ -129,9 +119,11 @@ class CheckUpdateTaskHandler extends TaskHandler {
       }
     } else if (resultStatusCompare != 0) {
       if (locale.compareTo('ru') == 0) {
-        textUpdated = 'Статус изменился на ${newMovieDetails.status ?? 'Неизвестный'}';
+        textUpdated =
+            'Статус изменился на ${newMovieDetails.status ?? 'Неизвестный'}';
       } else {
-        textUpdated = 'Status changed to ${newMovieDetails.status ?? 'Unknown'}';
+        textUpdated =
+            'Status changed to ${newMovieDetails.status ?? 'Unknown'}';
       }
     } else if (videosFromDB != null &&
         videosFromDB.results.isEmpty &&
@@ -183,9 +175,7 @@ class CheckUpdateTaskHandler extends TaskHandler {
           );
         }
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<void> _checkUpdateTvShow(
@@ -281,9 +271,7 @@ class CheckUpdateTaskHandler extends TaskHandler {
           );
         }
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<void> _checkUpdatePeson(
@@ -308,6 +296,8 @@ class CheckUpdateTaskHandler extends TaskHandler {
       }
     } else if (castFromDB.length !=
         newPersonDetails.combinedCredits.cast.length) {
+      final title =
+          newPersonDetails.name.isNotEmpty ? newPersonDetails.name : 'Unknown';
       for (var i = 0; i < newPersonDetails.combinedCredits.cast.length; i++) {
         final items = newPersonDetails.combinedCredits.cast;
         if (!castFromDB.contains(items[i])) {
@@ -320,15 +310,17 @@ class CheckUpdateTaskHandler extends TaskHandler {
                   : 'series';
           if (locale.compareTo('ru') == 0) {
             textUpdated =
-                'Появился новый $mediaTypeString${items[i].title ?? ''}${items[i].character != null ? ', в котором он играл ${items[i].character}' : ''}';
+                'Появился новый $mediaTypeString${items[i].title ?? ''}${items[i].character != null ? ', где $title в роли ${items[i].character}' : ''}';
           } else {
             textUpdated =
-                'There was a new $mediaTypeString ${items[i].title ?? ''}${items[i].character != null ? ', in which he played ${items[i].character}' : ''}';
+                'There was a new $mediaTypeString ${items[i].title ?? ''}${items[i].character != null ? ', where $title plays ${items[i].character}' : ''}';
           }
         }
       }
     } else if (crewFromDB.length !=
         newPersonDetails.combinedCredits.crew.length) {
+      final title =
+          newPersonDetails.name.isNotEmpty ? newPersonDetails.name : 'Unknown';
       for (var i = 0; i < newPersonDetails.combinedCredits.crew.length; i++) {
         final items = newPersonDetails.combinedCredits.crew;
         if (!crewFromDB.contains(items[i])) {
@@ -341,10 +333,10 @@ class CheckUpdateTaskHandler extends TaskHandler {
                   : 'series';
           if (locale.compareTo('ru') == 0) {
             textUpdated =
-                'Появился новый $mediaTypeString ${items[i].title ?? ''}${items[i].job != null ? ', в котором он был ${items[i].job}' : ''}';
+                'Появился новый $mediaTypeString ${items[i].title ?? ''}${items[i].job != null ? ', где $title ${items[i].job!.toLowerCase()}' : ''}';
           } else {
             textUpdated =
-                'There was a new $mediaTypeString ${items[i].title ?? ''}${items[i].job != null ? ', in which he was the ${items[i].job}' : ''}';
+                'There was a new $mediaTypeString ${items[i].title ?? ''}${items[i].job != null ? ', where $title is the ${items[i].job!.toLowerCase()}' : ''}';
           }
         }
       }

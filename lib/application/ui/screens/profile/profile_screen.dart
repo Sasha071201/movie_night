@@ -37,7 +37,7 @@ class ProfileScreen extends StatelessWidget {
             // ),
           ],
         ),
-        const _CircularProgressIndicatorWidget(),
+        const RepaintBoundary(child: _CircularProgressIndicatorWidget()),
       ],
     );
   }
