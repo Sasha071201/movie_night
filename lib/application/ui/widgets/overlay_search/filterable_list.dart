@@ -33,10 +33,11 @@ class FilterableList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
     return Container(
       color: suggestionBackgroundColor,
       width: double.infinity,
-      height: maxListHeight,
+      height: height * 0.4,//maxListHeight,
       child: loading
           ? const Center(
               child: RepaintBoundary(

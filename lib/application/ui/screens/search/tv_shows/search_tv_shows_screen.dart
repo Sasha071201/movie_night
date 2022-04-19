@@ -76,8 +76,6 @@ class _MoviesWithHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLoadingProgress = context
-        .select((SearchTvShowsViewModel vm) => vm.state.isLoadingProgress);
     final moviesWithHeader = context
         .select((SearchTvShowsViewModel vm) => vm.state.tvShowsWithHeader);
     return SliverList(
@@ -93,22 +91,7 @@ class _MoviesWithHeaderWidget extends StatelessWidget {
                   tvShowId: moviesWithHeader[index].tvShowId,
                 ),
               ),
-              if (isLoadingProgress &&
-                  index == moviesWithHeader.length - 1) ...[
-                const SizedBox(
-                  height: 8,
-                ),
-                const Center(
-                  child: RepaintBoundary(
-                    child: CircularProgressIndicator(
-                      color: AppColors.colorMainText,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-              ],
+              
             ],
           );
         },

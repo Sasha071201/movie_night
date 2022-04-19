@@ -8,8 +8,10 @@ import '../../themes/app_text_style.dart';
 import '../../widgets/back_button_widget.dart';
 import '../../widgets/background_posters_widget.dart';
 import '../../widgets/elevated_button_widget.dart';
+import '../../widgets/insets_bottom_widget.dart';
 import '../../widgets/sliver_app_bar_delegate.dart';
 import '../../widgets/text_field_widget.dart';
+import 'package:sizer/sizer.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -37,7 +39,6 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final insetsBottom = MediaQuery.of(context).viewInsets.bottom;
     return CustomScrollView(
       slivers: [
         const _AppBar(),
@@ -47,7 +48,7 @@ class _BodyWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               children: [
-                const SizedBox(height: 159),
+                SizedBox(height: 19.h),
                 Text(
                   S.of(context).sign_up_label,
                   style: AppTextStyle.header1,
@@ -63,7 +64,7 @@ class _BodyWidget extends StatelessWidget {
                 const Spacer(),
                 const SizedBox(height: 16),
                 const _SignUpButtonWidget(),
-                SizedBox(height: insetsBottom == 0 ? 32 : insetsBottom + 16),
+                const InsetsBottomWidget(),
               ],
             ),
           ),

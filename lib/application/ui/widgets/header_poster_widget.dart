@@ -67,6 +67,7 @@ class HeaderPosterWidget extends StatelessWidget {
         ),
         Positioned(
           left: 16,
+          top: 64,
           bottom: 8,
           child: InkWellMaterialWidget(
             color: AppColors.colorSplash,
@@ -75,10 +76,13 @@ class HeaderPosterWidget extends StatelessWidget {
                 showImageViewer(context, Image.network(ImageDownloader.imageHighQualityUrl(data.posterPath)).image),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(AppDimensions.radius5),
-              child: CachedNetworkImageWidget(
-                imageUrl: ImageDownloader.imageUrl(data.posterPath),
-                width: 100,
-                height: 140,
+              child: AspectRatio(
+                aspectRatio: 100 / 140,
+                child: CachedNetworkImageWidget(
+                  imageUrl: ImageDownloader.imageUrl(data.posterPath),
+                  // width: 100,
+                  // height: 140,
+                ),
               ),
             ),
           ),

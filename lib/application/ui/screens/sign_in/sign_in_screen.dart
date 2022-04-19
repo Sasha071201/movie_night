@@ -4,9 +4,11 @@ import 'package:movie_night/application/ui/screens/sign_in/sign_in_view_model.da
 import 'package:movie_night/application/ui/themes/app_colors.dart';
 import 'package:movie_night/application/ui/widgets/background_posters_widget.dart';
 import 'package:movie_night/application/ui/widgets/elevated_button_widget.dart';
+import 'package:movie_night/application/ui/widgets/insets_bottom_widget.dart';
 import 'package:movie_night/application/ui/widgets/text_button_widget.dart';
 import 'package:movie_night/application/ui/widgets/text_field_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../../generated/l10n.dart';
 import '../../themes/app_text_style.dart';
@@ -37,7 +39,6 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final insetsBottom = MediaQuery.of(context).viewInsets.bottom;
     return CustomScrollView(
       slivers: [
         SliverFillRemaining(
@@ -46,7 +47,7 @@ class _BodyWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               children: [
-                const SizedBox(height: 215),
+                SizedBox(height: 27.h),
                 Text(
                   S.of(context).sign_in_label,
                   style: AppTextStyle.header1,
@@ -69,7 +70,7 @@ class _BodyWidget extends StatelessWidget {
                   onPressed: () =>
                       Navigator.of(context).pushNamed(Screens.signUp),
                 ),
-                SizedBox(height: insetsBottom == 0 ? 32 : insetsBottom),
+                const InsetsBottomWidget(),
               ],
             ),
           ),

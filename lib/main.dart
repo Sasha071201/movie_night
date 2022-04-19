@@ -9,7 +9,6 @@ import 'package:movie_night/application/domain/foreground_task/foreground_task.d
 import 'package:movie_night/application/ui/app/app.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:device_preview/device_preview.dart';
 
 import 'application/ui/notifications/app_notification_manager.dart';
 
@@ -55,10 +54,7 @@ void main() async {
 
       const app = App();
       runApp(
-        DevicePreview(
-          enabled: true,
-          builder: (context) => app,
-        ),
+        app,
       );
     },
     (exception, stackTrace) async {

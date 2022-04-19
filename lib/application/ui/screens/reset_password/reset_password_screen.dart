@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_night/application/ui/screens/reset_password/reset_password_view_model.dart';
+import 'package:movie_night/application/ui/widgets/insets_bottom_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
@@ -10,6 +11,7 @@ import '../../widgets/background_posters_widget.dart';
 import '../../widgets/elevated_button_widget.dart';
 import '../../widgets/sliver_app_bar_delegate.dart';
 import '../../widgets/text_field_widget.dart';
+import 'package:sizer/sizer.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   const ResetPasswordScreen({Key? key}) : super(key: key);
@@ -37,7 +39,6 @@ class _BodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final insetsBottom = MediaQuery.of(context).viewInsets.bottom;
     return CustomScrollView(
       slivers: [
         const _AppBar(),
@@ -47,7 +48,7 @@ class _BodyWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               children: [
-                const SizedBox(height: 159),
+                SizedBox(height: 19.h),
                 Text(
                   S.of(context).reset_password,
                   style: AppTextStyle.header1,
@@ -57,7 +58,7 @@ class _BodyWidget extends StatelessWidget {
                 const Spacer(),
                 const SizedBox(height: 16),
                 const _ResetButtonWidget(),
-                SizedBox(height: insetsBottom == 0 ? 32 : insetsBottom + 16),
+                const InsetsBottomWidget(),
               ],
             ),
           ),

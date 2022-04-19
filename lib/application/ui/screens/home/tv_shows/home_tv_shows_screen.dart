@@ -19,7 +19,8 @@ class HomeTvShowsScreen extends StatefulWidget {
   State<HomeTvShowsScreen> createState() => _HomeTvShowsScreenState();
 }
 
-class _HomeTvShowsScreenState extends State<HomeTvShowsScreen> with AutomaticKeepAliveClientMixin {
+class _HomeTvShowsScreenState extends State<HomeTvShowsScreen>
+    with AutomaticKeepAliveClientMixin {
   @override
   void didChangeDependencies() {
     context.read<HomeTvShowsViewModel>().setupLocale(context);
@@ -133,11 +134,13 @@ class _HeaderPageViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final heightFactor = height / 785;
     final vm = context.read<HomeTvShowsViewModel>();
     final headerTvShows =
         context.select((HomeTvShowsViewModel vm) => vm.state.headerTvShows);
     return SizedBox(
-      height: 168,
+      height: 168 * heightFactor,
       child: Swiper(
         curve: Curves.easeInOut,
         scrollDirection: Axis.horizontal,
@@ -206,42 +209,44 @@ class _HeaderTvShowsItemWidget extends StatelessWidget {
         context.select((HomeTvShowsViewModel vm) => vm.state.headerTvShows);
     final currentHeaderTvShowIndex = context
         .select((HomeTvShowsViewModel vm) => vm.state.currentHeaderTvShowIndex);
-    return headerTvShows.isNotEmpty ? InkWellMaterialWidget(
-      color: AppColors.colorSplash,
-      borderRadius: AppDimensions.radius5,
-      onTap: () {
-        context.read<MainViewModel>().showAdIfAvailable();
-        Navigator.of(context).pushNamed(Screens.tvShowDetails,
-            arguments: headerTvShows[index].id);
-      },
-      child: CachedNetworkImageWidget(
-        imageUrl:
-            ImageDownloader.imageUrl(headerTvShows[index].backdropPath ?? ''),
-        imageBuilder: (context, imageProvider) => Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: 8.0,
-            vertical: index != currentHeaderTvShowIndex ? 4.0 : 0,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-              AppDimensions.radius5,
-            ),
-            color: index != currentHeaderTvShowIndex
-                ? AppColors.colorPrimary.withOpacity(0.7)
-                : Colors.transparent,
-            image: DecorationImage(
-              colorFilter: ColorFilter.mode(
-                index != currentHeaderTvShowIndex
-                    ? AppColors.colorPrimary.withOpacity(0.7)
-                    : Colors.transparent,
-                BlendMode.darken,
+    return headerTvShows.isNotEmpty
+        ? InkWellMaterialWidget(
+            color: AppColors.colorSplash,
+            borderRadius: AppDimensions.radius5,
+            onTap: () {
+              context.read<MainViewModel>().showAdIfAvailable();
+              Navigator.of(context).pushNamed(Screens.tvShowDetails,
+                  arguments: headerTvShows[index].id);
+            },
+            child: CachedNetworkImageWidget(
+              imageUrl: ImageDownloader.imageUrl(
+                  headerTvShows[index].backdropPath ?? ''),
+              imageBuilder: (context, imageProvider) => Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: index != currentHeaderTvShowIndex ? 4.0 : 0,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    AppDimensions.radius5,
+                  ),
+                  color: index != currentHeaderTvShowIndex
+                      ? AppColors.colorPrimary.withOpacity(0.7)
+                      : Colors.transparent,
+                  image: DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                      index != currentHeaderTvShowIndex
+                          ? AppColors.colorPrimary.withOpacity(0.7)
+                          : Colors.transparent,
+                      BlendMode.darken,
+                    ),
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              image: imageProvider,
-              fit: BoxFit.cover,
             ),
-          ),
-        ),
-      ),
-    ) : const SizedBox.shrink();
+          )
+        : const SizedBox.shrink();
   }
 }

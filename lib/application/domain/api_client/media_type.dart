@@ -9,7 +9,7 @@ extension MediaTypeAsString on MediaType {
       case MediaType.movie:
         return S.of(context).movie;
       case MediaType.tv:
-        return S.of(context).tv;
+        return S.of(context).series;
       case MediaType.person:
         return S.of(context).person;
     }
