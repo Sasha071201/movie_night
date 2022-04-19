@@ -28,9 +28,9 @@ class DropdownTextButtonWidget extends StatelessWidget {
     return CustomDropdownWidget(
       builderButton: (currentIndex, toggleDropdown) => TextButtonWidget(
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 220),
+            Flexible(
               child: Text(
                 currentIndex != -1 ? items[currentIndex] : hint,
                 style: AppTextStyle.button.copyWith(

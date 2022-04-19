@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:movie_night/application/domain/api_client/api_client_exception.dart';
@@ -44,7 +45,7 @@ class NetworkClient {
     } on ApiClientException catch (_) {
       rethrow;
     } catch (e) {
-      print(e);
+      log(e.toString());
       throw ApiClientException("unknown-error");
     }
   }
@@ -75,7 +76,7 @@ class NetworkClient {
     } on ApiClientException catch (_) {
       rethrow;
     } catch (e) {
-      print(e);
+      log(e.toString());
       throw ApiClientException("unknown-error");
     }
   }
@@ -102,7 +103,7 @@ class NetworkClient {
     } on ApiClientException catch (_) {
       rethrow;
     } catch (e) {
-      print(e);
+      log(e.toString());
       throw ApiClientException("unknown-error");
     }
   }

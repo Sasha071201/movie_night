@@ -19,7 +19,8 @@ class HomeMoviesScreen extends StatefulWidget {
   State<HomeMoviesScreen> createState() => _HomeMoviesScreenState();
 }
 
-class _HomeMoviesScreenState extends State<HomeMoviesScreen> with AutomaticKeepAliveClientMixin {
+class _HomeMoviesScreenState extends State<HomeMoviesScreen>
+    with AutomaticKeepAliveClientMixin {
   @override
   void didChangeDependencies() {
     context.read<HomeMoviesViewModel>().setupLocale(context);
@@ -133,11 +134,13 @@ class _HeaderPageViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final heightFactor = height / 785;
     final vm = context.read<HomeMoviesViewModel>();
     final headerMovies =
         context.select((HomeMoviesViewModel vm) => vm.state.headerMovies);
     return SizedBox(
-      height: 168,
+      height: 168 * heightFactor,
       child: Swiper(
         curve: Curves.easeInOut,
         scrollDirection: Axis.horizontal,
@@ -206,42 +209,44 @@ class _HeaderMovieItemWidget extends StatelessWidget {
         context.select((HomeMoviesViewModel vm) => vm.state.headerMovies);
     final currentHeaderMovieIndex = context
         .select((HomeMoviesViewModel vm) => vm.state.currentHeaderMovieIndex);
-    return headerMovies.isNotEmpty ? InkWellMaterialWidget(
-      color: AppColors.colorSplash,
-      borderRadius: AppDimensions.radius5,
-      onTap: () {
-        context.read<MainViewModel>().showAdIfAvailable();
-        Navigator.of(context)
-            .pushNamed(Screens.movieDetails, arguments: headerMovies[index].id);
-      },
-      child: CachedNetworkImageWidget(
-        imageUrl:
-            ImageDownloader.imageUrl(headerMovies[index].backdropPath ?? ''),
-        imageBuilder: (context, imageProvider) => Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: 8.0,
-            vertical: index != currentHeaderMovieIndex ? 4.0 : 0,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-              AppDimensions.radius5,
-            ),
-            color: index != currentHeaderMovieIndex
-                ? AppColors.colorPrimary.withOpacity(0.7)
-                : Colors.transparent,
-            image: DecorationImage(
-              colorFilter: ColorFilter.mode(
-                index != currentHeaderMovieIndex
-                    ? AppColors.colorPrimary.withOpacity(0.7)
-                    : Colors.transparent,
-                BlendMode.darken,
+    return headerMovies.isNotEmpty
+        ? InkWellMaterialWidget(
+            color: AppColors.colorSplash,
+            borderRadius: AppDimensions.radius5,
+            onTap: () {
+              context.read<MainViewModel>().showAdIfAvailable();
+              Navigator.of(context).pushNamed(Screens.movieDetails,
+                  arguments: headerMovies[index].id);
+            },
+            child: CachedNetworkImageWidget(
+              imageUrl: ImageDownloader.imageUrl(
+                  headerMovies[index].backdropPath ?? ''),
+              imageBuilder: (context, imageProvider) => Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: index != currentHeaderMovieIndex ? 4.0 : 0,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    AppDimensions.radius5,
+                  ),
+                  color: index != currentHeaderMovieIndex
+                      ? AppColors.colorPrimary.withOpacity(0.7)
+                      : Colors.transparent,
+                  image: DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                      index != currentHeaderMovieIndex
+                          ? AppColors.colorPrimary.withOpacity(0.7)
+                          : Colors.transparent,
+                      BlendMode.darken,
+                    ),
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              image: imageProvider,
-              fit: BoxFit.cover,
             ),
-          ),
-        ),
-      ),
-    ) : const SizedBox.shrink();
+          )
+        : const SizedBox.shrink();
   }
 }

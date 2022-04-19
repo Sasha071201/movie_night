@@ -34,8 +34,7 @@ class VerticalWidgetWithHeaderWidget<T> extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 200),
+              Flexible(
                 child: Text(
                   title,
                   style: AppTextStyle.header3,

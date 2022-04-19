@@ -6,6 +6,7 @@ import 'package:movie_night/application/ui/widgets/vertical_widgets_with_header/
 import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
+import '../../widgets/app_grid_view.dart';
 
 class ViewAllActorsScreen extends StatefulWidget {
   const ViewAllActorsScreen({Key? key}) : super(key: key);
@@ -64,20 +65,14 @@ class _ListActorsWidget extends StatelessWidget {
         ? Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              GridView.builder(
-                itemCount: actors.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 130 / 265, //188 - height, 130 - width
-                ),
+              AppGridView(
                 itemBuilder: (context, index) {
                   vm.showedCategoryAtIndex(index);
                   return VerticalActorWidget(
                     actor: actors[index],
                   );
                 },
+                itemCount: actors.length,
               ),
               if (isLoadingProgress)
                 const Positioned(

@@ -5,6 +5,7 @@ import 'package:movie_night/application/ui/themes/app_text_style.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
+import '../../widgets/app_grid_view.dart';
 import '../../widgets/vertical_widgets_with_header/vertical_movie_widget.dart';
 import '../../widgets/vertical_widgets_with_header/vertical_tv_show_widget.dart';
 import 'view_movies_view_model.dart';
@@ -68,14 +69,7 @@ class _ListMoviesWidget extends StatelessWidget {
         ? Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              GridView.builder(
-                itemCount: media.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 130 / 240, //188 - height, 130 - width
-                ),
+              AppGridView(
                 itemBuilder: (context, index) {
                   Widget child = const SizedBox.shrink();
                   if (mediaType == MediaType.movie) {
@@ -90,6 +84,7 @@ class _ListMoviesWidget extends StatelessWidget {
                   vm.showedCategoryAtIndex(index);
                   return child;
                 },
+                itemCount: media.length,
               ),
               if (isLoadingProgress)
                 const Positioned(
