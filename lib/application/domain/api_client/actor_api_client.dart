@@ -24,7 +24,8 @@ class ActorApiClient {
       'language': locale,
       'page': '$page',
     };
-    final result = _networkClient.getWithCache('/person/popular', parser, urlParameters);
+    final result =
+        _networkClient.getWithCache('/person/popular', parser, urlParameters);
     return result;
   }
 
@@ -38,16 +39,22 @@ class ActorApiClient {
       final result = ActorDetails.fromJson(jsonMap);
       return result;
     }
+
     final urlParameters = <String, dynamic>{
       'api_key': NetworkConfiguration.apiKey,
       'language': locale,
       'append_to_response': 'combined_credits,external_ids',
     };
-    if(isCache){
-    final result = _networkClient.getWithCache('/person/$actorId', parser, urlParameters);
-    return result;
+    if (isCache) {
+      final result = _networkClient.getWithCache(
+        '/person/$actorId',
+        parser,
+        urlParameters,
+      );
+      return result;
     }
-    final result = _networkClient.get('/person/$actorId', parser, urlParameters);
+    final result =
+        _networkClient.get('/person/$actorId', parser, urlParameters);
     return result;
   }
 
@@ -65,8 +72,8 @@ class ActorApiClient {
       'api_key': NetworkConfiguration.apiKey,
       if (locale != null) 'language': locale,
     };
-    final result =
-        _networkClient.getWithCache('/person/$actorId/images', parser, urlParameters);
+    final result = _networkClient.getWithCache(
+        '/person/$actorId/images', parser, urlParameters);
     return result;
   }
 
@@ -86,8 +93,8 @@ class ActorApiClient {
       'page': '$page',
       if (locale != null) 'language': locale,
     };
-    final result =
-        _networkClient.getWithCache('/person/$actorId/tagged_images', parser, urlParameters);
+    final result = _networkClient.getWithCache(
+        '/person/$actorId/tagged_images', parser, urlParameters);
     return result;
   }
 }
