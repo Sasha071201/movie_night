@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sizer/sizer.dart';
 
 import 'app_theme.dart';
 
@@ -16,8 +17,6 @@ class AppTextStyle {
       color: AppTheme.dark.textTheme.bodyText2!.color);
   static TextStyle get small => smallWithoutTheme.copyWith(
       color: AppTheme.dark.textTheme.bodyText2!.color);
-  static TextStyle get verySmall => verySmallWithoutTheme.copyWith(
-      color: AppTheme.dark.textTheme.bodyText2!.color);
   static TextStyle get header3 => header3WithoutTheme.copyWith(
       color: AppTheme.dark.textTheme.bodyText2!.color);
   static TextStyle get subheader => subheaderWithoutTheme.copyWith(
@@ -28,54 +27,48 @@ class AppTextStyle {
   static final subheader2WithoutTheme = GoogleFonts.poppins(
     fontWeight: FontWeight.w400,
     fontStyle: FontStyle.normal,
-    fontSize: 10,
+    fontSize: 9.sp,
   );
 
   static final subheaderWithoutTheme = GoogleFonts.poppins(
     fontWeight: FontWeight.w700,
     fontStyle: FontStyle.normal,
-    fontSize: 10,
+    fontSize: 9.sp,
   );
 
   static final header3WithoutTheme = GoogleFonts.poppins(
     fontWeight: FontWeight.w700,
     fontStyle: FontStyle.normal,
-    fontSize: 16,
-  );
-
-  static final verySmallWithoutTheme = GoogleFonts.poppins(
-    fontWeight: FontWeight.w500,
-    fontStyle: FontStyle.normal,
-    fontSize: 6,
+    fontSize: 13.sp,
   );
 
   static final smallWithoutTheme = GoogleFonts.poppins(
     fontWeight: FontWeight.w500,
     fontStyle: FontStyle.normal,
-    fontSize: 14,
+    fontSize: 11.sp,
   );
 
   static final mediumWithoutTheme = GoogleFonts.poppins(
     fontWeight: FontWeight.w400,
     fontStyle: FontStyle.normal,
-    fontSize: 16,
+    fontSize: 13.sp,
   );
 
   static final buttonWithoutTheme = GoogleFonts.poppins(
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w500,
     fontStyle: FontStyle.normal,
-    fontSize: 14,
+    fontSize: 11.sp,
   );
 
   static final header2WithoutTheme = GoogleFonts.poppins(
     fontWeight: FontWeight.w700,
     fontStyle: FontStyle.normal,
-    fontSize: 24,
+    fontSize: 18.sp,
   );
 
   static final header1WithoutTheme = GoogleFonts.poppins(
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w400,
     fontStyle: FontStyle.normal,
-    fontSize: 36,
+    fontSize: 36.sp,
   );
 }

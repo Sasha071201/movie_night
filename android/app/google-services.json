@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "178203271403",
+    "project_id": "movie-night-ac03c",
+    "storage_bucket": "movie-night-ac03c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178203271403:android:892233dabb10800e1e1eae",
+        "android_client_info": {
+          "package_name": "com.sstreltsov.movie_night"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "178203271403-92r1klsjpspbdee5vbnvgv7qiv8oihkn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sstreltsov.movie_night",
+            "certificate_hash": "7232085b0697f3faa74e53e1b466c303944e85ec"
+          }
+        },
+        {
+          "client_id": "178203271403-mi17uqp35cj2v8vr5ciou2dek87mba4i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXsucuX7xPBRhegANKuiV4Mls1_MiZw10"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "178203271403-mi17uqp35cj2v8vr5ciou2dek87mba4i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "178203271403-1gmvek211lcg393t33t2jvghtnvob0qs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sstreltsov.movie-night"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

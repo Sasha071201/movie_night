@@ -8,24 +8,15 @@ class AppTheme {
   AppTheme._();
 
   static final dark = ThemeData(
-    colorScheme: const ColorScheme.light(
+    colorScheme: const ColorScheme.dark(
       primary: AppColors.colorPrimary,
-    ), //for date picker
+    ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
     scaffoldBackgroundColor: AppColors.colorBackground,
     canvasColor: AppColors.colorFFFFFF,
-    iconTheme: const IconThemeData(color: AppColors.colorFFFFFF),
+    iconTheme: const IconThemeData(color: AppColors.colorSecondary),
     textTheme: const TextTheme(
       bodyText2: TextStyle(color: AppColors.colorFFFFFF),
-    ),
-    inputDecorationTheme: const InputDecorationTheme(
-      filled: true,
-      fillColor: AppColors.colorPrimary,
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: AppColors.colorFFFFFF,
-        ),
-      ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
@@ -44,6 +35,7 @@ class AppTheme {
     ),
     textSelectionTheme: const TextSelectionThemeData(
       cursorColor: AppColors.colorFFFFFF,
+      selectionHandleColor: AppColors.colorMainText,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedIconTheme: IconThemeData(
