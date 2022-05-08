@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
@@ -136,6 +137,8 @@ class MovieDetailsViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
+      log(e.toString());
+      rethrow;
     }
   }
 
@@ -147,6 +150,7 @@ class MovieDetailsViewModel extends ChangeNotifier {
         status: status.text,
       );
     } catch (e) {
+      log(e.toString());
     }
     try {
       final productionCountries = <ProductionCountrie>[];
@@ -167,6 +171,7 @@ class MovieDetailsViewModel extends ChangeNotifier {
         productionCountries: productionCountries,
       );
     } catch (e) {
+      log(e.toString());
     }
     try {
       final keywords = Keywords(keywords: []);
@@ -184,6 +189,7 @@ class MovieDetailsViewModel extends ChangeNotifier {
         keywords: keywords,
       );
     } catch (e) {
+      log(e.toString());
     }
     try {
       final tagline = await _translator.translate(
@@ -194,6 +200,7 @@ class MovieDetailsViewModel extends ChangeNotifier {
         tagline: tagline.text,
       );
     } catch (e) {
+      log(e.toString());
     }
     state.movieDetails = movieDetails;
     if (!_isDisposed) {

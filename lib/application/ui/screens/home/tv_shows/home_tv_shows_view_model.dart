@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:movie_night/application/domain/entities/tv_shows/tv_show.dart';
@@ -96,6 +97,8 @@ class HomeTvShowsViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
+      log(e.toString());
+      rethrow;
     }
   }
 
@@ -114,6 +117,8 @@ class HomeTvShowsViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
+      log(e.toString());
+      rethrow;
     }
     state.isLoadingProgress = false;
     notifyListeners();

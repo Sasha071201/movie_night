@@ -110,6 +110,7 @@ class ViewMoviesViewModel extends ChangeNotifier {
       );
     } catch (e) {
       log(e.toString());
+      rethrow;
     }
     state.isLoadingProgress = false;
     notifyListeners();

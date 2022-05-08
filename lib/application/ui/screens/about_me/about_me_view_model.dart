@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -15,7 +16,7 @@ class AboutMeViewModel extends ChangeNotifier {
   String _locale = '';
   late BuildContext _context;
   final _nameController = TextEditingController();
-  TextEditingController get  nameController => _nameController;
+  TextEditingController get nameController => _nameController;
 
   AboutMeViewModel() {
     loadData();
@@ -58,6 +59,7 @@ class AboutMeViewModel extends ChangeNotifier {
         }
       }
     } catch (e) {
+      log(e.toString());
     }
   }
 

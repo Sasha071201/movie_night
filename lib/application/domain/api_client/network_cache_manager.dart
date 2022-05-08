@@ -6,7 +6,7 @@ class NetworkCacheManager {
   static CacheManager instance = CacheManager(
     Config(
       key,
-      maxNrOfCacheObjects: 110,
+      stalePeriod: const Duration(hours: 3),
     ),
   );
 }

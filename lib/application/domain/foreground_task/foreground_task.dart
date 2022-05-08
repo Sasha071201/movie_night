@@ -3,7 +3,7 @@ import 'dart:isolate';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:movie_night/application/domain/data_providers/date_update_data_provider.dart';
+import 'package:movie_night/application/domain/data_providers/data_provider.dart';
 
 import '../../../generated/l10n.dart';
 import '../database/database.dart';
@@ -12,8 +12,7 @@ import 'check_update_task_handler.dart';
 class ForegroundTask {
   ForegroundTask._();
 
-  static const Duration durationUpdate = // Duration(minutes: 1);
-      Duration(hours: 11); 
+  static const Duration durationUpdate = Duration(hours: 11);
 
   static Future<void> initForegroundTask() async {
     await FlutterForegroundTask.init(
@@ -42,14 +41,14 @@ class ForegroundTask {
   }
 
   static Future<bool> startForegroundTask(BuildContext context) async {
-    final dateUpdateDataProvider = DateUpdateDataProvider();
-    final neededTime = await dateUpdateDataProvider.getNeededTime();
+    final dataProvider = DataProvider();
+    final neededTime = await dataProvider.getNeededTime();
     final pastTime = DateTime.now();
     if (neededTime != null) {
       if (pastTime.compareTo(neededTime) >= 0) {
         final newNeedTime = DateTime.now().add(durationUpdate);
-        await dateUpdateDataProvider.saveNeededTime(newNeedTime);
-
+        await dataProvider.saveNeededTime(newNeedTime);
+        
         ReceivePort? receivePort;
         if (await FlutterForegroundTask.isRunningService) {
           receivePort = await FlutterForegroundTask.restartService();
@@ -82,7 +81,7 @@ class ForegroundTask {
       }
     } else {
       final newNeedTime = DateTime.now().add(durationUpdate);
-      await dateUpdateDataProvider.saveNeededTime(newNeedTime);
+      await dataProvider.saveNeededTime(newNeedTime);
     }
     return false;
   }

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -307,6 +308,7 @@ class AccountRepository {
       }
       return;
     } catch (e) {
+      log(e.toString());
     }
   }
 
@@ -485,6 +487,7 @@ class AccountRepository {
         return;
       }
     } catch (e) {
+      log(e.toString());
     }
     final movieDetails = await _movieApiClient.fetchMovieDetails(
       locale: locale,
@@ -534,6 +537,7 @@ class AccountRepository {
         return;
       }
     } catch (e) {
+      log(e.toString());
     }
     final tvShowDetails = await _tvShowApiClient.fetchTvShowDetails(
       locale: locale,
@@ -577,6 +581,7 @@ class AccountRepository {
         return;
       }
     } catch (e) {
+      log(e.toString());
     }
     final personDetails = await _actorApiClient.fetchActorDetails(
       locale: locale,
