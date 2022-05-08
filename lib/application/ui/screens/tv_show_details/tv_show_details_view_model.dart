@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
@@ -191,6 +192,8 @@ class TvShowDetailsViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
+      log(e.toString());
+      rethrow;
     }
   }
 
@@ -201,8 +204,7 @@ class TvShowDetailsViewModel extends ChangeNotifier {
       tvShowDetails = tvShowDetails.copyWith(
         status: status.text,
       );
-    } catch (e) {
-    }
+    } catch (e) {}
     try {
       final productionCountries = <ProductionCountrie>[];
       final productionCountriesLength =
@@ -221,8 +223,7 @@ class TvShowDetailsViewModel extends ChangeNotifier {
       tvShowDetails = tvShowDetails.copyWith(
         productionCountries: productionCountries,
       );
-    } catch (e) {
-    }
+    } catch (e) {}
     try {
       final keywords = Keywords(keywords: []);
       final keywordsLength = tvShowDetails.keywords.keywords?.length ?? 0;
@@ -240,8 +241,7 @@ class TvShowDetailsViewModel extends ChangeNotifier {
       tvShowDetails = tvShowDetails.copyWith(
         keywords: keywords,
       );
-    } catch (e) {
-    }
+    } catch (e) {}
     try {
       final tagline = await _translator.translate(
         tvShowDetails.tagline,
@@ -250,8 +250,7 @@ class TvShowDetailsViewModel extends ChangeNotifier {
       tvShowDetails = tvShowDetails.copyWith(
         tagline: tagline.text,
       );
-    } catch (e) {
-    }
+    } catch (e) {}
     state.tvShowDetails = tvShowDetails;
     if (!_isDisposed) {
       notifyListeners();

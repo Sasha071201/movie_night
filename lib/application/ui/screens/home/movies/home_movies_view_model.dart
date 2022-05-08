@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:movie_night/application/domain/api_client/api_client_exception.dart';
@@ -93,6 +94,8 @@ class HomeMoviesViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
+      log(e.toString());
+      rethrow;
     }
   }
 
@@ -111,6 +114,8 @@ class HomeMoviesViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
+      log(e.toString());
+      rethrow;
     }
     state.isLoadingProgress = false;
     notifyListeners();

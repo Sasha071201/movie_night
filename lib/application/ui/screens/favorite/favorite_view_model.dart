@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:movie_night/application/domain/app_review/app_review.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../generated/l10n.dart';
@@ -6,6 +9,8 @@ import '../main/main_view_model.dart';
 
 class FavoriteViewModel extends ChangeNotifier {
   final _categoryController = PageController(initialPage: 0);
+  Timer? _timer;
+  final _appReview = AppReview();
   PageController get categoryController => _categoryController;
   String _locale = '';
 
@@ -32,8 +37,23 @@ class FavoriteViewModel extends ChangeNotifier {
 
   void selectCategory(int index, BuildContext context) {
     context.read<MainViewModel>().showAdIfAvailable();
+    _showReview();
     _currentCategoryIndex = index;
     _categoryController.jumpToPage(_currentCategoryIndex);
     notifyListeners();
+  }
+
+  void _showReview() {
+    _timer?.cancel();
+    _timer = Timer(const Duration(seconds: 2), () async {
+      await _appReview.showReview();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _timer = null;
+    super.dispose();
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -102,10 +103,11 @@ class FavoriteTvShowsViewModel extends ChangeNotifier {
 
     try {
       await _fillTvShowsWithHeader();
-      state.isLoadingProgress = false;
     } catch (e) {
-      state.isLoadingProgress = false;
+      log(e.toString());
+      rethrow;
     }
+    state.isLoadingProgress = false;
     notifyListeners();
   }
 
@@ -150,6 +152,8 @@ class FavoriteTvShowsViewModel extends ChangeNotifier {
         );
       }
     } catch (e) {
+      log(e.toString());
+      rethrow;
     }
     final newMovies = List<TvShowWithHeaderData>.from(state.tvShowsWithHeader);
     newMovies.addAll(tempTvShows);

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
@@ -219,6 +220,8 @@ class ActorDetailsViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
+      log(e.toString());
+      rethrow;
     }
   }
 
@@ -228,6 +231,7 @@ class ActorDetailsViewModel extends ChangeNotifier {
           .translate(actorDetails.placeOfBirth ?? '', to: _locale);
       actorDetails = actorDetails.copyWith(placeOfBirth: country.text);
     } catch (e) {
+      log(e.toString());
     }
     state.actorDetails = actorDetails;
     if (!_isDisposed) {
@@ -259,7 +263,10 @@ class ActorDetailsViewModel extends ChangeNotifier {
           notifyListeners();
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 
   @override

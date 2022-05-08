@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -99,10 +100,11 @@ class FavoriteMoviesViewModel extends ChangeNotifier {
 
     try {
       await _fillMoviesWithHeader();
-      state.isLoadingProgress = false;
     } catch (e) {
-      state.isLoadingProgress = false;
+      log(e.toString());
+      rethrow;
     }
+    state.isLoadingProgress = false;
     notifyListeners();
   }
 
@@ -147,6 +149,8 @@ class FavoriteMoviesViewModel extends ChangeNotifier {
         );
       }
     } catch (e) {
+      log(e.toString());
+      rethrow;
     }
     final newMovies = List<MovieWithHeaderData>.from(state.moviesWithHeader);
     newMovies.addAll(tempMovies);

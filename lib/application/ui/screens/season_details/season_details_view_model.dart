@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
@@ -89,6 +90,8 @@ class SeasonDetailsViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
+      log(e.toString());
+      rethrow;
     }
     notifyListeners();
   }

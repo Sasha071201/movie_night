@@ -87,6 +87,7 @@ class TextFieldWidget extends StatelessWidget {
         maxLength: maxLength,
         expands: expands,
         cursorColor: cursorColor,
+        cursorHeight: 22,
         obscureText: obscureText,
         // obscuringCharacter: '*',
         onChanged: onChanged,

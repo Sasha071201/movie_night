@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -81,10 +82,11 @@ class ViewFavoriteViewModel extends ChangeNotifier {
 
     try {
       await _fetchFavorite();
-      state.isLoadingProgress = false;
     } catch (e) {
-      state.isLoadingProgress = false;
+      log(e.toString());
+      rethrow;
     }
+    state.isLoadingProgress = false;
     notifyListeners();
   }
 
@@ -116,7 +118,8 @@ class ViewFavoriteViewModel extends ChangeNotifier {
       mediaNewAndOld.addAll(tvShowsResponse);
       state.media.media = mediaNewAndOld;
     } else if (state.media.mediaType == MediaType.person) {
-      final peopleResponse = await _repository.fetchFavoritePeople(_locale, null);
+      final peopleResponse =
+          await _repository.fetchFavoritePeople(_locale, null);
       final mediaNewAndOld = List<Actor>.from(state.media.media);
       mediaNewAndOld.addAll(peopleResponse);
       state.media.media = mediaNewAndOld;

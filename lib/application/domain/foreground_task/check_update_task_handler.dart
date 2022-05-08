@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:drift/drift.dart';
@@ -47,7 +48,9 @@ class CheckUpdateTaskHandler extends TaskHandler {
       await _addMoviesToDatabaseAndCheckUpdates();
       await _addTvShowsToDatabaseAndCheckUpdates();
       await _addPeopleToDatabaseAndCheckUpdates();
-    } catch (e) {}
+    } catch (e) {
+      log(e.toString());
+    }
 
     await FlutterForegroundTask.stopService();
   }
@@ -70,7 +73,7 @@ class CheckUpdateTaskHandler extends TaskHandler {
     try {
       List<MovieDetails>? favoriteMovies;
       try {
-        favoriteMovies = (await _database?.appDatabaseDao.fetchFavoriteMovies())
+        favoriteMovies = (await _database?.appDatabaseDao.fetchFavoriteAndNotWatchedMovies())
             ?.map((e) => e.data)
             .toList();
       } catch (e) {}
@@ -78,7 +81,7 @@ class CheckUpdateTaskHandler extends TaskHandler {
         for (var i = 0; i < favoriteMovies.length; i++) {
           await _checkUpdateMovie(
             favoriteMovies[i],
-            ViewFavoriteType.favorite,
+            ViewFavoriteType.favoriteAndNotWatched,
           );
         }
       }
@@ -163,7 +166,7 @@ class CheckUpdateTaskHandler extends TaskHandler {
       List<TvShowDetails>? favoriteTvShows;
       try {
         favoriteTvShows =
-            (await _database?.appDatabaseDao.fetchFavoriteTvShows())
+            (await _database?.appDatabaseDao.fetchFavoriteAndNotWatchedTvShows())
                 ?.map((e) => e.data)
                 .toList();
       } catch (e) {}
@@ -171,7 +174,7 @@ class CheckUpdateTaskHandler extends TaskHandler {
         for (var i = 0; i < favoriteTvShows.length; i++) {
           await _checkUpdateTvShow(
             favoriteTvShows[i],
-            ViewFavoriteType.favorite,
+            ViewFavoriteType.favoriteAndNotWatched,
           );
         }
       }

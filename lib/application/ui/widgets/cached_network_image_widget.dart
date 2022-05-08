@@ -40,7 +40,7 @@ class CachedNetworkImageWidget extends StatelessWidget {
       cacheManager: CacheManager(
         Config(
           'CachedNetworkImageKey',
-          maxNrOfCacheObjects: 200,
+          stalePeriod: const Duration(hours: 3),
         ),
       ),
     );

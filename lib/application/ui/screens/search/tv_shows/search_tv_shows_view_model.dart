@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -98,6 +99,8 @@ class SearchTvShowsViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
+      log(e.toString());
+      rethrow;
     }
     state.isLoadingProgress = false;
     notifyListeners();

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -49,7 +50,8 @@ class MainViewModel extends ChangeNotifier {
   void _initNotification() {
     final context = scaffoldKey!.currentState!.context;
     _timer?.cancel();
-    _timer = Timer.periodic(ForegroundTask.durationUpdate,
+    _timer = Timer.periodic(
+      ForegroundTask.durationUpdate,
       (timer) {
         ForegroundTask.startForegroundTask(context);
       },
@@ -78,7 +80,9 @@ class MainViewModel extends ChangeNotifier {
         onConnectionNo: () {
           try {
             _errorMessge = S.of(context).no_internet_connection;
-          } catch (e) {}
+          } catch (e) {
+            log(e.toString());
+          }
           DialogWidget.showSnackBar(
             context: context,
             text: _errorMessge,

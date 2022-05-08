@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:movie_night/application/ui/screens/view_movies/view_movies_view_model.dart';
@@ -98,6 +99,8 @@ class SearchMoviesViewModel extends ChangeNotifier {
         backgroundColor: AppColors.colorError,
       );
     } catch (e) {
+      log(e.toString());
+      rethrow;
     }
     state.isLoadingProgress = false;
     notifyListeners();
