@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-// ignore: implementation_imports
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../screens/main/main_view_model.dart';
 import '../../themes/app_colors.dart';

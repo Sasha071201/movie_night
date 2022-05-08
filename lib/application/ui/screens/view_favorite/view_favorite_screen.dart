@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:movie_night/application/domain/api_client/media_type.dart';
 import 'package:movie_night/application/ui/themes/app_colors.dart';
 import 'package:movie_night/application/ui/themes/app_text_style.dart';

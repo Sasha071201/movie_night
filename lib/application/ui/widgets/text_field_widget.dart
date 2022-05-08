@@ -89,7 +89,6 @@ class TextFieldWidget extends StatelessWidget {
         cursorColor: cursorColor,
         cursorHeight: 22,
         obscureText: obscureText,
-        // obscuringCharacter: '*',
         onChanged: onChanged,
         onSubmitted: onSubmitted,
         onTap: onTap,

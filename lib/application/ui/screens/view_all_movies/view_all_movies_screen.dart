@@ -207,7 +207,7 @@ class _ResultTitleFilterWidget extends StatelessWidget {
         '${voteAverageFrom != null ? '${S.of(context).from.toLowerCase()} ${(voteAverageFrom).toInt()} ' : ''}${voteAverageBefore != null ? '${S.of(context).before.toLowerCase()} ${(voteAverageBefore).toInt()}' : ''}';
 
     return Text(
-      '${withGenresString.isNotEmpty ? '${S.of(context).with_genres} $withGenresString. ' : ''}${withoutGenresString.isNotEmpty ? '${S.of(context).without_genres} $withoutGenresString. ' : ''}${S.of(context).sort_by} $sortBy. ${date.isNotEmpty ? '${S.of(context).date} $date. ' : ''} ${voteAverage.isNotEmpty ? '${S.of(context).vote_average} $voteAverage. ' : ''}', //Include Adult: $includeAdult. ${date.isNotEmpty ? 'Date $date' : ''}',
+      '${withGenresString.isNotEmpty ? '${S.of(context).with_genres} $withGenresString. ' : ''}${withoutGenresString.isNotEmpty ? '${S.of(context).without_genres} $withoutGenresString. ' : ''}${S.of(context).sort_by} $sortBy. ${date.isNotEmpty ? '${S.of(context).date} $date. ' : ''} ${voteAverage.isNotEmpty ? '${S.of(context).vote_average} $voteAverage. ' : ''}',
       style: AppTextStyle.subheader.copyWith(
         color: AppColors.colorSecondaryText,
       ),

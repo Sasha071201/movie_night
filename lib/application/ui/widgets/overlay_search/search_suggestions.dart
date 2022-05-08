@@ -167,27 +167,7 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
       ),
     );
   }
-
-  // Widget _scrollConfiguration(Widget child) => ScrollConfiguration(
-  //     behavior: ScrollConfiguration.of(context).copyWith(
-  //       scrollbars: false,
-  //       overscroll: false,
-  //       physics: const ClampingScrollPhysics(),
-  //       platform: Theme.of(context).platform,
-  //     ),
-  //     child: PrimaryScrollController(
-  //       controller: _scrollController,
-  //       child: RawScrollbar(
-  //         radius: const Radius.circular(2),
-  //         thickness: 4,
-  //         crossAxisMargin: 4,
-  //         thumbColor: AppColors.colorMainText,
-  //         isAlwaysShown: true,
-  //         child: child,
-  //       ),
-  //     ),
-  //   );
-
+  
   void _toggleDropdown({bool close = false}) async {
     if (close) {
       await _animationController.reverse();

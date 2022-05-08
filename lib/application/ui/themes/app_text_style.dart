@@ -39,25 +39,25 @@ class AppTextStyle {
   static final header3WithoutTheme = GoogleFonts.poppins(
     fontWeight: FontWeight.w700,
     fontStyle: FontStyle.normal,
-    fontSize: 13.sp,//maybe 12.sp
+    fontSize: 13.sp,
   );
 
   static final smallWithoutTheme = GoogleFonts.poppins(
     fontWeight: FontWeight.w500,
     fontStyle: FontStyle.normal,
-    fontSize: 11.sp,//maybe 10.sp
+    fontSize: 11.sp,
   );
 
   static final mediumWithoutTheme = GoogleFonts.poppins(
     fontWeight: FontWeight.w400,
     fontStyle: FontStyle.normal,
-    fontSize: 13.sp,//maybe 12.sp
+    fontSize: 13.sp,
   );
 
   static final buttonWithoutTheme = GoogleFonts.poppins(
     fontWeight: FontWeight.w500,
     fontStyle: FontStyle.normal,
-    fontSize: 11.sp,//maybe 10.sp
+    fontSize: 11.sp,
   );
 
   static final header2WithoutTheme = GoogleFonts.poppins(

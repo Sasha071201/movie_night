@@ -96,13 +96,6 @@ class _ListImagesWidgetState extends State<_ListImagesWidget> {
                 context,
                 multiImageProvider,
               );
-              // showImageViewer(
-              //     context,
-              //     Image.network(
-              //       ImageDownloader.imageHighQualityUrl(
-              //         backdrops![index],
-              //       ),
-              //     ).image);
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(AppDimensions.radius5),

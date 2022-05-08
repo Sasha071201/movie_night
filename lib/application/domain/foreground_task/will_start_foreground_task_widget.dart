@@ -34,7 +34,7 @@ class WillStartForegroundTaskWidget extends StatelessWidget {
         ),
       ),
       foregroundTaskOptions: const ForegroundTaskOptions(
-        interval: 10000, //10 сек
+        interval: 10000,
         autoRunOnBoot: true,
         allowWifiLock: true,
       ),
