@@ -12,7 +12,6 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import 'application/ui/notifications/app_notification_manager.dart';
 
-//TODO использовать provider либо get_it, чтобы было чище архитектура.
 AppDatabase? database;
 
 void main() async {

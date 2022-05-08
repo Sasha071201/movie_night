@@ -42,7 +42,7 @@ class HeaderPosterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final rating = (data.voteAverage * 10).toInt();
     final text = rating == 0 ? 'NR' : '$rating';
-  
+
     return Stack(
       children: [
         AspectRatio(
@@ -72,23 +72,24 @@ class HeaderPosterWidget extends StatelessWidget {
           child: InkWellMaterialWidget(
             color: AppColors.colorSplash,
             borderRadius: AppDimensions.radius5,
-            onTap: () =>
-                showImageViewer(context, Image.network(ImageDownloader.imageHighQualityUrl(data.posterPath)).image),
+            onTap: () => showImageViewer(
+                context,
+                Image.network(
+                        ImageDownloader.imageHighQualityUrl(data.posterPath))
+                    .image),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(AppDimensions.radius5),
               child: AspectRatio(
                 aspectRatio: 100 / 140,
                 child: CachedNetworkImageWidget(
                   imageUrl: ImageDownloader.imageUrl(data.posterPath),
-                  // width: 100,
-                  // height: 140,
                 ),
               ),
             ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:movie_night/application/repository/auth_repository.dart';
-// ignore: unused_import
-import 'package:movie_night/application/ui/navigation/app_navigation.dart';
 import 'package:movie_night/application/ui/widgets/dialog_widget.dart';
 import 'package:movie_night/generated/l10n.dart';
 

@@ -81,8 +81,8 @@ class _AppBar extends StatelessWidget {
             ],
           ),
         ),
-        maxHeight: 128, //100
-        minHeight: 128, //100
+        maxHeight: 128,
+        minHeight: 128,
       ),
     );
   }

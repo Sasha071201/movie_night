@@ -10,7 +10,7 @@ class AppTheme {
   static final dark = ThemeData(
     colorScheme: const ColorScheme.dark(
       primary: AppColors.colorPrimary,
-    ), //for date picker
+    ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
     scaffoldBackgroundColor: AppColors.colorBackground,
     canvasColor: AppColors.colorFFFFFF,

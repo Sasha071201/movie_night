@@ -57,7 +57,6 @@ class AppNotificationManager {
     const iOS = IOSInitializationSettings();
     const settings = InitializationSettings(android: android, iOS: iOS);
 
-    //When app is closed
     final details = await _notifications.getNotificationAppLaunchDetails();
     if (details != null && details.didNotificationLaunchApp) {
       onNotification.add(details.payload);

@@ -19,7 +19,6 @@ class NetworkClient {
     }
   }
 
-  //With cache
   Future<T> getWithCache<T>(
     String path,
     T Function(dynamic json) parser, [
@@ -27,8 +26,6 @@ class NetworkClient {
   ]) async {
     try {
       final url = _makeUri(path, urlParameters);
-      // print('request');
-      // print(url);
       final file =
           await NetworkCacheManager.instance.getSingleFile(url.toString());
       final data = await file.readAsString();
@@ -50,7 +47,6 @@ class NetworkClient {
     }
   }
 
-  //Without cache
   Future<T> get<T>(
     String path,
     T Function(dynamic json) parser, [
@@ -58,16 +54,15 @@ class NetworkClient {
   ]) async {
     try {
       final url = _makeUri(path, urlParameters);
-      // print(url);
       final request = await _client.getUrl(url);
       final response = await request.close();
       final json = (await response.jsonDecode());
-      _validateResponse(response, json);
       final result = parser(json);
       return result;
     } on SocketException catch (_) {
       throw ApiClientException(
-          'network-error');
+        'network-error',
+      );
     } on HttpException catch (_) {
       throw ApiClientException(
         'network-error',
@@ -94,31 +89,15 @@ class NetworkClient {
       request.write(jsonEncode(bodyParameters));
       final response = await request.close();
       final json = (await response.jsonDecode());
-      _validateResponse(response, json);
       final result = parser(json);
       return result;
     } on SocketException catch (_) {
-      throw ApiClientException(
-          'network-error');
+      throw ApiClientException('network-error');
     } on ApiClientException catch (_) {
       rethrow;
     } catch (e) {
       log(e.toString());
       throw ApiClientException("unknown-error");
-    }
-  }
-
-  void _validateResponse(HttpClientResponse response, dynamic json) {
-    if (response.statusCode == 401) {
-      final status = json['status_code'];
-      final code = status is int ? status : 0;
-      // if (code == 30) {
-      //   throw ApiClientException(ApiClientExceptionType.auth);
-      // } else if (code == 3) {
-      //   throw ApiClientException(ApiClientExceptionType.sessionExpired);
-      // } else {
-      //   throw ApiClientException(ApiClientExceptionType.other);
-      // }
     }
   }
 }
