@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:movie_night/application/configuration/ad_mob_configuration.dart';
 
 class AdHelper {
-  InterstitialAd? _interstitialAd;
+  // InterstitialAd? _interstitialAd;
   bool _isAdReady = false;
 
   /// Maximum duration allowed between loading and showing the ad.
@@ -38,7 +38,7 @@ class AdHelper {
     // );
   }
 
-  bool get isAdAvailable => _interstitialAd != null;
+  // bool get isAdAvailable => _interstitialAd != null;
 
   void showAdIfAvailable() {
     // if (!isAdAvailable) {
