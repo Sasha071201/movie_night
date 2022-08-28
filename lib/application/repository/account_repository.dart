@@ -118,8 +118,7 @@ class AccountRepository {
   Stream<DocumentSnapshot<Map<String, dynamic>>> watchedStream() =>
       _accountApiClient.watchedStream();
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> userStream() =>
-      _accountApiClient.userStream();
+  Stream<DocumentSnapshot<Map<String, dynamic>>> userStream() => _accountApiClient.userStream();
 
   Stream<List<Review>> reviewsStream(String id) =>
       _accountApiClient.reviewsStream(id).asyncMap((event) async {
@@ -131,11 +130,9 @@ class AccountRepository {
             Review(
                 id: event.docs[i].id,
                 name: await _accountApiClient.fetchUserName(userId),
-                avatarUrl:
-                    await _accountApiClient.fetchUserProfileImageUrl(userId),
+                avatarUrl: await _accountApiClient.fetchUserProfileImageUrl(userId),
                 userId: userId,
-                date:
-                    event.docs[i].get(FirebaseConfiguration.dateField).toDate(),
+                date: event.docs[i].get(FirebaseConfiguration.dateField).toDate(),
                 review: event.docs[i].get(FirebaseConfiguration.reviewField),
                 isMine: userId == _accountApiClient.uid),
           );
@@ -148,22 +145,18 @@ class AccountRepository {
       onConnectionYes: () async {
         final ids = await _accountApiClient.fetchWatchedMovies();
         final movies = <Movie>[];
-        final length = maxLength != null && maxLength < ids.length
-            ? maxLength
-            : ids.length;
+        final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
           await Future.delayed(Duration.zero);
-          final response =
-              await _searchApiClient.findById(id: ids[i], locale: locale);
+          final response = await _searchApiClient.findById(id: ids[i], locale: locale);
+          if (response.movieResults.isEmpty) continue;
           final movie = response.movieResults.first;
           movies.add(movie);
           await Future.delayed(Duration.zero);
-          _addMovieToDatabaseAndCheckUpdates(
-              locale, movie, ViewFavoriteType.watched);
+          _addMovieToDatabaseAndCheckUpdates(locale, movie, ViewFavoriteType.watched);
         }
         if (maxLength == null || maxLength > ids.length) {
-          _deleteOldMediaFromDB(
-              movies, MediaType.movie, ViewFavoriteType.watched);
+          _deleteOldMediaFromDB(movies, MediaType.movie, ViewFavoriteType.watched);
         }
         return movies;
       },
@@ -184,22 +177,18 @@ class AccountRepository {
       onConnectionYes: () async {
         final ids = await _accountApiClient.fetchWatchedTvShows();
         final tvShows = <TvShow>[];
-        final length = maxLength != null && maxLength < ids.length
-            ? maxLength
-            : ids.length;
+        final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
           await Future.delayed(Duration.zero);
-          final response =
-              await _searchApiClient.findById(id: ids[i], locale: locale);
+          final response = await _searchApiClient.findById(id: ids[i], locale: locale);
+          if (response.tvResults.isEmpty) continue;
           final tvShow = response.tvResults.first;
           tvShows.add(tvShow);
           await Future.delayed(Duration.zero);
-          _addTvShowToDatabaseAndCheckUpdates(
-              locale, tvShow, ViewFavoriteType.watched);
+          _addTvShowToDatabaseAndCheckUpdates(locale, tvShow, ViewFavoriteType.watched);
         }
         if (maxLength == null || maxLength > ids.length) {
-          _deleteOldMediaFromDB(
-              tvShows, MediaType.tv, ViewFavoriteType.watched);
+          _deleteOldMediaFromDB(tvShows, MediaType.tv, ViewFavoriteType.watched);
         }
         return tvShows;
       },
@@ -217,22 +206,18 @@ class AccountRepository {
       onConnectionYes: () async {
         final ids = await _accountApiClient.fetchFavoriteMovies();
         final movies = <Movie>[];
-        final length = maxLength != null && maxLength < ids.length
-            ? maxLength
-            : ids.length;
+        final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
           await Future.delayed(Duration.zero);
-          final response =
-              await _searchApiClient.findById(id: ids[i], locale: locale);
+          final response = await _searchApiClient.findById(id: ids[i], locale: locale);
+          if (response.movieResults.isEmpty) continue;
           final movie = response.movieResults.first;
           movies.add(movie);
           await Future.delayed(Duration.zero);
-          _addMovieToDatabaseAndCheckUpdates(
-              locale, movie, ViewFavoriteType.favorite);
+          _addMovieToDatabaseAndCheckUpdates(locale, movie, ViewFavoriteType.favorite);
         }
         if (maxLength == null || maxLength > ids.length) {
-          _deleteOldMediaFromDB(
-              movies, MediaType.movie, ViewFavoriteType.favorite);
+          _deleteOldMediaFromDB(movies, MediaType.movie, ViewFavoriteType.favorite);
         }
         return movies;
       },
@@ -252,13 +237,10 @@ class AccountRepository {
   ) async {
     try {
       List<dynamic>? mediaFromDB =
-          (await _fetchMediaFromDB(mediaType, viewFavoriteType))
-              .map((e) => e.data)
-              .toList();
+          (await _fetchMediaFromDB(mediaType, viewFavoriteType)).map((e) => e.data).toList();
       final idsMedia = media.map((e) => e.id);
-      final mediaNeedDelete = mediaFromDB
-          .where((element) => !idsMedia.contains(element.id))
-          .toList();
+      final mediaNeedDelete =
+          mediaFromDB.where((element) => !idsMedia.contains(element.id)).toList();
       for (var i = 0; i < mediaNeedDelete.length; i++) {
         String imdbId = '';
         switch (mediaType) {
@@ -269,8 +251,7 @@ class AccountRepository {
                 await database?.appDatabaseDao.deleteFavoriteMovie(imdbId);
                 break;
               case ViewFavoriteType.favoriteAndNotWatched:
-                await database?.appDatabaseDao
-                    .deleteFavoriteAndNotWatchedMovie(imdbId);
+                await database?.appDatabaseDao.deleteFavoriteAndNotWatchedMovie(imdbId);
                 break;
               case ViewFavoriteType.watched:
                 await database?.appDatabaseDao.deleteWatchedMovie(imdbId);
@@ -284,8 +265,7 @@ class AccountRepository {
                 await database?.appDatabaseDao.deleteFavoriteTvShow(imdbId);
                 break;
               case ViewFavoriteType.favoriteAndNotWatched:
-                await database?.appDatabaseDao
-                    .deleteFavoriteAndNotWatchedTvShow(imdbId);
+                await database?.appDatabaseDao.deleteFavoriteAndNotWatchedTvShow(imdbId);
                 break;
               case ViewFavoriteType.watched:
                 await database?.appDatabaseDao.deleteWatchedTvShow(imdbId);
@@ -320,22 +300,18 @@ class AccountRepository {
       onConnectionYes: () async {
         final ids = await _accountApiClient.fetchFavoriteTvShows();
         final tvShows = <TvShow>[];
-        final length = maxLength != null && maxLength < ids.length
-            ? maxLength
-            : ids.length;
+        final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
           await Future.delayed(Duration.zero);
-          final response =
-              await _searchApiClient.findById(id: ids[i], locale: locale);
+          final response = await _searchApiClient.findById(id: ids[i], locale: locale);
+          if (response.tvResults.isEmpty) continue;
           final tvShow = response.tvResults.first;
           tvShows.add(tvShow);
           await Future.delayed(Duration.zero);
-          _addTvShowToDatabaseAndCheckUpdates(
-              locale, tvShow, ViewFavoriteType.favorite);
+          _addTvShowToDatabaseAndCheckUpdates(locale, tvShow, ViewFavoriteType.favorite);
         }
         if (maxLength == null || maxLength > ids.length) {
-          _deleteOldMediaFromDB(
-              tvShows, MediaType.tv, ViewFavoriteType.favorite);
+          _deleteOldMediaFromDB(tvShows, MediaType.tv, ViewFavoriteType.favorite);
         }
         return tvShows;
       },
@@ -353,22 +329,18 @@ class AccountRepository {
       onConnectionYes: () async {
         final ids = await _accountApiClient.fetchFavoritePeople();
         final people = <Actor>[];
-        final length = maxLength != null && maxLength < ids.length
-            ? maxLength
-            : ids.length;
+        final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
           await Future.delayed(Duration.zero);
-          final response =
-              await _searchApiClient.findById(id: ids[i], locale: locale);
+          final response = await _searchApiClient.findById(id: ids[i], locale: locale);
+          if (response.personResults.isEmpty) continue;
           final person = response.personResults.first;
           people.add(person);
           await Future.delayed(Duration.zero);
-          _addPersonToDatabaseAndCheckUpdates(
-              locale, person, ViewFavoriteType.favorite);
+          _addPersonToDatabaseAndCheckUpdates(locale, person, ViewFavoriteType.favorite);
         }
         if (maxLength == null || maxLength > ids.length) {
-          _deleteOldMediaFromDB(
-              people, MediaType.person, ViewFavoriteType.favorite);
+          _deleteOldMediaFromDB(people, MediaType.person, ViewFavoriteType.favorite);
         }
         return people;
       },
@@ -388,22 +360,19 @@ class AccountRepository {
       onConnectionYes: () async {
         final ids = await _accountApiClient.fetchFavoriteAndNotWatchedMovies();
         final movies = <Movie>[];
-        final length = maxLength != null && maxLength < ids.length
-            ? maxLength
-            : ids.length;
+        final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
           await Future.delayed(Duration.zero);
-          final response =
-              await _searchApiClient.findById(id: ids[i], locale: locale);
+          print(ids[i]);
+          final response = await _searchApiClient.findById(id: ids[i], locale: locale);
+          if (response.movieResults.isEmpty) continue;
           final movie = response.movieResults.first;
           movies.add(movie);
           await Future.delayed(Duration.zero);
-          _addMovieToDatabaseAndCheckUpdates(
-              locale, movie, ViewFavoriteType.favoriteAndNotWatched);
+          _addMovieToDatabaseAndCheckUpdates(locale, movie, ViewFavoriteType.favoriteAndNotWatched);
         }
         if (maxLength == null || maxLength > ids.length) {
-          _deleteOldMediaFromDB(
-              movies, MediaType.movie, ViewFavoriteType.favoriteAndNotWatched);
+          _deleteOldMediaFromDB(movies, MediaType.movie, ViewFavoriteType.favoriteAndNotWatched);
         }
         return movies;
       },
@@ -424,13 +393,11 @@ class AccountRepository {
       onConnectionYes: () async {
         final ids = await _accountApiClient.fetchFavoriteAndNotWatchedTvShows();
         final tvShows = <TvShow>[];
-        final length = maxLength != null && maxLength < ids.length
-            ? maxLength
-            : ids.length;
+        final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
           await Future.delayed(Duration.zero);
-          final response =
-              await _searchApiClient.findById(id: ids[i], locale: locale);
+          final response = await _searchApiClient.findById(id: ids[i], locale: locale);
+          if (response.tvResults.isEmpty) continue;
           final tvShow = response.tvResults.first;
           tvShows.add(tvShow);
           await Future.delayed(Duration.zero);
@@ -438,8 +405,7 @@ class AccountRepository {
               locale, tvShow, ViewFavoriteType.favoriteAndNotWatched);
         }
         if (maxLength == null || maxLength > ids.length) {
-          _deleteOldMediaFromDB(
-              tvShows, MediaType.tv, ViewFavoriteType.favoriteAndNotWatched);
+          _deleteOldMediaFromDB(tvShows, MediaType.tv, ViewFavoriteType.favoriteAndNotWatched);
         }
         return tvShows;
       },
@@ -461,19 +427,14 @@ class AccountRepository {
       MovieDetails? movieFromDB;
       switch (type) {
         case ViewFavoriteType.favorite:
-          movieFromDB =
-              (await database?.appDatabaseDao.fetchFavoriteMovie(movie.id!))
-                  ?.data;
+          movieFromDB = (await database?.appDatabaseDao.fetchFavoriteMovie(movie.id!))?.data;
           break;
         case ViewFavoriteType.favoriteAndNotWatched:
-          movieFromDB = (await database?.appDatabaseDao
-                  .fetchFavoriteAndNotWatchedMovie(movie.id!))
-              ?.data;
+          movieFromDB =
+              (await database?.appDatabaseDao.fetchFavoriteAndNotWatchedMovie(movie.id!))?.data;
           break;
         case ViewFavoriteType.watched:
-          movieFromDB =
-              (await database?.appDatabaseDao.fetchWatchedMovie(movie.id!))
-                  ?.data;
+          movieFromDB = (await database?.appDatabaseDao.fetchWatchedMovie(movie.id!))?.data;
           break;
       }
       if (movieFromDB == null) {
@@ -496,8 +457,7 @@ class AccountRepository {
     await _insertMovieToDB(movieDetails, type);
   }
 
-  Future<void> _insertMovieToDB(
-      MovieDetails movieDetails, ViewFavoriteType type) async {
+  Future<void> _insertMovieToDB(MovieDetails movieDetails, ViewFavoriteType type) async {
     await Future.delayed(Duration.zero);
     await database?.appDatabaseDao.insertMovie(movieDetails, type);
   }
@@ -511,19 +471,14 @@ class AccountRepository {
       TvShowDetails? tvShowFromDB;
       switch (type) {
         case ViewFavoriteType.favorite:
-          tvShowFromDB =
-              (await database?.appDatabaseDao.fetchFavoriteTvShow(tvShow.id!))
-                  ?.data;
+          tvShowFromDB = (await database?.appDatabaseDao.fetchFavoriteTvShow(tvShow.id!))?.data;
           break;
         case ViewFavoriteType.favoriteAndNotWatched:
-          tvShowFromDB = (await database?.appDatabaseDao
-                  .fetchFavoriteAndNotWatchedTvShow(tvShow.id!))
-              ?.data;
+          tvShowFromDB =
+              (await database?.appDatabaseDao.fetchFavoriteAndNotWatchedTvShow(tvShow.id!))?.data;
           break;
         case ViewFavoriteType.watched:
-          tvShowFromDB =
-              (await database?.appDatabaseDao.fetchWatchedTvShow(tvShow.id!))
-                  ?.data;
+          tvShowFromDB = (await database?.appDatabaseDao.fetchWatchedTvShow(tvShow.id!))?.data;
           break;
       }
       if (tvShowFromDB == null) {
@@ -546,8 +501,7 @@ class AccountRepository {
     await _insertTvShowToDB(tvShowDetails, type);
   }
 
-  Future<void> _insertTvShowToDB(
-      TvShowDetails tvShowDetails, ViewFavoriteType type) async {
+  Future<void> _insertTvShowToDB(TvShowDetails tvShowDetails, ViewFavoriteType type) async {
     await Future.delayed(Duration.zero);
     await database?.appDatabaseDao.insertTvShow(tvShowDetails, type);
   }
@@ -561,9 +515,7 @@ class AccountRepository {
       ActorDetails? personFromDB;
       switch (type) {
         case ViewFavoriteType.favorite:
-          personFromDB =
-              (await database?.appDatabaseDao.fetchFavoritePerson(person.id!))
-                  ?.data;
+          personFromDB = (await database?.appDatabaseDao.fetchFavoritePerson(person.id!))?.data;
           break;
         case ViewFavoriteType.favoriteAndNotWatched:
           break;
@@ -590,8 +542,7 @@ class AccountRepository {
     await _insertPersonToDB(personDetails, type);
   }
 
-  Future<void> _insertPersonToDB(
-      ActorDetails tvShowDetails, ViewFavoriteType type) async {
+  Future<void> _insertPersonToDB(ActorDetails tvShowDetails, ViewFavoriteType type) async {
     await Future.delayed(Duration.zero);
     await database?.appDatabaseDao.insertPerson(tvShowDetails);
   }
@@ -609,46 +560,35 @@ class AccountRepository {
             moviesFromDB = await database?.appDatabaseDao.fetchFavoriteMovies();
             break;
           case ViewFavoriteType.favoriteAndNotWatched:
-            moviesFromDB = await database?.appDatabaseDao
-                .fetchFavoriteAndNotWatchedMovies();
+            moviesFromDB = await database?.appDatabaseDao.fetchFavoriteAndNotWatchedMovies();
             break;
           case ViewFavoriteType.watched:
             moviesFromDB = await database?.appDatabaseDao.fetchWatchedMovies();
             break;
         }
         await Future.delayed(Duration.zero);
-        data = moviesFromDB
-            .map((movie) => Movie.fromJson(movie.data.toJson()))
-            .toList();
+        data = moviesFromDB.map((movie) => Movie.fromJson(movie.data.toJson())).toList();
         break;
       case MediaType.tv:
         dynamic tvShowsFromDB;
         switch (viewFavoriteType) {
           case ViewFavoriteType.favorite:
-            tvShowsFromDB =
-                await database?.appDatabaseDao.fetchFavoriteTvShows();
+            tvShowsFromDB = await database?.appDatabaseDao.fetchFavoriteTvShows();
             break;
           case ViewFavoriteType.favoriteAndNotWatched:
-            tvShowsFromDB = await database?.appDatabaseDao
-                .fetchFavoriteAndNotWatchedTvShows();
+            tvShowsFromDB = await database?.appDatabaseDao.fetchFavoriteAndNotWatchedTvShows();
             break;
           case ViewFavoriteType.watched:
-            tvShowsFromDB =
-                await database?.appDatabaseDao.fetchWatchedTvShows();
+            tvShowsFromDB = await database?.appDatabaseDao.fetchWatchedTvShows();
             break;
         }
         await Future.delayed(Duration.zero);
-        data = tvShowsFromDB
-            .map((movie) => TvShow.fromJson(movie.data.toJson()))
-            .toList();
+        data = tvShowsFromDB.map((movie) => TvShow.fromJson(movie.data.toJson())).toList();
         break;
       case MediaType.person:
-        final peopleFromDB =
-            await database?.appDatabaseDao.fetchFavoritePeople();
+        final peopleFromDB = await database?.appDatabaseDao.fetchFavoritePeople();
         await Future.delayed(Duration.zero);
-        data = peopleFromDB!
-            .map((movie) => Actor.fromJson(movie.data.toJson()))
-            .toList();
+        data = peopleFromDB!.map((movie) => Actor.fromJson(movie.data.toJson())).toList();
         break;
     }
     return data.cast<T>();
@@ -666,8 +606,7 @@ class AccountRepository {
             data = await database?.appDatabaseDao.fetchFavoriteMovies();
             break;
           case ViewFavoriteType.favoriteAndNotWatched:
-            data = await database?.appDatabaseDao
-                .fetchFavoriteAndNotWatchedMovies();
+            data = await database?.appDatabaseDao.fetchFavoriteAndNotWatchedMovies();
             break;
           case ViewFavoriteType.watched:
             data = await database?.appDatabaseDao.fetchWatchedMovies();
@@ -681,8 +620,7 @@ class AccountRepository {
             data = await database?.appDatabaseDao.fetchFavoriteTvShows();
             break;
           case ViewFavoriteType.favoriteAndNotWatched:
-            data = await database?.appDatabaseDao
-                .fetchFavoriteAndNotWatchedTvShows();
+            data = await database?.appDatabaseDao.fetchFavoriteAndNotWatchedTvShows();
             break;
           case ViewFavoriteType.watched:
             data = await database?.appDatabaseDao.fetchWatchedTvShows();
