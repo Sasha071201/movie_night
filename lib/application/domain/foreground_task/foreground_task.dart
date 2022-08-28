@@ -24,12 +24,17 @@ class ForegroundTask {
         channelImportance: NotificationChannelImportance.HIGH,
         priority: NotificationPriority.HIGH,
         isSticky: true,
+        playSound: true,
         visibility: NotificationVisibility.VISIBILITY_PUBLIC,
         iconData: const NotificationIconData(
           resType: ResourceType.drawable,
           resPrefix: ResourcePrefix.ic,
           name: 'notification',
         ),
+      ),
+      iosNotificationOptions: const IOSNotificationOptions(
+        showNotification: true,
+        playSound: true,
       ),
       foregroundTaskOptions: const ForegroundTaskOptions(
         interval: 5000,
@@ -48,7 +53,7 @@ class ForegroundTask {
       if (pastTime.compareTo(neededTime) >= 0) {
         final newNeedTime = DateTime.now().add(durationUpdate);
         await dataProvider.saveNeededTime(newNeedTime);
-        
+
         ReceivePort? receivePort;
         if (await FlutterForegroundTask.isRunningService) {
           receivePort = await FlutterForegroundTask.restartService();

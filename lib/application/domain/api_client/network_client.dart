@@ -25,8 +25,7 @@ class NetworkClient {
   ]) async {
     try {
       final url = _makeUri(path, urlParameters);
-      final file =
-          await NetworkCacheManager.instance.getSingleFile(url.toString());
+      final file = await NetworkCacheManager.instance.getSingleFile(url.toString());
       final data = await file.readAsString();
       final json = (jsonDecode(data));
       final result = parser(json);
@@ -57,7 +56,7 @@ class NetworkClient {
       final url = _makeUri(path, urlParameters);
       final response = await dio.get(url.toString());
       _handleResponse(response);
-      final json = (await jsonDecode(response.data));
+      final json = response.data;
       final result = parser(json);
       return result;
     } on SocketException catch (e) {
@@ -97,7 +96,7 @@ class NetworkClient {
         data: bodyParameters,
       );
       _handleResponse(response);
-      final json = (await jsonDecode(response.data));
+      final json = response.data;
       final result = parser(json);
       return result;
     } on SocketException catch (e) {

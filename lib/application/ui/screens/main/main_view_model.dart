@@ -94,8 +94,7 @@ class MainViewModel extends ChangeNotifier {
 
   void _listenNotifications(BuildContext context) {
     _notificationStreamSubscription?.cancel();
-    _notificationStreamSubscription =
-        AppNotificationManager.onNotification.listen((payload) {
+    _notificationStreamSubscription = AppNotificationManager.onNotification.listen((payload) {
       if (payload != null) {
         final id = payload.substring(
           payload.indexOf('-') + 1,
@@ -135,8 +134,7 @@ class MainViewModel extends ChangeNotifier {
   Future<bool> onBackPressed(BuildContext context) {
     DateTime now = DateTime.now();
     const duration = Duration(seconds: 2);
-    if (_currentBackPressTime == null ||
-        now.difference(_currentBackPressTime!) > duration) {
+    if (_currentBackPressTime == null || now.difference(_currentBackPressTime!) > duration) {
       _currentBackPressTime = now;
       DialogWidget.showSnackBar(
         context: context,

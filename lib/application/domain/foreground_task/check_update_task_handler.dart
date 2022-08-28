@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:drift/drift.dart';
@@ -9,6 +10,7 @@ import 'package:movie_night/application/domain/api_client/media_type.dart';
 import 'package:movie_night/application/domain/entities/actor/actor_details.dart';
 import 'package:movie_night/application/ui/notifications/app_notification_manager.dart';
 import 'package:shared_preferences_android/shared_preferences_android.dart';
+import 'package:shared_preferences_ios/shared_preferences_ios.dart';
 
 import '../../ui/screens/view_favorite/view_favorite_view_model.dart';
 import '../api_client/actor_api_client.dart';
@@ -27,7 +29,11 @@ class CheckUpdateTaskHandler extends TaskHandler {
 
   @override
   Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
-    SharedPreferencesAndroid.registerWith();
+    if (Platform.isAndroid) {
+      SharedPreferencesAndroid.registerWith();
+    } else if (Platform.isIOS) {
+      SharedPreferencesIOS.registerWith();
+    }
     final completer = Completer<bool>();
     try {
       final spawnerReceivePort = ReceivePort();
@@ -43,8 +49,7 @@ class CheckUpdateTaskHandler extends TaskHandler {
     }
     await completer.future;
     try {
-      locale =
-          await FlutterForegroundTask.getData<String>(key: 'locale') ?? 'ru';
+      locale = await FlutterForegroundTask.getData<String>(key: 'locale') ?? 'ru';
       await _addMoviesToDatabaseAndCheckUpdates();
       await _addTvShowsToDatabaseAndCheckUpdates();
       await _addPeopleToDatabaseAndCheckUpdates();
@@ -73,10 +78,9 @@ class CheckUpdateTaskHandler extends TaskHandler {
     try {
       List<MovieDetails>? favoriteMovies;
       try {
-        favoriteMovies =
-            (await _database?.appDatabaseDao.fetchFavoriteAndNotWatchedMovies())
-                ?.map((e) => e.data)
-                .toList();
+        favoriteMovies = (await _database?.appDatabaseDao.fetchFavoriteAndNotWatchedMovies())
+            ?.map((e) => e.data)
+            .toList();
       } catch (e) {}
       if (favoriteMovies != null) {
         for (var i = 0; i < favoriteMovies.length; i++) {
@@ -103,12 +107,10 @@ class CheckUpdateTaskHandler extends TaskHandler {
     final releaseDateFromDB = movieFromDB.releaseDate;
     final statusFromDB = movieFromDB.status;
     final videosFromDB = movieFromDB.videos;
-    final resultOverviewCompare =
-        newMovieDetails.overview?.compareTo(overviewFromDB ?? '');
-    final resultReleaseDateCompare = newMovieDetails.releaseDate
-        ?.compareTo(releaseDateFromDB ?? DateTime.now());
-    final resultStatusCompare =
-        newMovieDetails.status?.compareTo(statusFromDB ?? '');
+    final resultOverviewCompare = newMovieDetails.overview?.compareTo(overviewFromDB ?? '');
+    final resultReleaseDateCompare =
+        newMovieDetails.releaseDate?.compareTo(releaseDateFromDB ?? DateTime.now());
+    final resultStatusCompare = newMovieDetails.status?.compareTo(statusFromDB ?? '');
     if (resultOverviewCompare != 0) {
       if (locale.compareTo('ru') == 0) {
         textUpdated = 'Описание изменилось';
@@ -123,11 +125,9 @@ class CheckUpdateTaskHandler extends TaskHandler {
       }
     } else if (resultStatusCompare != 0) {
       if (locale.compareTo('ru') == 0) {
-        textUpdated =
-            'Статус изменился на ${newMovieDetails.status ?? 'Неизвестный'}';
+        textUpdated = 'Статус изменился на ${newMovieDetails.status ?? 'Неизвестный'}';
       } else {
-        textUpdated =
-            'Status changed to ${newMovieDetails.status ?? 'Unknown'}';
+        textUpdated = 'Status changed to ${newMovieDetails.status ?? 'Unknown'}';
       }
     } else if (videosFromDB != null &&
         videosFromDB.results.isEmpty &&
@@ -140,10 +140,9 @@ class CheckUpdateTaskHandler extends TaskHandler {
       }
     }
     if (textUpdated.isNotEmpty) {
-      final title =
-          newMovieDetails.title != null && newMovieDetails.title!.isNotEmpty
-              ? newMovieDetails.title
-              : 'Unknown';
+      final title = newMovieDetails.title != null && newMovieDetails.title!.isNotEmpty
+          ? newMovieDetails.title
+          : 'Unknown';
       final id = newMovieDetails.id;
       AppNotificationManager.showNotification(
         id: id ?? 0,
@@ -166,8 +165,7 @@ class CheckUpdateTaskHandler extends TaskHandler {
     try {
       List<TvShowDetails>? favoriteTvShows;
       try {
-        favoriteTvShows = (await _database?.appDatabaseDao
-                .fetchFavoriteAndNotWatchedTvShows())
+        favoriteTvShows = (await _database?.appDatabaseDao.fetchFavoriteAndNotWatchedTvShows())
             ?.map((e) => e.data)
             .toList();
       } catch (e) {}
@@ -227,11 +225,9 @@ class CheckUpdateTaskHandler extends TaskHandler {
       if (locale.compareTo('ru') == 0) {
         textUpdated = 'Появился ${newTvShowDetails.numberOfEpisodes} эпизод';
       } else {
-        textUpdated =
-            'Episode ${newTvShowDetails.numberOfEpisodes} has appeared';
+        textUpdated = 'Episode ${newTvShowDetails.numberOfEpisodes} has appeared';
       }
-    } else if (videosFromDB.results.isEmpty &&
-        newTvShowDetails.videos.results.isNotEmpty) {
+    } else if (videosFromDB.results.isEmpty && newTvShowDetails.videos.results.isNotEmpty) {
       if (locale.compareTo('ru') == 0) {
         textUpdated = 'Появился трейлер';
       } else {
@@ -239,8 +235,7 @@ class CheckUpdateTaskHandler extends TaskHandler {
       }
     }
     if (textUpdated.isNotEmpty) {
-      final title =
-          newTvShowDetails.name.isNotEmpty ? newTvShowDetails.name : 'Unknown';
+      final title = newTvShowDetails.name.isNotEmpty ? newTvShowDetails.name : 'Unknown';
       final id = newTvShowDetails.id;
       AppNotificationManager.showNotification(
         id: id,
@@ -263,9 +258,8 @@ class CheckUpdateTaskHandler extends TaskHandler {
     try {
       List<ActorDetails>? favoritePeople;
       try {
-        favoritePeople = (await _database?.appDatabaseDao.fetchFavoritePeople())
-            ?.map((e) => e.data)
-            .toList();
+        favoritePeople =
+            (await _database?.appDatabaseDao.fetchFavoritePeople())?.map((e) => e.data).toList();
       } catch (e) {}
       if (favoritePeople != null) {
         for (var i = 0; i < favoritePeople.length; i++) {
@@ -291,17 +285,14 @@ class CheckUpdateTaskHandler extends TaskHandler {
     final overviewFromDB = personFromDB.biography;
     final castFromDB = personFromDB.combinedCredits.cast;
     final crewFromDB = personFromDB.combinedCredits.crew;
-    if (overviewFromDB != null &&
-        newPersonDetails.biography?.compareTo(overviewFromDB) != 0) {
+    if (overviewFromDB != null && newPersonDetails.biography?.compareTo(overviewFromDB) != 0) {
       if (locale.compareTo('ru') == 0) {
         textUpdated = 'Биография изменилась';
       } else {
         textUpdated = 'Biography has changed';
       }
-    } else if (castFromDB.length !=
-        newPersonDetails.combinedCredits.cast.length) {
-      final title =
-          newPersonDetails.name.isNotEmpty ? newPersonDetails.name : 'Unknown';
+    } else if (castFromDB.length != newPersonDetails.combinedCredits.cast.length) {
+      final title = newPersonDetails.name.isNotEmpty ? newPersonDetails.name : 'Unknown';
       for (var i = 0; i < newPersonDetails.combinedCredits.cast.length; i++) {
         final items = newPersonDetails.combinedCredits.cast;
         if (!castFromDB.contains(items[i])) {
@@ -321,10 +312,8 @@ class CheckUpdateTaskHandler extends TaskHandler {
           }
         }
       }
-    } else if (crewFromDB.length !=
-        newPersonDetails.combinedCredits.crew.length) {
-      final title =
-          newPersonDetails.name.isNotEmpty ? newPersonDetails.name : 'Unknown';
+    } else if (crewFromDB.length != newPersonDetails.combinedCredits.crew.length) {
+      final title = newPersonDetails.name.isNotEmpty ? newPersonDetails.name : 'Unknown';
       for (var i = 0; i < newPersonDetails.combinedCredits.crew.length; i++) {
         final items = newPersonDetails.combinedCredits.crew;
         if (!crewFromDB.contains(items[i])) {
@@ -346,8 +335,7 @@ class CheckUpdateTaskHandler extends TaskHandler {
       }
     }
     if (textUpdated.isNotEmpty) {
-      final title =
-          newPersonDetails.name.isNotEmpty ? newPersonDetails.name : 'Unknown';
+      final title = newPersonDetails.name.isNotEmpty ? newPersonDetails.name : 'Unknown';
       final id = newPersonDetails.id;
       AppNotificationManager.showNotification(
         id: id,

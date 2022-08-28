@@ -363,7 +363,6 @@ class AccountRepository {
         final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
           await Future.delayed(Duration.zero);
-          print(ids[i]);
           final response = await _searchApiClient.findById(id: ids[i], locale: locale);
           if (response.movieResults.isEmpty) continue;
           final movie = response.movieResults.first;
