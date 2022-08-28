@@ -51,7 +51,7 @@ dependencies:
   cloud_firestore: ^3.1.10
   file_picker: ^4.5.1
   firebase_storage: ^10.2.9
-  google_mobile_ads: ^1.1.0
+  # google_mobile_ads: ^1.1.0
   async: ^2.8.2
   firebase_crashlytics: ^2.6.0
   firebase_analytics: ^9.1.3
