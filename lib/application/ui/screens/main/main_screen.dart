@@ -18,11 +18,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
     context.read<MainViewModel>().scaffoldKey = GlobalKey<ScaffoldState>();
     context.read<MainViewModel>().init();

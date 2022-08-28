@@ -6,10 +6,12 @@ enum ExceptionSolution { none, update, showMessage }
 
 class ApiClientException implements Exception {
   String code;
+  String? message;
   ExceptionSolution solution;
 
   ApiClientException(
-    this.code, [
+    this.code,
+    this.message, [
     this.solution = ExceptionSolution.none,
   ]);
 
@@ -18,17 +20,13 @@ class ApiClientException implements Exception {
       return S.of(context).no_such_user;
     } else if (code.compareTo('network-error') == 0) {
       return S.of(context).network_error_check_your_internet_connection;
-    } 
-    else if (code.compareTo('movie-details-not-saved') == 0) {
+    } else if (code.compareTo('movie-details-not-saved') == 0) {
       return S.of(context).movie_details_not_saved;
-    } 
-    else if (code.compareTo('serial-details-not-saved') == 0) {
+    } else if (code.compareTo('serial-details-not-saved') == 0) {
       return S.of(context).serial_details_not_saved;
-    } 
-    else if (code.compareTo('actor-details-not-saved') == 0) {
+    } else if (code.compareTo('actor-details-not-saved') == 0) {
       return S.of(context).actor_details_not_saved;
-    } 
-    else if (code.compareTo('invalid-email') == 0) {
+    } else if (code.compareTo('invalid-email') == 0) {
       return S.of(context).email_entered_incorrectly;
     } else if (code.compareTo('not-verified') == 0) {
       return S.of(context).confirm_mail;
@@ -44,5 +42,10 @@ class ApiClientException implements Exception {
       return S.of(context).unknown_error_write_to_support;
     }
     return S.of(context).unknown_error_write_to_support;
+  }
+
+  @override
+  String toString() {
+    return '$code: $message';
   }
 }

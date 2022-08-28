@@ -33,9 +33,9 @@ class ActorRepository {
             return favoritePerson.data;
           }
         } catch (e) {
-          throw ApiClientException('actor-details-not-saved');
+          throw ApiClientException('actor-details-not-saved',e.toString());
         }
-        throw ApiClientException('actor-details-not-saved');
+        throw ApiClientException('actor-details-not-saved',toString());
       },
     );
   }

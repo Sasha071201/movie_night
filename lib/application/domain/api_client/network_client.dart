@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:http/retry.dart';
 import 'package:movie_night/application/domain/api_client/api_client_exception.dart';
 
 import '../../configuration/network_configuration.dart';
@@ -32,18 +31,19 @@ class NetworkClient {
       final json = (jsonDecode(data));
       final result = parser(json);
       return result;
-    } on SocketException catch (_) {
-      throw ApiClientException('network-error');
-    } on HttpException catch (_) {
+    } on SocketException catch (e) {
+      throw ApiClientException('network-error', e.message);
+    } on HttpException catch (e) {
       throw ApiClientException(
         'network-error',
+        e.message,
         ExceptionSolution.update,
       );
     } on ApiClientException catch (_) {
       rethrow;
     } catch (e) {
       log(e.toString());
-      throw ApiClientException("unknown-error");
+      throw ApiClientException("unknown-error", e.toString());
     }
   }
 
@@ -60,20 +60,19 @@ class NetworkClient {
       final json = (await jsonDecode(response.data));
       final result = parser(json);
       return result;
-    } on SocketException catch (_) {
+    } on SocketException catch (e) {
+      throw ApiClientException('network-error', e.message);
+    } on HttpException catch (e) {
       throw ApiClientException(
         'network-error',
-      );
-    } on HttpException catch (_) {
-      throw ApiClientException(
-        'network-error',
+        e.message,
         ExceptionSolution.update,
       );
     } on ApiClientException catch (_) {
       rethrow;
     } catch (e) {
       log(e.toString());
-      throw ApiClientException("unknown-error");
+      throw ApiClientException("unknown-error", e.toString());
     } finally {
       dio.close();
     }
@@ -101,13 +100,13 @@ class NetworkClient {
       final json = (await jsonDecode(response.data));
       final result = parser(json);
       return result;
-    } on SocketException catch (_) {
-      throw ApiClientException('network-error');
+    } on SocketException catch (e) {
+      throw ApiClientException('network-error', e.message);
     } on ApiClientException catch (_) {
       rethrow;
     } catch (e) {
       log(e.toString());
-      throw ApiClientException("unknown-error");
+      throw ApiClientException("unknown-error", e.toString());
     } finally {
       dio.close();
     }
@@ -117,7 +116,7 @@ class NetworkClient {
     final statusCode = response.statusCode;
     if (statusCode != 200) {
       log('statusCode: $statusCode');
-      throw ApiClientException('unknown-error');
+      throw ApiClientException('unknown-error', response.statusMessage);
     }
   }
 }

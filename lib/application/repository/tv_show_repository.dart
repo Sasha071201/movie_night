@@ -120,10 +120,10 @@ class TvShowRepository {
               return watchedTvShow.data;
             }
           } catch (e) {
-            throw ApiClientException('serial-details-not-saved');
+            throw ApiClientException('serial-details-not-saved', e.toString());
           }
         }
-        throw ApiClientException('serial-details-not-saved');
+        throw ApiClientException('serial-details-not-saved', toString());
       },
     );
   }

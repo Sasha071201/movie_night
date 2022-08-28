@@ -418,21 +418,21 @@ class AccountApiClient {
 
   void _handleException(FirebaseException e) {
     if (e.code.compareTo('user-not-found') == 0) {
-      throw ApiClientException('user-not-found');
+      throw ApiClientException('user-not-found', e.message);
     } else if (e.code.compareTo('invalid-email') == 0) {
-      throw ApiClientException('invalid-email');
+      throw ApiClientException('invalid-email', e.message);
     } else if (e.code.compareTo('not-verified') == 0) {
-      throw ApiClientException('not-verified');
+      throw ApiClientException('not-verified', e.message);
     } else if (e.code.compareTo('wrong-password') == 0) {
-      throw ApiClientException('wrong-password');
+      throw ApiClientException('wrong-password', e.message);
     } else if (e.code.compareTo('weak-password') == 0) {
-      throw ApiClientException('weak-password');
+      throw ApiClientException('weak-password', e.message);
     } else if (e.code.compareTo('email-already-in-use') == 0) {
-      throw ApiClientException('email-already-in-use');
+      throw ApiClientException('email-already-in-use', e.message);
     } else if (e.code.compareTo('too-many-requests') == 0) {
-      throw ApiClientException('too-many-requests');
+      throw ApiClientException('too-many-requests', e.message);
     } else {
-      throw ApiClientException('unknown-error');
+      throw ApiClientException('unknown-error', e.message);
     }
   }
 }

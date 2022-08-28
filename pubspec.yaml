@@ -62,7 +62,7 @@ dependencies:
   path_provider: ^2.0.9
   path: ^1.8.0
   connectivity_plus: ^2.2.1
-  flutter_foreground_task: ^3.5.5
+  flutter_foreground_task: ^3.7.3
   shared_preferences: ^2.0.13
   shared_preferences_android: ^2.0.11
   flutter_local_notifications: ^9.4.0
