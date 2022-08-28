@@ -176,7 +176,7 @@ class MovieDetailsConverter extends drift.TypeConverter<MovieDetails, String> {
 @JsonSerializable(fieldRename: FieldRename.snake)
 class BelongsToCollection {
   final int id;
-  final String name;
+  final String? name;
   final String? posterPath;
   final String? backdropPath;
   BelongsToCollection({

@@ -105,7 +105,7 @@ Map<String, dynamic> _$MovieDetailsToJson(MovieDetails instance) =>
 BelongsToCollection _$BelongsToCollectionFromJson(Map<String, dynamic> json) =>
     BelongsToCollection(
       id: json['id'] as int,
-      name: json['name'] as String,
+      name: json['name'] as String?,
       posterPath: json['poster_path'] as String?,
       backdropPath: json['backdrop_path'] as String?,
     );

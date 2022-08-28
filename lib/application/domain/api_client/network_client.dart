@@ -2,14 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:movie_night/application/domain/api_client/api_client_exception.dart';
 
 import '../../configuration/network_configuration.dart';
 import 'network_cache_manager.dart';
 
 class NetworkClient {
-  final _client = HttpClient();
-
   Uri _makeUri(String path, [Map<String, dynamic>? parameters]) {
     final uri = Uri.parse('${NetworkConfiguration.host}$path');
     if (parameters != null) {
@@ -32,18 +31,19 @@ class NetworkClient {
       final json = (jsonDecode(data));
       final result = parser(json);
       return result;
-    } on SocketException catch (_) {
-      throw ApiClientException('network-error');
-    } on HttpException catch (_) {
+    } on SocketException catch (e) {
+      throw ApiClientException('network-error', e.message);
+    } on HttpException catch (e) {
       throw ApiClientException(
         'network-error',
+        e.message,
         ExceptionSolution.update,
       );
     } on ApiClientException catch (_) {
       rethrow;
     } catch (e) {
       log(e.toString());
-      throw ApiClientException("unknown-error");
+      throw ApiClientException("unknown-error", e.toString());
     }
   }
 
@@ -52,27 +52,29 @@ class NetworkClient {
     T Function(dynamic json) parser, [
     Map<String, dynamic>? urlParameters,
   ]) async {
+    final dio = Dio();
     try {
       final url = _makeUri(path, urlParameters);
-      final request = await _client.getUrl(url);
-      final response = await request.close();
-      final json = (await response.jsonDecode());
+      final response = await dio.get(url.toString());
+      _handleResponse(response);
+      final json = (await jsonDecode(response.data));
       final result = parser(json);
       return result;
-    } on SocketException catch (_) {
+    } on SocketException catch (e) {
+      throw ApiClientException('network-error', e.message);
+    } on HttpException catch (e) {
       throw ApiClientException(
         'network-error',
-      );
-    } on HttpException catch (_) {
-      throw ApiClientException(
-        'network-error',
+        e.message,
         ExceptionSolution.update,
       );
     } on ApiClientException catch (_) {
       rethrow;
     } catch (e) {
       log(e.toString());
-      throw ApiClientException("unknown-error");
+      throw ApiClientException("unknown-error", e.toString());
+    } finally {
+      dio.close();
     }
   }
 
@@ -82,22 +84,39 @@ class NetworkClient {
     T Function(dynamic json) parser, [
     Map<String, dynamic>? urlParameters,
   ]) async {
+    final dio = Dio();
     try {
       final url = _makeUri(path, urlParameters);
-      final request = await _client.postUrl(url);
-      request.headers.contentType = ContentType.json;
-      request.write(jsonEncode(bodyParameters));
-      final response = await request.close();
-      final json = (await response.jsonDecode());
+      final response = await dio.post(
+        url.toString(),
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        ),
+        data: bodyParameters,
+      );
+      _handleResponse(response);
+      final json = (await jsonDecode(response.data));
       final result = parser(json);
       return result;
-    } on SocketException catch (_) {
-      throw ApiClientException('network-error');
+    } on SocketException catch (e) {
+      throw ApiClientException('network-error', e.message);
     } on ApiClientException catch (_) {
       rethrow;
     } catch (e) {
       log(e.toString());
-      throw ApiClientException("unknown-error");
+      throw ApiClientException("unknown-error", e.toString());
+    } finally {
+      dio.close();
+    }
+  }
+
+  void _handleResponse(Response response) {
+    final statusCode = response.statusCode;
+    if (statusCode != 200) {
+      log('statusCode: $statusCode');
+      throw ApiClientException('unknown-error', response.statusMessage);
     }
   }
 }

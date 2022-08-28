@@ -197,8 +197,7 @@ class MovieApiClient {
           _networkClient.getWithCache('/movie/$movieId', parser, urlParameters);
       return result;
     }
-    final result =
-        _networkClient.get('/movie/$movieId', parser, urlParameters);
+    final result = _networkClient.get('/movie/$movieId', parser, urlParameters);
     return result;
   }
 

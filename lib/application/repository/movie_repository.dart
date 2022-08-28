@@ -119,10 +119,10 @@ class MovieRepository {
               return watchedMovie.data;
             }
           } catch (e) {
-            throw ApiClientException('movie-details-not-saved');
+            throw ApiClientException('movie-details-not-saved',e.toString());
           }
         }
-        throw ApiClientException('movie-details-not-saved');
+        throw ApiClientException('movie-details-not-saved',toString());
       },
     );
   }

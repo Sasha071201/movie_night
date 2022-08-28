@@ -67,15 +67,16 @@ class CheckUpdateTaskHandler extends TaskHandler {
   Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {}
 
   @override
-  Future<void> onDestroy(DateTime timestamp) async {}
+  Future<void> onDestroy(DateTime timestamp, SendPort? sendPort) async {}
 
   Future<void> _addMoviesToDatabaseAndCheckUpdates() async {
     try {
       List<MovieDetails>? favoriteMovies;
       try {
-        favoriteMovies = (await _database?.appDatabaseDao.fetchFavoriteAndNotWatchedMovies())
-            ?.map((e) => e.data)
-            .toList();
+        favoriteMovies =
+            (await _database?.appDatabaseDao.fetchFavoriteAndNotWatchedMovies())
+                ?.map((e) => e.data)
+                .toList();
       } catch (e) {}
       if (favoriteMovies != null) {
         for (var i = 0; i < favoriteMovies.length; i++) {
@@ -165,10 +166,10 @@ class CheckUpdateTaskHandler extends TaskHandler {
     try {
       List<TvShowDetails>? favoriteTvShows;
       try {
-        favoriteTvShows =
-            (await _database?.appDatabaseDao.fetchFavoriteAndNotWatchedTvShows())
-                ?.map((e) => e.data)
-                .toList();
+        favoriteTvShows = (await _database?.appDatabaseDao
+                .fetchFavoriteAndNotWatchedTvShows())
+            ?.map((e) => e.data)
+            .toList();
       } catch (e) {}
       if (favoriteTvShows != null) {
         for (var i = 0; i < favoriteTvShows.length; i++) {
