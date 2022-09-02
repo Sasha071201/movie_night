@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:movie_night/application/domain/api_client/api_client_exception.dart';
 
 import '../../configuration/network_configuration.dart';
 import 'network_cache_manager.dart';
 
 class NetworkClient {
+  final _client = HttpClient();
+
   Uri _makeUri(String path, [Map<String, dynamic>? parameters]) {
     final uri = Uri.parse('${NetworkConfiguration.host}$path');
     if (parameters != null) {
@@ -51,12 +52,12 @@ class NetworkClient {
     T Function(dynamic json) parser, [
     Map<String, dynamic>? urlParameters,
   ]) async {
-    final dio = Dio();
     try {
       final url = _makeUri(path, urlParameters);
-      final response = await dio.get(url.toString());
+      final request = await _client.getUrl(url);
+      final response = await request.close();
       _handleResponse(response);
-      final json = response.data;
+      final dynamic json = await response.jsonDecode();
       final result = parser(json);
       return result;
     } on SocketException catch (e) {
@@ -72,31 +73,25 @@ class NetworkClient {
     } catch (e) {
       log(e.toString());
       throw ApiClientException("unknown-error", e.toString());
-    } finally {
-      dio.close();
     }
   }
 
   Future<T> post<T>(
     String path,
     Map<String, dynamic> bodyParameters,
-    T Function(dynamic json) parser, [
+    T Function(dynamic json) parser, {
     Map<String, dynamic>? urlParameters,
-  ]) async {
-    final dio = Dio();
+    ContentType? contentType,
+  }) async {
     try {
       final url = _makeUri(path, urlParameters);
-      final response = await dio.post(
-        url.toString(),
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-        ),
-        data: bodyParameters,
-      );
+      final request = await _client.postUrl(url);
+      request.headers.contentType = contentType ?? ContentType.text;
+      request.write(jsonEncode(bodyParameters));
+
+      final HttpClientResponse response = await request.close();
       _handleResponse(response);
-      final json = response.data;
+      final json = await response.jsonDecode();
       final result = parser(json);
       return result;
     } on SocketException catch (e) {
@@ -106,16 +101,14 @@ class NetworkClient {
     } catch (e) {
       log(e.toString());
       throw ApiClientException("unknown-error", e.toString());
-    } finally {
-      dio.close();
     }
   }
 
-  void _handleResponse(Response response) {
+  void _handleResponse(HttpClientResponse response) {
     final statusCode = response.statusCode;
     if (statusCode != 200) {
       log('statusCode: $statusCode');
-      throw ApiClientException('unknown-error', response.statusMessage);
+      throw ApiClientException('unknown-error', null);
     }
   }
 }
