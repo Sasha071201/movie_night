@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 
 import 'package:movie_night/application/constants/app_dimensions.dart';
 import 'package:movie_night/application/domain/api_client/image_downloader.dart';
+import 'package:movie_night/application/domain/firebase/firebase_dynamic_link.dart';
 import 'package:movie_night/application/ui/screens/actor_details/actor_details_view_model.dart';
 import 'package:movie_night/application/ui/themes/app_colors.dart';
 import 'package:movie_night/application/ui/themes/app_text_style.dart';
 import 'package:movie_night/application/ui/widgets/cached_network_image_widget.dart';
 import 'package:movie_night/application/ui/widgets/inkwell_material_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../generated/l10n.dart';
 import '../../widgets/details/expansion_tile_credits_widget.dart';
@@ -37,14 +39,12 @@ class _ActorDetailsScreenState extends State<ActorDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final actorDetails =
-        context.select((ActorDetailsViewModel vm) => vm.state.actorDetails);
-    final isLoaded =
-        context.select((ActorDetailsViewModel vm) => vm.state.isLoaded);
+    final actorDetails = context.select((ActorDetailsViewModel vm) => vm.state.actorDetails);
+    final isLoaded = context.select((ActorDetailsViewModel vm) => vm.state.isLoaded);
     return Scaffold(
       body: actorDetails != null && isLoaded
           ? CustomScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               slivers: [
                 const SliverAppBar(
                   pinned: false,
@@ -127,8 +127,8 @@ class _ReviewTextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<ActorDetailsViewModel>();
-    final isProgressSending = context
-        .select((ActorDetailsViewModel vm) => vm.state.isProgressSending);
+    final isProgressSending =
+        context.select((ActorDetailsViewModel vm) => vm.state.isProgressSending);
     return ReviewTextFieldWidget(
       isProgressSending: isProgressSending,
       sendReview: vm.sendReview,
@@ -164,9 +164,7 @@ class _BottomPaddingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final insetsBottom = MediaQuery.of(context).viewInsets.bottom;
-    return Padding(
-        padding: EdgeInsets.only(
-            bottom: insetsBottom == 0 ? 32 : insetsBottom + 16));
+    return Padding(padding: EdgeInsets.only(bottom: insetsBottom == 0 ? 32 : insetsBottom + 16));
   }
 }
 
@@ -177,15 +175,13 @@ class _MediaWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profiles = context
-        .select((ActorDetailsViewModel vm) => vm.state.actorImages?.profiles);
+    final profiles = context.select((ActorDetailsViewModel vm) => vm.state.actorImages?.profiles);
     return MediaWidget(
       aspectRatios: profiles
           ?.map(
             (backdrop) => backdrop.aspectRatio,
           )
           .toList(),
-      
       backdrops: profiles
           ?.map(
             (backdrop) => backdrop.filePath,
@@ -201,8 +197,8 @@ class _CastExpansionTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<ActorDetailsViewModel>();
-    final cast = context.select((ActorDetailsViewModel vm) =>
-        vm.state.actorDetails?.combinedCredits.cast);
+    final cast =
+        context.select((ActorDetailsViewModel vm) => vm.state.actorDetails?.combinedCredits.cast);
     return cast != null && cast.isNotEmpty
         ? Padding(
             padding: const EdgeInsets.symmetric(
@@ -226,8 +222,8 @@ class _CrewExpansionTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<ActorDetailsViewModel>();
-    final crew = context.select((ActorDetailsViewModel vm) =>
-        vm.state.actorDetails?.combinedCredits.crew);
+    final crew =
+        context.select((ActorDetailsViewModel vm) => vm.state.actorDetails?.combinedCredits.crew);
     return crew != null && crew.isNotEmpty
         ? Padding(
             padding: const EdgeInsets.symmetric(
@@ -253,8 +249,7 @@ class _HeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<ActorDetailsViewModel>();
-    final isFavorite =
-        context.select((ActorDetailsViewModel vm) => vm.state.isFavorite);
+    final isFavorite = context.select((ActorDetailsViewModel vm) => vm.state.isFavorite);
     return SizedBox(
       width: double.infinity,
       child: Stack(
@@ -263,15 +258,33 @@ class _HeaderWidget extends StatelessWidget {
           Positioned(
             right: 24,
             top: 0,
-            child: IconButtonWidget(
-              icon: Icon(
-                Icons.favorite,
-                color: isFavorite
-                    ? AppColors.colorSecondary
-                    : AppColors.colorSecondaryText,
-                size: 32,
-              ),
-              onPressed: vm.favoritePerson,
+            child: Column(
+              children: [
+                IconButtonWidget(
+                  icon: Icon(
+                    Icons.favorite,
+                    color: isFavorite ? AppColors.colorSecondary : AppColors.colorSecondaryText,
+                    size: 32,
+                  ),
+                  onPressed: vm.favoritePerson,
+                ),
+                IconButtonWidget(
+                  icon: const Icon(
+                    Icons.share,
+                    color: AppColors.colorSecondary,
+                    size: 32,
+                  ),
+                  onPressed: () async {
+                    if (vm.state.actorDetails?.id == null) return;
+                    final url = await FirebaseDynamicLinkService.createDynamicLink(
+                      type: FirebaseDynamicLinkType.person,
+                      id: vm.state.actorDetails!.id,
+                      short: true,
+                    );
+                    Share.share(url);
+                  },
+                ),
+              ],
             ),
           ),
         ],
@@ -285,8 +298,8 @@ class _BiographyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final biography = context
-        .select((ActorDetailsViewModel vm) => vm.state.actorDetails?.biography);
+    final biography =
+        context.select((ActorDetailsViewModel vm) => vm.state.actorDetails?.biography);
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.mediumPadding,
@@ -306,8 +319,8 @@ class _ExternalSourcesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final externalIds = context.select(
-        (ActorDetailsViewModel vm) => vm.state.actorDetails!.externalIds);
+    final externalIds =
+        context.select((ActorDetailsViewModel vm) => vm.state.actorDetails!.externalIds);
     final allIsNull = (externalIds.facebookId ?? '').isEmpty &&
         (externalIds.instagramId ?? '').isEmpty &&
         (externalIds.twitterId ?? '').isEmpty;
@@ -342,14 +355,12 @@ class _RowMainInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<ActorDetailsViewModel>();
-    final actor =
-        context.select((ActorDetailsViewModel vm) => vm.state.actorDetails!);
+    final actor = context.select((ActorDetailsViewModel vm) => vm.state.actorDetails!);
     final actorInfoData = <RowMainInfoData>[
       if (actor.birthday != null)
         RowMainInfoData(
           icon: Icons.calendar_month,
-          title:
-              '${S.of(context).date_of_birth}: ${vm.stringFromDate(actor.birthday)}',
+          title: '${S.of(context).date_of_birth}: ${vm.stringFromDate(actor.birthday)}',
         ),
       RowMainInfoData(
         icon: Icons.info_rounded,
@@ -377,8 +388,7 @@ class _TitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = context
-        .select((ActorDetailsViewModel vm) => vm.state.actorDetails!.name);
+    final title = context.select((ActorDetailsViewModel vm) => vm.state.actorDetails!.name);
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.mediumPadding,
@@ -395,16 +405,14 @@ class _ActorImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final actorDetails =
-        context.select((ActorDetailsViewModel vm) => vm.state.actorDetails);
+    final actorDetails = context.select((ActorDetailsViewModel vm) => vm.state.actorDetails);
     return Center(
       child: InkWellMaterialWidget(
         borderRadius: AppDimensions.radius5,
         color: AppColors.colorSplash,
         onTap: () => showImageViewer(
             context,
-            Image.network(ImageDownloader.imageHighQualityUrl(
-                    actorDetails?.profilePath ?? ''))
+            Image.network(ImageDownloader.imageHighQualityUrl(actorDetails?.profilePath ?? ''))
                 .image),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(

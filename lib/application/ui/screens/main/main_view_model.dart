@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:movie_night/application/domain/ad_mob/ad_helper.dart';
 import 'package:movie_night/application/domain/connectivity/app_connectivity_reactor.dart';
+import 'package:movie_night/application/domain/firebase/firebase_dynamic_link.dart';
 import 'package:movie_night/application/domain/foreground_task/foreground_task.dart';
 import 'package:movie_night/application/ui/navigation/app_navigation.dart';
 import 'package:movie_night/application/ui/notifications/app_notification_manager.dart';
@@ -57,6 +58,7 @@ class MainViewModel extends ChangeNotifier {
       },
     );
     _listenNotifications(context);
+    FirebaseDynamicLinkService.initDynamicLink(context);
     AppNotificationManager.showScheduledNotificationDaily(
         id: 1,
         title: S.of(context).nothing_to_see,

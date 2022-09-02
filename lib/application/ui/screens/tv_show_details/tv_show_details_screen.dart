@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_night/application/domain/firebase/firebase_dynamic_link.dart';
 import 'package:provider/provider.dart';
 
 import 'package:movie_night/application/constants/app_dimensions.dart';
@@ -49,17 +50,15 @@ class _TvShowDetailsScreenState extends State<TvShowDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<TvShowDetailsViewModel>();
-    final showAdultContent = context
-        .select((TvShowDetailsViewModel vm) => vm.state.showAdultContent);
-    final tvShow =
-        context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails);
-    final isLoaded =
-        context.select((TvShowDetailsViewModel vm) => vm.state.isLoaded);
+    final showAdultContent =
+        context.select((TvShowDetailsViewModel vm) => vm.state.showAdultContent);
+    final tvShow = context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails);
+    final isLoaded = context.select((TvShowDetailsViewModel vm) => vm.state.isLoaded);
     return Scaffold(
       body: SafeArea(
         child: tvShow != null && isLoaded
             ? CustomScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 slivers: [
                   SliverList(
                     delegate: SliverChildListDelegate(
@@ -148,8 +147,8 @@ class _ReviewTextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<TvShowDetailsViewModel>();
-    final isProgressSending = context
-        .select((TvShowDetailsViewModel vm) => vm.state.isProgressSending);
+    final isProgressSending =
+        context.select((TvShowDetailsViewModel vm) => vm.state.isProgressSending);
     return ReviewTextFieldWidget(
       isProgressSending: isProgressSending,
       sendReview: vm.sendReview,
@@ -185,9 +184,7 @@ class _BottomPaddingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final insetsBottom = MediaQuery.of(context).viewInsets.bottom;
-    return Padding(
-        padding: EdgeInsets.only(
-            bottom: insetsBottom == 0 ? 32 : insetsBottom + 16));
+    return Padding(padding: EdgeInsets.only(bottom: insetsBottom == 0 ? 32 : insetsBottom + 16));
   }
 }
 
@@ -198,17 +195,15 @@ class _ListCrewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final crew = context.select((TvShowDetailsViewModel vm) =>
-        vm.state.tvShowDetails!.aggregateCredits.crew);
+    final crew = context
+        .select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.aggregateCredits.crew);
     final list = crew
         .map(
           (item) => CreditsItemComplexData(
             id: item.id,
             name: item.name,
             posterPath: item.profilePath ?? '',
-            list: item.jobs
-                .map((job) => MapEntry(job.job, job.episodeCount))
-                .toList(),
+            list: item.jobs.map((job) => MapEntry(job.job, job.episodeCount)).toList(),
           ),
         )
         .toList();
@@ -230,8 +225,8 @@ class _RecommendationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final details = context.read<TvShowDetailsViewModel>();
-    final recommendations = context.select(
-        (TvShowDetailsViewModel vm) => vm.state.tvShowDetails?.recommendations);
+    final recommendations =
+        context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails?.recommendations);
     return recommendations != null && recommendations.results.isNotEmpty
         ? TvShowsWithHeaderWidget(
             tvShowData: TvShowWithHeaderData(
@@ -240,8 +235,7 @@ class _RecommendationWidget extends StatelessWidget {
               viewMediaType: ViewMediaType.recommendation,
               tvShowId: details.tvShowId,
             ),
-            onPressed: () =>
-                context.read<TvShowDetailsViewModel>().showAdIfAvailable(),
+            onPressed: () => context.read<TvShowDetailsViewModel>().showAdIfAvailable(),
           )
         : const SizedBox.shrink();
   }
@@ -255,8 +249,7 @@ class _SimilarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final details = context.read<TvShowDetailsViewModel>();
-    final similar = context
-        .select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails?.similar);
+    final similar = context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails?.similar);
     return similar != null && similar.results.isNotEmpty
         ? TvShowsWithHeaderWidget(
             tvShowData: TvShowWithHeaderData(
@@ -265,8 +258,7 @@ class _SimilarWidget extends StatelessWidget {
               viewMediaType: ViewMediaType.similar,
               tvShowId: details.tvShowId,
             ),
-            onPressed: () =>
-                context.read<TvShowDetailsViewModel>().showAdIfAvailable(),
+            onPressed: () => context.read<TvShowDetailsViewModel>().showAdIfAvailable(),
           )
         : const SizedBox.shrink();
   }
@@ -316,17 +308,14 @@ class _SeasonsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tvShowId = context
-        .select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails?.id);
-    final seasons = context
-        .select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails?.seasons);
+    final tvShowId = context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails?.id);
+    final seasons = context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails?.seasons);
     return seasons != null && tvShowId != null && seasons.isNotEmpty == true
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.only(left: AppDimensions.mediumPadding),
+                padding: const EdgeInsets.only(left: AppDimensions.mediumPadding),
                 child: Text(
                   S.of(context).seasons,
                   style: AppTextStyle.header3,
@@ -341,8 +330,7 @@ class _SeasonsWidget extends StatelessWidget {
                   ),
                   scrollDirection: Axis.horizontal,
                   itemCount: seasons.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(width: 8),
+                  separatorBuilder: (context, index) => const SizedBox(width: 8),
                   itemBuilder: (context, index) {
                     final item = seasons[index];
                     return Align(
@@ -373,8 +361,8 @@ class SeasonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWellMaterialWidget(
-      onTap: () => Navigator.of(context).pushNamed(Screens.seasonDetails,
-          arguments: [season.seasonNumber, tvShowId]),
+      onTap: () => Navigator.of(context)
+          .pushNamed(Screens.seasonDetails, arguments: [season.seasonNumber, tvShowId]),
       borderRadius: AppDimensions.radius5,
       color: AppColors.colorSplash,
       child: SizedBox(
@@ -395,8 +383,7 @@ class SeasonWidget extends StatelessWidget {
                       right: 4,
                       bottom: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 1),
+                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                         decoration: BoxDecoration(
                           color: AppColors.colorPrimary,
                           borderRadius: BorderRadius.circular(
@@ -435,8 +422,8 @@ class _OverviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final overview = context.select(
-        (TvShowDetailsViewModel vm) => vm.state.tvShowDetails?.overview);
+    final overview =
+        context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails?.overview);
     return LargeTextWithHeaderWidget(
       header: S.of(context).description,
       overview: overview ?? '',
@@ -451,8 +438,8 @@ class _ExternalSourcesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final externalIds = context.select(
-        (TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.externalIds);
+    final externalIds =
+        context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.externalIds);
     final allIsNull = (externalIds.facebookId ?? '').isEmpty &&
         (externalIds.instagramId ?? '').isEmpty &&
         (externalIds.twitterId ?? '').isEmpty;
@@ -481,8 +468,8 @@ class _ProductionCompaniesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productionCompanies = context.select((TvShowDetailsViewModel vm) =>
-        vm.state.tvShowDetails!.productionCompanies);
+    final productionCompanies =
+        context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.productionCompanies);
     return ChipsWithHeaderWidget(
       title: S.of(context).production_companies,
       data: productionCompanies.map((data) => data.name).toList(),
@@ -498,8 +485,8 @@ class _ProductionCountriesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productionCountries = context.select((TvShowDetailsViewModel vm) =>
-        vm.state.tvShowDetails!.productionCountries);
+    final productionCountries =
+        context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.productionCountries);
     return ChipsWithHeaderWidget(
       title: S.of(context).production_countries,
       data: productionCountries.map((data) => data.name).toList(),
@@ -515,8 +502,8 @@ class _KeywordsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final keywords = context.select(
-        (TvShowDetailsViewModel vm) => vm.state.tvShowDetails?.keywords);
+    final keywords =
+        context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails?.keywords);
     return ChipsWithHeaderWidget(
       title: 'Keywords',
       data: keywords?.keywords?.map((keyword) => keyword.name).toList(),
@@ -530,8 +517,7 @@ class _TaglineWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tagline = context
-        .select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.tagline);
+    final tagline = context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.tagline);
     return TaglineWidget(
       tagline: tagline,
     );
@@ -545,8 +531,8 @@ class _MediaWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backdrops = context.select(
-        (TvShowDetailsViewModel vm) => vm.state.tvShowImages?.backdrops);
+    final backdrops =
+        context.select((TvShowDetailsViewModel vm) => vm.state.tvShowImages?.backdrops);
     return MediaWidget(
       aspectRatios: backdrops
           ?.map(
@@ -569,8 +555,8 @@ class _CreatedByWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final createdBy = context.select(
-        (TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.createdBy);
+    final createdBy =
+        context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.createdBy);
     final list = createdBy
         .map(
           (item) => CreditsItemSimpleData(
@@ -597,17 +583,15 @@ class _ListCastWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cast = context.select((TvShowDetailsViewModel vm) =>
-        vm.state.tvShowDetails!.aggregateCredits.cast);
+    final cast = context
+        .select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.aggregateCredits.cast);
     final list = cast
         .map(
           (item) => CreditsItemComplexData(
             id: item.id,
             name: item.name,
             posterPath: item.profilePath ?? '',
-            list: item.roles
-                .map((job) => MapEntry(job.character, job.episodeCount))
-                .toList(),
+            list: item.roles.map((job) => MapEntry(job.character, job.episodeCount)).toList(),
           ),
         )
         .toList();
@@ -628,8 +612,7 @@ class _GenresWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final genres = context
-        .select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.genres);
+    final genres = context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.genres);
     return ChipsWithHeaderWidget(
         title: S.of(context).genres,
         data: genres.map((genre) => genre.name).toList(),
@@ -656,33 +639,26 @@ class _RowMainInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<TvShowDetailsViewModel>();
-    final tvShow =
-        context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails);
+    final tvShow = context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails);
     final tvShowInfoData = <RowMainInfoData>[
       RowMainInfoData(
         icon: Icons.calendar_month,
-        title:
-            '${S.of(context).release_date}: ${vm.stringFromDate(tvShow?.firstAirDate)}',
+        title: '${S.of(context).release_date}: ${vm.stringFromDate(tvShow?.firstAirDate)}',
       ),
       if (tvShow?.lastAirDate != null)
         RowMainInfoData(
           icon: Icons.calendar_month,
-          title:
-              '${S.of(context).last_show}: ${vm.stringFromDate(tvShow?.lastAirDate)}',
+          title: '${S.of(context).last_show}: ${vm.stringFromDate(tvShow?.lastAirDate)}',
         ),
-      if (tvShow?.lastEpisodeToAir != null &&
-          tvShow!.lastEpisodeToAir!.name.isNotEmpty)
+      if (tvShow?.lastEpisodeToAir != null && tvShow!.lastEpisodeToAir!.name.isNotEmpty)
         RowMainInfoData(
           icon: Icons.movie_creation,
-          title:
-              '${S.of(context).last_episode}: ${tvShow.lastEpisodeToAir?.name}',
+          title: '${S.of(context).last_episode}: ${tvShow.lastEpisodeToAir?.name}',
         ),
-      if (tvShow?.nextEpisodeToAir != null &&
-          tvShow!.nextEpisodeToAir!.name.isNotEmpty)
+      if (tvShow?.nextEpisodeToAir != null && tvShow!.nextEpisodeToAir!.name.isNotEmpty)
         RowMainInfoData(
           icon: Icons.movie_creation,
-          title:
-              '${S.of(context).next_episode}: ${tvShow.nextEpisodeToAir!.name}',
+          title: '${S.of(context).next_episode}: ${tvShow.nextEpisodeToAir!.name}',
         ),
       if (tvShow?.numberOfSeasons != null && tvShow!.numberOfSeasons != 0)
         RowMainInfoData(
@@ -709,8 +685,7 @@ class _TitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = context
-        .select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.name);
+    final title = context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.name);
     return TitleWidget(title: title);
   }
 }
@@ -723,14 +698,15 @@ class _ButtonsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<TvShowDetailsViewModel>();
-    final videos = context
-        .select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.videos);
-    final isWatched =
-        context.select((TvShowDetailsViewModel vm) => vm.state.isWatched);
+    final videos = context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!.videos);
+    final isWatched = context.select((TvShowDetailsViewModel vm) => vm.state.isWatched);
     return ButtonsWidget(
       videos: videos.results,
       onPressedWatch: vm.watchTvShow,
       isWatched: isWatched,
+      showShare: true,
+      dynamicLinkType: FirebaseDynamicLinkType.tv,
+      id: vm.tvShowId,
     );
   }
 }
@@ -741,10 +717,8 @@ class _HeaderPosterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<TvShowDetailsViewModel>();
-    final isFavorite =
-        context.select((TvShowDetailsViewModel vm) => vm.state.isFavorite);
-    final tvShow =
-        context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!);
+    final isFavorite = context.select((TvShowDetailsViewModel vm) => vm.state.isFavorite);
+    final tvShow = context.select((TvShowDetailsViewModel vm) => vm.state.tvShowDetails!);
     return HeaderPosterWidget(
       data: HeaderPosterData(
         isFavorite: isFavorite,

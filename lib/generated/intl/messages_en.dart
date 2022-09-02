@@ -200,6 +200,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "serial_details_not_saved":
             MessageLookupByLibrary.simpleMessage("Serial details not saved"),
         "series": MessageLookupByLibrary.simpleMessage("Series"),
+        "share": MessageLookupByLibrary.simpleMessage("Share"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
         "sign_in_label": MessageLookupByLibrary.simpleMessage("Sign In"),
         "sign_out": MessageLookupByLibrary.simpleMessage("Sign Out"),

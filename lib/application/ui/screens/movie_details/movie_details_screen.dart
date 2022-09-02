@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:movie_night/application/domain/firebase/firebase_dynamic_link.dart';
 import 'package:provider/provider.dart';
 
 import 'package:movie_night/application/constants/app_dimensions.dart';
@@ -47,24 +48,20 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     final vm = context.read<MovieDetailsViewModel>();
     final showAdultContent =
         context.select((MovieDetailsViewModel vm) => vm.state.showAdultContent);
-    final movie =
-        context.select((MovieDetailsViewModel vm) => vm.state.movieDetails);
-    final isLoaded =
-        context.select((MovieDetailsViewModel vm) => vm.state.isLoaded);
+    final movie = context.select((MovieDetailsViewModel vm) => vm.state.movieDetails);
+    final isLoaded = context.select((MovieDetailsViewModel vm) => vm.state.isLoaded);
     return Scaffold(
       body: SafeArea(
         child: movie != null && isLoaded
             ? CustomScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 slivers: [
                   SliverList(
                     delegate: SliverChildListDelegate(
                       [
                         AdultOnboardingWidget(
                           onPressed: vm.enableAdultContent,
-                          show: movie.adult != null &&
-                              movie.adult == true &&
-                              !showAdultContent,
+                          show: movie.adult != null && movie.adult == true && !showAdultContent,
                           child: Column(
                             children: const [
                               _HeaderPosterWidget(),
@@ -145,8 +142,8 @@ class _ReviewTextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<MovieDetailsViewModel>();
-    final isProgressSending = context
-        .select((MovieDetailsViewModel vm) => vm.state.isProgressSending);
+    final isProgressSending =
+        context.select((MovieDetailsViewModel vm) => vm.state.isProgressSending);
     return ReviewTextFieldWidget(
       isProgressSending: isProgressSending,
       sendReview: vm.sendReview,
@@ -182,9 +179,7 @@ class _BottomPaddingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final insetsBottom = MediaQuery.of(context).viewInsets.bottom;
-    return Padding(
-        padding: EdgeInsets.only(
-            bottom: insetsBottom == 0 ? 32 : insetsBottom + 16));
+    return Padding(padding: EdgeInsets.only(bottom: insetsBottom == 0 ? 32 : insetsBottom + 16));
   }
 }
 
@@ -196,8 +191,8 @@ class _RecommendationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final details = context.read<MovieDetailsViewModel>();
-    final recommendations = context.select(
-        (MovieDetailsViewModel vm) => vm.state.movieDetails?.recommendations);
+    final recommendations =
+        context.select((MovieDetailsViewModel vm) => vm.state.movieDetails?.recommendations);
     return recommendations != null && recommendations.results.isNotEmpty
         ? MoviesWithHeaderWidget(
             movieData: MovieWithHeaderData(
@@ -206,8 +201,7 @@ class _RecommendationWidget extends StatelessWidget {
               viewMediaType: ViewMediaType.recommendation,
               movieId: details.movieId,
             ),
-            onPressed: () =>
-                context.read<MovieDetailsViewModel>().showAdIfAvailable(),
+            onPressed: () => context.read<MovieDetailsViewModel>().showAdIfAvailable(),
           )
         : const SizedBox.shrink();
   }
@@ -221,8 +215,7 @@ class _SimilarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final details = context.read<MovieDetailsViewModel>();
-    final similar = context
-        .select((MovieDetailsViewModel vm) => vm.state.movieDetails?.similar);
+    final similar = context.select((MovieDetailsViewModel vm) => vm.state.movieDetails?.similar);
     return similar != null && similar.results.isNotEmpty
         ? MoviesWithHeaderWidget(
             movieData: MovieWithHeaderData(
@@ -231,8 +224,7 @@ class _SimilarWidget extends StatelessWidget {
               viewMediaType: ViewMediaType.similar,
               movieId: details.movieId,
             ),
-            onPressed: () =>
-                context.read<MovieDetailsViewModel>().showAdIfAvailable(),
+            onPressed: () => context.read<MovieDetailsViewModel>().showAdIfAvailable(),
           )
         : const SizedBox.shrink();
   }
@@ -280,8 +272,7 @@ class _TitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = context
-        .select((MovieDetailsViewModel vm) => vm.state.movieDetails!.title);
+    final title = context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!.title);
     return TitleWidget(title: title ?? 'Unknown');
   }
 }
@@ -291,8 +282,7 @@ class _TaglineWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tagline = context
-        .select((MovieDetailsViewModel vm) => vm.state.movieDetails!.tagline);
+    final tagline = context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!.tagline);
     return TaglineWidget(
       tagline: tagline ?? '',
     );
@@ -306,9 +296,9 @@ class _ExternalSourcesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final externalIds = context.select(
-        (MovieDetailsViewModel vm) => vm.state.movieDetails!.externalIds);
-    final allIsNull = (externalIds?.facebookId ?? '').isEmpty  &&
+    final externalIds =
+        context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!.externalIds);
+    final allIsNull = (externalIds?.facebookId ?? '').isEmpty &&
         (externalIds?.instagramId ?? '').isEmpty &&
         (externalIds?.twitterId ?? '').isEmpty;
     final data = [
@@ -336,8 +326,8 @@ class _ProductionCompaniesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productionCompanies = context.select((MovieDetailsViewModel vm) =>
-        vm.state.movieDetails!.productionCompanies);
+    final productionCompanies =
+        context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!.productionCompanies);
     return productionCompanies != null
         ? ChipsWithHeaderWidget(
             title: S.of(context).production_companies,
@@ -355,11 +345,11 @@ class _ProductionCountriesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productionCountries = context.select((MovieDetailsViewModel vm) =>
-        vm.state.movieDetails!.productionCountries);
+    final productionCountries =
+        context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!.productionCountries);
     return productionCountries != null
         ? ChipsWithHeaderWidget(
-            title:  S.of(context).production_countries,
+            title: S.of(context).production_countries,
             data: productionCountries.map((data) => data.name).toList(),
             onPressed: (index) {},
           )
@@ -374,8 +364,7 @@ class _KeywordsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final keywords = context
-        .select((MovieDetailsViewModel vm) => vm.state.movieDetails!.keywords);
+    final keywords = context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!.keywords);
     return ChipsWithHeaderWidget(
       title: S.of(context).keywords,
       data: keywords?.keywords.map((keyword) => keyword.name).toList(),
@@ -389,8 +378,7 @@ class _OverviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final overview = context
-        .select((MovieDetailsViewModel vm) => vm.state.movieDetails?.overview);
+    final overview = context.select((MovieDetailsViewModel vm) => vm.state.movieDetails?.overview);
     return LargeTextWithHeaderWidget(
       header: S.of(context).description,
       overview: overview ?? '',
@@ -405,8 +393,7 @@ class _MediaWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backdrops = context
-        .select((MovieDetailsViewModel vm) => vm.state.movieImages?.backdrops);
+    final backdrops = context.select((MovieDetailsViewModel vm) => vm.state.movieImages?.backdrops);
     return MediaWidget(
       aspectRatios: backdrops
           ?.map(
@@ -425,8 +412,7 @@ class _ListCastsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cast = context.select(
-        (MovieDetailsViewModel vm) => vm.state.movieDetails!.credits?.cast);
+    final cast = context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!.credits?.cast);
     final list = cast
         ?.map(
           (item) => CreditsItemSimpleData(
@@ -457,8 +443,7 @@ class _ListCrewsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final crew = context.select(
-        (MovieDetailsViewModel vm) => vm.state.movieDetails!.credits?.crew);
+    final crew = context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!.credits?.crew);
     final list = crew
         ?.map(
           (item) => CreditsItemSimpleData(
@@ -489,8 +474,7 @@ class _GenresWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final genres = context
-        .select((MovieDetailsViewModel vm) => vm.state.movieDetails!.genres);
+    final genres = context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!.genres);
     return genres != null
         ? ChipsWithHeaderWidget(
             title: S.of(context).genres,
@@ -498,8 +482,7 @@ class _GenresWidget extends StatelessWidget {
             onPressed: (index) {
               context.read<MovieDetailsViewModel>().showAdIfAvailable();
               final genre = Genre.fromIdToGenre(genres[index].id);
-              Navigator.of(context)
-                  .pushNamed(Screens.viewAllMovies, arguments: [
+              Navigator.of(context).pushNamed(Screens.viewAllMovies, arguments: [
                 ViewAllMoviesData(
                   withGenres: [
                     Genre(genre: genre),
@@ -520,8 +503,7 @@ class _RowMainInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<MovieDetailsViewModel>();
-    final movie =
-        context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!);
+    final movie = context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!);
 
     final movieInfoData = <RowMainInfoData>[
       RowMainInfoData(
@@ -556,14 +538,15 @@ class _ButtonsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<MovieDetailsViewModel>();
-    final videos = context
-        .select((MovieDetailsViewModel vm) => vm.state.movieDetails!.videos);
-    final isWatched =
-        context.select((MovieDetailsViewModel vm) => vm.state.isWatched);
+    final videos = context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!.videos);
+    final isWatched = context.select((MovieDetailsViewModel vm) => vm.state.isWatched);
     return ButtonsWidget(
       videos: videos?.results ?? [],
       onPressedWatch: vm.watchMovie,
       isWatched: isWatched,
+      showShare: true,
+      dynamicLinkType: FirebaseDynamicLinkType.movie,
+      id: vm.movieId,
     );
   }
 }
@@ -576,10 +559,8 @@ class _HeaderPosterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<MovieDetailsViewModel>();
-    final isFavorite =
-        context.select((MovieDetailsViewModel vm) => vm.state.isFavorite);
-    final movie =
-        context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!);
+    final isFavorite = context.select((MovieDetailsViewModel vm) => vm.state.isFavorite);
+    final movie = context.select((MovieDetailsViewModel vm) => vm.state.movieDetails!);
     return HeaderPosterWidget(
       data: HeaderPosterData(
         isFavorite: isFavorite,

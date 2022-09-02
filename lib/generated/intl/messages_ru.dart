@@ -207,6 +207,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "serial_details_not_saved": MessageLookupByLibrary.simpleMessage(
             "Детальная информация сериала не сохранена"),
         "series": MessageLookupByLibrary.simpleMessage("Сериал"),
+        "share": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Войти"),
         "sign_in_label": MessageLookupByLibrary.simpleMessage("Вход"),
         "sign_out": MessageLookupByLibrary.simpleMessage("Выход"),
