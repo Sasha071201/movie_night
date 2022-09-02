@@ -54,16 +54,16 @@ class ForegroundTask {
         final newNeedTime = DateTime.now().add(durationUpdate);
         await dataProvider.saveNeededTime(newNeedTime);
 
-        ReceivePort? receivePort;
         if (await FlutterForegroundTask.isRunningService) {
-          receivePort = await FlutterForegroundTask.restartService();
+          await FlutterForegroundTask.restartService();
         } else {
-          receivePort = await FlutterForegroundTask.startService(
+          await FlutterForegroundTask.startService(
             notificationTitle: S.of(context).checking_data_for_updates,
             notificationText: S.of(context).click_to_open_the_application,
             callback: _startCallback,
           );
         }
+        ReceivePort? receivePort = await FlutterForegroundTask.receivePort;
         if (receivePort != null) {
           final locale = Localizations.localeOf(context).toLanguageTag();
           await FlutterForegroundTask.saveData(key: 'locale', value: locale);
