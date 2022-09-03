@@ -1820,6 +1820,16 @@ class S {
     );
   }
 
+  /// `Share`
+  String get share {
+    return Intl.message(
+      'Share',
+      name: 'share',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request has been sent`
   String get request_has_been_sent {
     return Intl.message(
