@@ -29,6 +29,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "actor_details_not_saved":
             MessageLookupByLibrary.simpleMessage("Actor details not saved"),
         "adventure": MessageLookupByLibrary.simpleMessage("Adventure"),
+        "allow_show_all":
+            MessageLookupByLibrary.simpleMessage("Allow to show everyone"),
         "animation": MessageLookupByLibrary.simpleMessage("Animation"),
         "appeared": MessageLookupByLibrary.simpleMessage("Appeared"),
         "apply": MessageLookupByLibrary.simpleMessage("Apply"),
@@ -42,6 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "cast": MessageLookupByLibrary.simpleMessage("Cast"),
         "cast_actor_details":
             MessageLookupByLibrary.simpleMessage("Acting art"),
+        "change": MessageLookupByLibrary.simpleMessage("Change"),
         "checking_data_for_updates":
             MessageLookupByLibrary.simpleMessage("Checking data for updates"),
         "click_to_open_the_application": MessageLookupByLibrary.simpleMessage(
@@ -64,6 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "drama": MessageLookupByLibrary.simpleMessage("Drama"),
         "email_entered_incorrectly":
             MessageLookupByLibrary.simpleMessage("Email entered incorrectly"),
+        "empty": MessageLookupByLibrary.simpleMessage("Empty"),
         "empty_write_review_first": MessageLookupByLibrary.simpleMessage(
             "Empty. Write a review first!"),
         "enter_confirm_password":
@@ -71,6 +75,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "enter_email": MessageLookupByLibrary.simpleMessage("Enter email"),
         "enter_movie_tv_show_person": MessageLookupByLibrary.simpleMessage(
             "Enter movie, TV show, person"),
+        "enter_name": MessageLookupByLibrary.simpleMessage("Enter name"),
+        "enter_name_you_are_looking_for": MessageLookupByLibrary.simpleMessage(
+            "Enter the name you are looking for"),
         "enter_password":
             MessageLookupByLibrary.simpleMessage("Enter password"),
         "enter_your_name":
@@ -85,12 +92,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "favorite": MessageLookupByLibrary.simpleMessage("Favorite"),
         "favorite_and_not_watched":
             MessageLookupByLibrary.simpleMessage("Favorite and not watched"),
+        "favorite_movies":
+            MessageLookupByLibrary.simpleMessage("favorite movies"),
+        "favorite_people":
+            MessageLookupByLibrary.simpleMessage("favorite people"),
+        "favorite_tv_shows":
+            MessageLookupByLibrary.simpleMessage("favorite tv shows"),
+        "favorites_and_have_not_watched_tv_shows":
+            MessageLookupByLibrary.simpleMessage(
+                "favorites and have not watched TV shows"),
+        "favorites_and_not_watched_movies":
+            MessageLookupByLibrary.simpleMessage(
+                "favorites and not watched movies"),
         "female": MessageLookupByLibrary.simpleMessage("Female"),
         "fill_in_the_mail":
             MessageLookupByLibrary.simpleMessage("Fill in the mail"),
         "fill_in_the_password":
             MessageLookupByLibrary.simpleMessage("Fill in the password"),
         "filter": MessageLookupByLibrary.simpleMessage("Filter"),
+        "find_people": MessageLookupByLibrary.simpleMessage("Find people"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Forgot Password?"),
         "from": MessageLookupByLibrary.simpleMessage("From"),
@@ -114,6 +134,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "movie_details_not_saved":
             MessageLookupByLibrary.simpleMessage("Movie details not saved"),
         "movies": MessageLookupByLibrary.simpleMessage("Movies"),
+        "movies_you_have_watched":
+            MessageLookupByLibrary.simpleMessage("the movies you\'ve watched"),
         "music": MessageLookupByLibrary.simpleMessage("Music"),
         "mystery": MessageLookupByLibrary.simpleMessage("Mystery"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
@@ -181,6 +203,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "revenue_desc": MessageLookupByLibrary.simpleMessage("Revenue desc"),
         "reviews": MessageLookupByLibrary.simpleMessage("Reviews"),
         "romance": MessageLookupByLibrary.simpleMessage("Romance"),
+        "save": MessageLookupByLibrary.simpleMessage("Save"),
         "sciFiAndFantasy":
             MessageLookupByLibrary.simpleMessage("Sci-Fi & Fantasy"),
         "science_fiction":
@@ -200,6 +223,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "serial_details_not_saved":
             MessageLookupByLibrary.simpleMessage("Serial details not saved"),
         "series": MessageLookupByLibrary.simpleMessage("Series"),
+        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
         "sign_in_label": MessageLookupByLibrary.simpleMessage("Sign In"),
@@ -208,12 +232,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "sign_up_label": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "similar": MessageLookupByLibrary.simpleMessage("Similar"),
         "soap": MessageLookupByLibrary.simpleMessage("Soap"),
+        "social": MessageLookupByLibrary.simpleMessage("Social"),
         "something_went_wrong":
             MessageLookupByLibrary.simpleMessage("Something went wrong"),
         "sort_by": MessageLookupByLibrary.simpleMessage("Sort by"),
         "status": MessageLookupByLibrary.simpleMessage("Status"),
         "status_changed_to":
             MessageLookupByLibrary.simpleMessage("Status changed to"),
+        "subscribers": MessageLookupByLibrary.simpleMessage("Subscribers"),
+        "subscriptions": MessageLookupByLibrary.simpleMessage("Subscriptions"),
         "tagline": MessageLookupByLibrary.simpleMessage("Tagline"),
         "talk": MessageLookupByLibrary.simpleMessage("Talk"),
         "text_of_complaint":
@@ -243,10 +270,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "tv": MessageLookupByLibrary.simpleMessage("TV"),
         "tv_movie": MessageLookupByLibrary.simpleMessage("TV Movie"),
         "tv_show": MessageLookupByLibrary.simpleMessage("TV Show"),
+        "tv_show_you_have_watched":
+            MessageLookupByLibrary.simpleMessage("TV shows you\'ve watched"),
         "tv_shows": MessageLookupByLibrary.simpleMessage("TV Shows"),
         "unknown": MessageLookupByLibrary.simpleMessage("Unknown"),
         "unknown_error_write_to_support": MessageLookupByLibrary.simpleMessage(
             "Unknown error. Write to support"),
+        "user": MessageLookupByLibrary.simpleMessage("User"),
         "view_all": MessageLookupByLibrary.simpleMessage("View All"),
         "vote_average": MessageLookupByLibrary.simpleMessage("Vote average"),
         "vote_average_asc":
@@ -260,6 +290,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "war": MessageLookupByLibrary.simpleMessage("War"),
         "war_and_politics":
             MessageLookupByLibrary.simpleMessage("War & Politics"),
+        "watch_online": MessageLookupByLibrary.simpleMessage("Watch online"),
         "watched": MessageLookupByLibrary.simpleMessage("Watched"),
         "western": MessageLookupByLibrary.simpleMessage("Western"),
         "with_genres": MessageLookupByLibrary.simpleMessage("With genres"),

@@ -30,9 +30,11 @@ extension ViewMediaTypeString on ViewFavoriteType {
 class ViewFavoriteData {
   final MediaType mediaType;
   final ViewFavoriteType favoriteType;
-  ViewFavoriteData({
+  final String? userId;
+  const ViewFavoriteData({
     required this.mediaType,
     required this.favoriteType,
+    this.userId,
   });
 }
 
@@ -49,8 +51,7 @@ class ViewFavoriteViewModel extends ChangeNotifier {
   StreamSubscription? _streamSubscription;
 
   ViewFavoriteViewModel(this.data)
-      : state = ViewFavoriteState()
-          ..media = Media(mediaType: data.mediaType, media: []);
+      : state = ViewFavoriteState()..media = Media(mediaType: data.mediaType, media: []);
 
   Future<void> setupLocale(BuildContext context) async {
     final locale = Localizations.localeOf(context).toLanguageTag();
@@ -94,12 +95,12 @@ class ViewFavoriteViewModel extends ChangeNotifier {
     if (state.media.mediaType == MediaType.movie) {
       late final moviesResponse;
       if (data.favoriteType == ViewFavoriteType.favorite) {
-        moviesResponse = await _repository.fetchFavoriteMovies(_locale, null);
+        moviesResponse = await _repository.fetchFavoriteMovies(_locale, null, data.userId);
       } else if (data.favoriteType == ViewFavoriteType.favoriteAndNotWatched) {
         moviesResponse =
-            await _repository.fetchFavoriteAndNotWatchedMovies(_locale, null);
+            await _repository.fetchFavoriteAndNotWatchedMovies(_locale, null, data.userId);
       } else if (data.favoriteType == ViewFavoriteType.watched) {
-        moviesResponse = await _repository.fetchWatchedMovies(_locale, null);
+        moviesResponse = await _repository.fetchWatchedMovies(_locale, null, data.userId);
       }
       final movieNewAndOld = List<Movie>.from(state.media.media);
       movieNewAndOld.addAll(moviesResponse);
@@ -107,19 +108,18 @@ class ViewFavoriteViewModel extends ChangeNotifier {
     } else if (state.media.mediaType == MediaType.tv) {
       late final tvShowsResponse;
       if (data.favoriteType == ViewFavoriteType.favorite) {
-        tvShowsResponse = await _repository.fetchFavoriteTvShows(_locale, null);
+        tvShowsResponse = await _repository.fetchFavoriteTvShows(_locale, null, data.userId);
       } else if (data.favoriteType == ViewFavoriteType.favoriteAndNotWatched) {
         tvShowsResponse =
-            await _repository.fetchFavoriteAndNotWatchedTvShows(_locale, null);
+            await _repository.fetchFavoriteAndNotWatchedTvShows(_locale, null, data.userId);
       } else if (data.favoriteType == ViewFavoriteType.watched) {
-        tvShowsResponse = await _repository.fetchWatchedTvShows(_locale, null);
+        tvShowsResponse = await _repository.fetchWatchedTvShows(_locale, null, data.userId);
       }
       final mediaNewAndOld = List<TvShow>.from(state.media.media);
       mediaNewAndOld.addAll(tvShowsResponse);
       state.media.media = mediaNewAndOld;
     } else if (state.media.mediaType == MediaType.person) {
-      final peopleResponse =
-          await _repository.fetchFavoritePeople(_locale, null);
+      final peopleResponse = await _repository.fetchFavoritePeople(_locale, null, data.userId);
       final mediaNewAndOld = List<Actor>.from(state.media.media);
       mediaNewAndOld.addAll(peopleResponse);
       state.media.media = mediaNewAndOld;

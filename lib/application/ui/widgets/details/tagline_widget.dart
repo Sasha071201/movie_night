@@ -24,10 +24,9 @@ class TaglineWidget extends StatelessWidget {
               const SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Text(
+                child: SelectableText(
                   tagline,
-                  style: AppTextStyle.small
-                      .copyWith(color: AppColors.colorSecondaryText),
+                  style: AppTextStyle.small.copyWith(color: AppColors.colorSecondaryText),
                 ),
               ),
             ],

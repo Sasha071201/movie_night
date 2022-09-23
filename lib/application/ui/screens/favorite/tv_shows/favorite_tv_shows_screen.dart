@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_night/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 import '../../../themes/app_colors.dart';
@@ -24,11 +25,12 @@ class _FavoriteTvShowsScreenState extends State<FavoriteTvShowsScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final isLoaded =
-        context.select((FavoriteTvShowsViewModel vm) => vm.state.isLoaded);
+    final userId = context.select((FavoriteTvShowsViewModel vm) => vm.userId);
+    final isLoaded = context.select((FavoriteTvShowsViewModel vm) => vm.state.isLoaded);
     return Stack(
       children: [
         CustomScrollView(
+          physics: userId != null ? const NeverScrollableScrollPhysics() : null,
           slivers: [
             SliverList(
               delegate: SliverChildListDelegate(
@@ -63,10 +65,10 @@ class _TvShowsWithCategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tvShowsWithHeader = context
-        .select((FavoriteTvShowsViewModel vm) => vm.state.tvShowsWithHeader);
-    final isLoaded =
-        context.select((FavoriteTvShowsViewModel vm) => vm.state.isLoaded);
+    final userId = context.read<FavoriteTvShowsViewModel>().userId;
+    final tvShowsWithHeader =
+        context.select((FavoriteTvShowsViewModel vm) => vm.state.tvShowsWithHeader);
+    final isLoaded = context.select((FavoriteTvShowsViewModel vm) => vm.state.isLoaded);
     return isLoaded
         ? tvShowsWithHeader.isNotEmpty
             ? SliverList(
@@ -76,6 +78,7 @@ class _TvShowsWithCategoryWidget extends StatelessWidget {
                       children: [
                         TvShowsWithHeaderWidget(
                           tvShowData: tvShowsWithHeader[index],
+                          userId: userId,
                         ),
                       ],
                     );
@@ -86,7 +89,7 @@ class _TvShowsWithCategoryWidget extends StatelessWidget {
             : SliverToBoxAdapter(
                 child: Center(
                   child: Text(
-                    'Пусто',
+                    S.of(context).empty,
                     style: AppTextStyle.header2,
                   ),
                 ),

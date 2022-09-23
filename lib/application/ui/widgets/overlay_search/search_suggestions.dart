@@ -44,8 +44,7 @@ class SearchSuggestions extends StatefulWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(56);
 }
 
-class _SearchSuggestionsState extends State<SearchSuggestions>
-    with TickerProviderStateMixin {
+class _SearchSuggestionsState extends State<SearchSuggestions> with TickerProviderStateMixin {
   final LayerLink _layerLink = LayerLink();
   bool _isLoading = false;
   bool _isOpen = false;
@@ -64,8 +63,8 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 200));
+    _animationController =
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
     _expandAnimation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
@@ -76,6 +75,7 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
         setState(() {});
       } else {
         _canCancel = false;
+        _isLoading = false;
         _debounce?.cancel();
         if (_isOpen) {
           _searchController.clear();
@@ -167,7 +167,7 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
       ),
     );
   }
-  
+
   void _toggleDropdown({bool close = false}) async {
     if (close) {
       await _animationController.reverse();
@@ -186,6 +186,8 @@ class _SearchSuggestionsState extends State<SearchSuggestions>
 
   void updateSuggestions(String text) async {
     _debounce?.cancel();
+    _isLoading = true;
+    setState(() {});
     _debounce = Timer(widget.debounceDuration, () async {
       final searchText = text.isNotEmpty ? text : null;
       if (searchText == _previousAsyncSearchText) {

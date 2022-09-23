@@ -13,6 +13,9 @@ class FavoriteViewModel extends ChangeNotifier {
   final _appReview = AppReview();
   PageController get categoryController => _categoryController;
   String _locale = '';
+  String? userId;
+
+  FavoriteViewModel([this.userId]);
 
   final _listCategory = <String>[
     'Movies',
@@ -36,10 +39,12 @@ class FavoriteViewModel extends ChangeNotifier {
   }
 
   void selectCategory(int index, BuildContext context) {
-    context.read<MainViewModel>().showAdIfAvailable();
+    context.read<MainViewModel?>()?.showAdIfAvailable();
     _showReview();
     _currentCategoryIndex = index;
-    _categoryController.jumpToPage(_currentCategoryIndex);
+    if (userId == null) {
+      _categoryController.jumpToPage(_currentCategoryIndex);
+    }
     notifyListeners();
   }
 

@@ -13,8 +13,16 @@ import 'package:movie_night/application/ui/screens/main/main_view_model.dart';
 import 'package:movie_night/application/ui/screens/movie_details/movie_details_screen.dart';
 import 'package:movie_night/application/ui/screens/movie_details/movie_details_view_model.dart';
 import 'package:movie_night/application/ui/screens/profile/profile_view_model.dart';
+import 'package:movie_night/application/ui/screens/settings/settings_screen.dart';
+import 'package:movie_night/application/ui/screens/settings/settings_view_model.dart';
+import 'package:movie_night/application/ui/screens/subscribers/subscribers_screen.dart';
+import 'package:movie_night/application/ui/screens/subscribers/subscribers_view_model.dart';
+import 'package:movie_night/application/ui/screens/subscriptions/subscriptions_screen.dart';
+import 'package:movie_night/application/ui/screens/subscriptions/subscriptions_view_model.dart';
 import 'package:movie_night/application/ui/screens/trailer/trailer_screen.dart';
 import 'package:movie_night/application/ui/screens/trailer/trailer_view_model.dart';
+import 'package:movie_night/application/ui/screens/user_details/user_details_screen.dart';
+import 'package:movie_night/application/ui/screens/user_details/user_details_view_model.dart';
 import 'package:movie_night/application/ui/screens/view_all_actors/view_all_actors_screen.dart';
 import 'package:movie_night/application/ui/screens/view_all_actors/view_all_actors_view_model.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +52,8 @@ import '../screens/subscription/subscription_screen.dart';
 import '../screens/subscription/subscription_view_model.dart';
 import '../screens/tv_show_details/tv_show_details_screen.dart';
 import '../screens/tv_show_details/tv_show_details_view_model.dart';
+import '../screens/users/users_screen.dart';
+import '../screens/users/users_view_model.dart';
 import '../screens/view_all_movies/view_all_movies_screen.dart';
 import '../screens/view_all_movies/view_all_movies_view_model.dart';
 import '../screens/view_favorite/view_favorite_screen.dart';
@@ -125,6 +135,34 @@ class ScreenFactory {
     );
   }
 
+  Widget makeUsers() {
+    return ChangeNotifierProvider(
+      create: (context) => UsersViewModel(),
+      child: const UsersScreen(),
+    );
+  }
+
+  Widget makeSettings() {
+    return ChangeNotifierProvider(
+      create: (context) => SettingsViewModel(),
+      child: const SettingsScreen(),
+    );
+  }
+
+  Widget makeSubscriptions() {
+    return ChangeNotifierProvider(
+      create: (context) => SubscriptionsViewModel(),
+      child: const SubscriptionsScreen(),
+    );
+  }
+
+  Widget makeSubscribers() {
+    return ChangeNotifierProvider(
+      create: (context) => SubscribersViewModel(),
+      child: const SubscribersScreen(),
+    );
+  }
+
   Widget makeResetPassword() {
     return ChangeNotifierProvider(
       create: (context) => ResetPasswordViewModel(context),
@@ -150,6 +188,29 @@ class ScreenFactory {
     return ChangeNotifierProvider(
       create: (context) => MovieDetailsViewModel(movieId),
       child: const MovieDetailsScreen(),
+    );
+  }
+
+  Widget makeUserDetails(String userId) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => UserDetailsViewModel(userId),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FavoriteViewModel(userId),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FavoriteActorsViewModel(context, userId),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FavoriteMoviesViewModel(context, userId),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FavoriteTvShowsViewModel(context, userId),
+        ),
+      ],
+      child: const UserDetailsScreen(),
     );
   }
 
@@ -197,8 +258,7 @@ class ScreenFactory {
 
   Widget makeSeasonDetails({required int seasonId, required int tvShowId}) {
     return ChangeNotifierProvider(
-      create: (context) =>
-          SeasonDetailsViewModel(seasonId: seasonId, tvShowId: tvShowId),
+      create: (context) => SeasonDetailsViewModel(seasonId: seasonId, tvShowId: tvShowId),
       child: const SeasonDetailsScreen(),
     );
   }
@@ -209,8 +269,8 @@ class ScreenFactory {
     required int tvShowId,
   }) {
     return ChangeNotifierProvider(
-      create: (context) => EpisodeDetailsViewModel(
-          episodeId: episodeId, seasonId: seasonId, tvShowId: tvShowId),
+      create: (context) =>
+          EpisodeDetailsViewModel(episodeId: episodeId, seasonId: seasonId, tvShowId: tvShowId),
       child: const EpisodeDetailsScreen(),
     );
   }

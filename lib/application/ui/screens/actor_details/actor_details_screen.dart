@@ -278,8 +278,9 @@ class _HeaderWidget extends StatelessWidget {
                     if (vm.state.actorDetails?.id == null) return;
                     final url = await FirebaseDynamicLinkService.createDynamicLink(
                       type: FirebaseDynamicLinkType.person,
-                      id: vm.state.actorDetails!.id,
-                      short: true,
+                      id: vm.state.actorDetails!.id.toString(),
+                      title: vm.state.actorDetails?.name ?? '',
+                      description: vm.state.actorDetails?.biography ?? '',
                     );
                     Share.share(url);
                   },

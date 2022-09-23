@@ -35,11 +35,13 @@ class TvShowWithHeaderData {
 class TvShowsWithHeaderWidget extends StatelessWidget {
   final TvShowWithHeaderData tvShowData;
   final void Function()? onPressed;
+  final String? userId;
 
   const TvShowsWithHeaderWidget({
     Key? key,
     required this.tvShowData,
     this.onPressed,
+    this.userId,
   }) : super(key: key);
 
   @override
@@ -56,15 +58,12 @@ class TvShowsWithHeaderWidget extends StatelessWidget {
             context.read<MainViewModel>().showAdIfAvailable();
           } catch (e) {}
           if (tvShowData.tvShowGenres != null) {
-            await Navigator.of(context)
-                .pushNamed(Screens.viewAllMovies, arguments: [
-              ViewAllMoviesData(
-                  withGenres: [Genre(genre: tvShowData.tvShowGenres)]),
+            await Navigator.of(context).pushNamed(Screens.viewAllMovies, arguments: [
+              ViewAllMoviesData(withGenres: [Genre(genre: tvShowData.tvShowGenres)]),
               MediaType.tv,
             ]);
             if (onPressed != null) onPressed!();
-          } else if (tvShowData.viewMediaType != null &&
-              tvShowData.tvShowId != null) {
+          } else if (tvShowData.viewMediaType != null && tvShowData.tvShowId != null) {
             await Navigator.of(context).pushNamed(Screens.viewMovies,
                 arguments: ViewMoviesData(
                   mediaType: MediaType.tv,
@@ -78,6 +77,7 @@ class TvShowsWithHeaderWidget extends StatelessWidget {
               arguments: ViewFavoriteData(
                 mediaType: MediaType.tv,
                 favoriteType: tvShowData.viewFavoriteType!,
+                userId: userId,
               ),
             );
             if (onPressed != null) onPressed!();

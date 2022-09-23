@@ -12,10 +12,8 @@ class TitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return SelectableText(
       title,
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
       style: AppTextStyle.header2.copyWith(
         color: AppColors.colorSecondary,
       ),

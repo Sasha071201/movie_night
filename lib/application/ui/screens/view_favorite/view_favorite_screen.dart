@@ -59,12 +59,10 @@ class _ListMoviesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLoadingProgress = context
-        .select((ViewFavoriteViewModel vm) => vm.state.isLoadingProgress);
-    final media =
-        context.select((ViewFavoriteViewModel vm) => vm.state.media.media);
-    final mediaType =
-        context.select((ViewFavoriteViewModel vm) => vm.state.media.mediaType);
+    final isLoadingProgress =
+        context.select((ViewFavoriteViewModel vm) => vm.state.isLoadingProgress);
+    final media = context.select((ViewFavoriteViewModel vm) => vm.state.media.media);
+    final mediaType = context.select((ViewFavoriteViewModel vm) => vm.state.media.mediaType);
     return !isLoadingProgress
         ? media.isNotEmpty
             ? AppGridView(
@@ -111,17 +109,16 @@ class _HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewMediaType =
-        context.select((ViewFavoriteViewModel vm) => vm.data.favoriteType);
-    final mediaType =
-        context.select((ViewFavoriteViewModel vm) => vm.state.media.mediaType);
+    final media = context.select((ViewFavoriteViewModel vm) => vm.state.media.media);
+    final viewMediaType = context.select((ViewFavoriteViewModel vm) => vm.data.favoriteType);
+    final mediaType = context.select((ViewFavoriteViewModel vm) => vm.state.media.mediaType);
     String text = '';
     if (mediaType == MediaType.movie) {
-      text = '${viewMediaType.asString(context)} ${S.of(context).movies}';
+      text = '${viewMediaType.asString(context)} ${S.of(context).movies} (${media.length})';
     } else if (mediaType == MediaType.tv) {
-      text = '${viewMediaType.asString(context)} ${S.of(context).tv_shows}';
+      text = '${viewMediaType.asString(context)} ${S.of(context).tv_shows} (${media.length})';
     } else if (mediaType == MediaType.person) {
-      text = '${viewMediaType.asString(context)} ${S.of(context).people}';
+      text = '${viewMediaType.asString(context)} ${S.of(context).people} (${media.length})';
     }
     return Text(
       text,

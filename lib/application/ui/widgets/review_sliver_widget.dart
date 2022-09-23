@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:movie_night/application/ui/navigation/app_navigation.dart';
 
 import 'package:movie_night/application/ui/widgets/dialog_widget.dart';
+import 'package:movie_night/application/ui/widgets/inkwell_material_widget.dart';
 import 'package:movie_night/application/ui/widgets/text_button_widget.dart';
 import 'package:movie_night/application/ui/widgets/text_field_widget.dart';
 
@@ -49,8 +51,7 @@ class ReviewsSliverWidget extends StatelessWidget {
                               timeAgoFromDate: timeAgoFromDate,
                               deleteReview: deleteReview,
                               sendComplaintToReview: sendComplaintToReview,
-                              complaintReviewTextController:
-                                  complaintReviewTextController,
+                              complaintReviewTextController: complaintReviewTextController,
                             );
                           }
                           return const Divider(
@@ -61,8 +62,8 @@ class ReviewsSliverWidget extends StatelessWidget {
                         childCount: max(0, reviews.length * 2 - 1),
                         findChildIndexCallback: (key) {
                           final valueKey = key as ValueKey<int>;
-                          final index = reviews.indexWhere(
-                              (element) => element.hashCode == valueKey.value);
+                          final index =
+                              reviews.indexWhere((element) => element.hashCode == valueKey.value);
                           return reviews.length - 1 - index;
                         },
                       ),
@@ -160,12 +161,18 @@ class _ReviewItemWidget extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(90),
-                child: CachedNetworkImageWidget(
-                  imageUrl: review.avatarUrl,
-                  width: 60,
-                  height: 60,
+              InkWellMaterialWidget(
+                color: AppColors.colorSplash,
+                borderRadius: 90,
+                onTap: () =>
+                    Navigator.of(context).pushNamed(Screens.userDetails, arguments: review.userId),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(90),
+                  child: CachedNetworkImageWidget(
+                    imageUrl: review.avatarUrl,
+                    width: 60,
+                    height: 60,
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
@@ -173,21 +180,19 @@ class _ReviewItemWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    SelectableText(
                       review.name != null && review.name!.isNotEmpty
                           ? review.name!
                           : S.of(context).unknown,
                       style: AppTextStyle.medium,
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                    Text(
+                    SelectableText(
                       timeAgoFromDate(review.date),
                       style: AppTextStyle.small.copyWith(
                         color: AppColors.colorSecondaryText,
                       ),
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
@@ -280,7 +285,7 @@ class _ReviewItemWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Text(
+          SelectableText(
             review.review,
             style: AppTextStyle.small,
           ),

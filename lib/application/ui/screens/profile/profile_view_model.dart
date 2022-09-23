@@ -16,6 +16,7 @@ class ProfileViewModel extends ChangeNotifier {
   Timer? _timer;
   String nameFromDB = '';
   String profileImageUrl = '';
+  String? userId = '';
 
   ProfileViewModel() {
     _streamSubscription?.cancel();
@@ -34,6 +35,7 @@ class ProfileViewModel extends ChangeNotifier {
         final name = await _accountRepository.fetchUserName();
         nameFromDB = name;
         profileImageUrl = await _accountRepository.fetchUserProfileImageUrl();
+        userId = (await _accountRepository.userStream().first).uid;
         isLoadingProgress = false;
         Future.microtask(() => notifyListeners());
       },
@@ -42,6 +44,10 @@ class ProfileViewModel extends ChangeNotifier {
 
   Future<void> openAboutMe(BuildContext context) async {
     Navigator.of(context).pushNamed(Screens.aboutMe);
+  }
+
+  Future<void> openUsers(BuildContext context) async {
+    Navigator.of(context).pushNamed(Screens.users);
   }
 
   Future<void> openSubscription(BuildContext context) async {
@@ -53,7 +59,7 @@ class ProfileViewModel extends ChangeNotifier {
       await _authRepository.signOut();
     } on ApiClientException catch (e) {
       _showDialog(context, e.asString(context));
-    } 
+    }
   }
 
   void _showDialog(BuildContext context, String errorMessage) {

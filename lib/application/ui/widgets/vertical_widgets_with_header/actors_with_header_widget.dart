@@ -25,11 +25,13 @@ class ActorWithHeaderData {
 class ActorsWithHeaderWidget extends StatelessWidget {
   final ActorWithHeaderData actorData;
   final void Function()? onPressed;
+  final String? userId;
 
   const ActorsWithHeaderWidget({
     Key? key,
     required this.actorData,
     this.onPressed,
+    this.userId,
   }) : super(key: key);
 
   @override
@@ -51,6 +53,7 @@ class ActorsWithHeaderWidget extends StatelessWidget {
               arguments: ViewFavoriteData(
                 mediaType: MediaType.person,
                 favoriteType: actorData.viewFavoriteType!,
+                userId: userId,
               ),
             );
             if (onPressed != null) onPressed!();

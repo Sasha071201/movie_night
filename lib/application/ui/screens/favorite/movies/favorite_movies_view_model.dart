@@ -29,8 +29,47 @@ class FavoriteMoviesViewModel extends ChangeNotifier {
   StreamSubscription? _streamNeedUpdateSubscription;
   AppConnectivityReactor? _appConnectivityReactor;
   Timer? _timer;
+  String? userId;
 
-  FavoriteMoviesViewModel(BuildContext context) {
+  bool isAllowShowFavoriteMovies = false;
+  bool isAllowShowFavoriteAndNotWatchedMovies = false;
+  bool isAllowShowWatchedMovies = false;
+
+  Future<void> _initIsAllowShow() async {
+    await Future.wait<void>([
+      _isAllowShowFavoriteMovies(),
+      _isAllowShowFavoriteAndNotWatchedMovies(),
+      _isAllowShowWatchedMovies(),
+    ]);
+    notifyListeners();
+  }
+
+  Future<void> _isAllowShowFavoriteMovies() async {
+    final newIsAllowShowFavoriteMovies = await _repository.isAllowShowFavoriteMovies(userId);
+    if (newIsAllowShowFavoriteMovies != null) {
+      isAllowShowFavoriteMovies = newIsAllowShowFavoriteMovies;
+      notifyListeners();
+    }
+  }
+
+  Future<void> _isAllowShowFavoriteAndNotWatchedMovies() async {
+    final newIsAllowShowFavoriteAndNotWatchedMovies =
+        await _repository.isAllowShowFavoriteAndNotWatchedMovies(userId);
+    if (newIsAllowShowFavoriteAndNotWatchedMovies != null) {
+      isAllowShowFavoriteAndNotWatchedMovies = newIsAllowShowFavoriteAndNotWatchedMovies;
+      notifyListeners();
+    }
+  }
+
+  Future<void> _isAllowShowWatchedMovies() async {
+    final newIsAllowShowWatchedMovies = await _repository.isAllowShowWatchedMovies(userId);
+    if (newIsAllowShowWatchedMovies != null) {
+      isAllowShowWatchedMovies = newIsAllowShowWatchedMovies;
+      notifyListeners();
+    }
+  }
+
+  FavoriteMoviesViewModel(BuildContext context, [this.userId]) {
     _context = context;
     _listenNeedUpdate();
     _listenChanges();
@@ -72,8 +111,7 @@ class FavoriteMoviesViewModel extends ChangeNotifier {
 
   void _listenNeedUpdate() {
     _streamNeedUpdateSubscription?.cancel();
-    _streamNeedUpdateSubscription =
-        _controllerNeedUpdate.stream.listen((needUpdate) {
+    _streamNeedUpdateSubscription = _controllerNeedUpdate.stream.listen((needUpdate) {
       if (needUpdate) _refresh();
     });
   }
@@ -83,6 +121,9 @@ class FavoriteMoviesViewModel extends ChangeNotifier {
     _timer = Timer(const Duration(milliseconds: 1000), () async {
       state.isLoaded = false;
       notifyListeners();
+      if (userId != null) {
+        await _initIsAllowShow();
+      }
       await resetAll();
       state.isLoaded = true;
       notifyListeners();
@@ -111,32 +152,36 @@ class FavoriteMoviesViewModel extends ChangeNotifier {
   Future<void> _fillMoviesWithHeader() async {
     final tempMovies = <MovieWithHeaderData>[];
     try {
-      final moviesFavoriteResult =
-          await _repository.fetchFavoriteMovies(_locale, 10);
-      if (moviesFavoriteResult.isNotEmpty) {
-        tempMovies.add(MovieWithHeaderData(
-          title: S.of(_context).favorite,
-          list: moviesFavoriteResult,
-          viewFavoriteType: ViewFavoriteType.favorite,
-        ));
+      if (userId == null || isAllowShowFavoriteMovies) {
+        final moviesFavoriteResult = await _repository.fetchFavoriteMovies(_locale, 10, userId);
+        if (moviesFavoriteResult.isNotEmpty) {
+          tempMovies.add(MovieWithHeaderData(
+            title: S.of(_context).favorite,
+            list: moviesFavoriteResult,
+            viewFavoriteType: ViewFavoriteType.favorite,
+          ));
+        }
       }
-      final moviesFavoriteAndNotWatchedResult =
-          await _repository.fetchFavoriteAndNotWatchedMovies(_locale, 10);
-      if (moviesFavoriteAndNotWatchedResult.isNotEmpty) {
-        tempMovies.add(MovieWithHeaderData(
-          title: S.of(_context).favorite_and_not_watched,
-          list: moviesFavoriteAndNotWatchedResult,
-          viewFavoriteType: ViewFavoriteType.favoriteAndNotWatched,
-        ));
+      if (userId == null || isAllowShowFavoriteAndNotWatchedMovies) {
+        final moviesFavoriteAndNotWatchedResult =
+            await _repository.fetchFavoriteAndNotWatchedMovies(_locale, 10, userId);
+        if (moviesFavoriteAndNotWatchedResult.isNotEmpty) {
+          tempMovies.add(MovieWithHeaderData(
+            title: S.of(_context).favorite_and_not_watched,
+            list: moviesFavoriteAndNotWatchedResult,
+            viewFavoriteType: ViewFavoriteType.favoriteAndNotWatched,
+          ));
+        }
       }
-      final moviesWatchedResult =
-          await _repository.fetchWatchedMovies(_locale, 10);
-      if (moviesWatchedResult.isNotEmpty) {
-        tempMovies.add(MovieWithHeaderData(
-          title: S.of(_context).watched,
-          list: moviesWatchedResult,
-          viewFavoriteType: ViewFavoriteType.watched,
-        ));
+      if (userId == null || isAllowShowWatchedMovies) {
+        final moviesWatchedResult = await _repository.fetchWatchedMovies(_locale, 10, userId);
+        if (moviesWatchedResult.isNotEmpty) {
+          tempMovies.add(MovieWithHeaderData(
+            title: S.of(_context).watched,
+            list: moviesWatchedResult,
+            viewFavoriteType: ViewFavoriteType.watched,
+          ));
+        }
       }
     } on ApiClientException catch (e) {
       if (e.solution == ExceptionSolution.update) {

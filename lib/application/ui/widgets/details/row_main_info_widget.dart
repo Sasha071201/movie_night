@@ -35,7 +35,7 @@ class RowMainInfoWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Expanded(
-                    child: Text(
+                    child: SelectableText(
                       data.title,
                       style: AppTextStyle.small,
                     ),

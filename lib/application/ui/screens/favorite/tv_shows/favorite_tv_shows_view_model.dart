@@ -29,8 +29,47 @@ class FavoriteTvShowsViewModel extends ChangeNotifier {
   StreamSubscription? _streamNeedUpdateSubscription;
   AppConnectivityReactor? _appConnectivityReactor;
   Timer? _timer;
+  String? userId;
 
-  FavoriteTvShowsViewModel(BuildContext context) {
+  bool isAllowShowFavoriteTvShows = false;
+  bool isAllowShowFavoriteAndNotWatchedTvShows = false;
+  bool isAllowShowWatchedTvShows = false;
+
+  Future<void> _initIsAllowShow() async {
+    await Future.wait<void>([
+      _isAllowShowFavoriteTvShows(),
+      _isAllowShowFavoriteAndNotWatchedTvShows(),
+      _isAllowShowWatchedTvShows(),
+    ]);
+    notifyListeners();
+  }
+
+  Future<void> _isAllowShowFavoriteTvShows() async {
+    final newIsallowShowFavoriteTvShows = await _repository.isAllowShowFavoriteTvShows(userId);
+    if (newIsallowShowFavoriteTvShows != null) {
+      isAllowShowFavoriteTvShows = newIsallowShowFavoriteTvShows;
+      notifyListeners();
+    }
+  }
+
+  Future<void> _isAllowShowFavoriteAndNotWatchedTvShows() async {
+    final newIsAllowShowFavoriteAndNotWatchedTvShows =
+        await _repository.isAllowShowFavoriteAndNotWatchedTvShows(userId);
+    if (newIsAllowShowFavoriteAndNotWatchedTvShows != null) {
+      isAllowShowFavoriteAndNotWatchedTvShows = newIsAllowShowFavoriteAndNotWatchedTvShows;
+      notifyListeners();
+    }
+  }
+
+  Future<void> _isAllowShowWatchedTvShows() async {
+    final newIsAllowShowWatchedTvShows = await _repository.isAllowShowWatchedTvShows(userId);
+    if (newIsAllowShowWatchedTvShows != null) {
+      isAllowShowWatchedTvShows = newIsAllowShowWatchedTvShows;
+      notifyListeners();
+    }
+  }
+
+  FavoriteTvShowsViewModel(BuildContext context, [this.userId]) {
     _context = context;
     _listenNeedUpdate();
     _listenChanges();
@@ -62,8 +101,7 @@ class FavoriteTvShowsViewModel extends ChangeNotifier {
 
   void _listenNeedUpdate() {
     _streamNeedUpdateSubscription?.cancel();
-    _streamNeedUpdateSubscription =
-        _controllerNeedUpdate.stream.listen((needUpdate) {
+    _streamNeedUpdateSubscription = _controllerNeedUpdate.stream.listen((needUpdate) {
       if (needUpdate) _refresh();
     });
   }
@@ -86,6 +124,9 @@ class FavoriteTvShowsViewModel extends ChangeNotifier {
     _timer = Timer(const Duration(milliseconds: 1000), () async {
       state.isLoaded = false;
       notifyListeners();
+      if (userId != null) {
+        await _initIsAllowShow();
+      }
       await resetAll();
       state.isLoaded = true;
       notifyListeners();
@@ -114,32 +155,36 @@ class FavoriteTvShowsViewModel extends ChangeNotifier {
   Future<void> _fillTvShowsWithHeader() async {
     final tempTvShows = <TvShowWithHeaderData>[];
     try {
-      final tvShowsFavoriteResult =
-          await _repository.fetchFavoriteTvShows(_locale, 10);
-      if (tvShowsFavoriteResult.isNotEmpty) {
-        tempTvShows.add(TvShowWithHeaderData(
-          title: S.of(_context).favorite,
-          list: tvShowsFavoriteResult,
-          viewFavoriteType: ViewFavoriteType.favorite,
-        ));
+      if (userId == null || isAllowShowFavoriteTvShows) {
+        final tvShowsFavoriteResult = await _repository.fetchFavoriteTvShows(_locale, 10, userId);
+        if (tvShowsFavoriteResult.isNotEmpty) {
+          tempTvShows.add(TvShowWithHeaderData(
+            title: S.of(_context).favorite,
+            list: tvShowsFavoriteResult,
+            viewFavoriteType: ViewFavoriteType.favorite,
+          ));
+        }
       }
-      final tvShowsFavoriteAndNotWatchedResult =
-          await _repository.fetchFavoriteAndNotWatchedTvShows(_locale, 10);
-      if (tvShowsFavoriteAndNotWatchedResult.isNotEmpty) {
-        tempTvShows.add(TvShowWithHeaderData(
-          title: S.of(_context).favorite_and_not_watched,
-          list: tvShowsFavoriteAndNotWatchedResult,
-          viewFavoriteType: ViewFavoriteType.favoriteAndNotWatched,
-        ));
+      if (userId == null || isAllowShowFavoriteAndNotWatchedTvShows) {
+        final tvShowsFavoriteAndNotWatchedResult =
+            await _repository.fetchFavoriteAndNotWatchedTvShows(_locale, 10, userId);
+        if (tvShowsFavoriteAndNotWatchedResult.isNotEmpty) {
+          tempTvShows.add(TvShowWithHeaderData(
+            title: S.of(_context).favorite_and_not_watched,
+            list: tvShowsFavoriteAndNotWatchedResult,
+            viewFavoriteType: ViewFavoriteType.favoriteAndNotWatched,
+          ));
+        }
       }
-      final tvShowsWatchedResult =
-          await _repository.fetchWatchedTvShows(_locale, 10);
-      if (tvShowsWatchedResult.isNotEmpty) {
-        tempTvShows.add(TvShowWithHeaderData(
-          title: S.of(_context).watched,
-          list: tvShowsWatchedResult,
-          viewFavoriteType: ViewFavoriteType.watched,
-        ));
+      if (userId == null || isAllowShowWatchedTvShows) {
+        final tvShowsWatchedResult = await _repository.fetchWatchedTvShows(_locale, 10, userId);
+        if (tvShowsWatchedResult.isNotEmpty) {
+          tempTvShows.add(TvShowWithHeaderData(
+            title: S.of(_context).watched,
+            list: tvShowsWatchedResult,
+            viewFavoriteType: ViewFavoriteType.watched,
+          ));
+        }
       }
     } on ApiClientException catch (e) {
       if (e.solution == ExceptionSolution.update) {
