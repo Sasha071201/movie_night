@@ -4,15 +4,17 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_night/application/ui/navigation/app_navigation.dart';
 
-enum FirebaseDynamicLinkType { movie, tv, person }
+enum FirebaseDynamicLinkType { movie, tv, person, user }
 
 class FirebaseDynamicLinkService {
   const FirebaseDynamicLinkService._();
 
   static Future<String> createDynamicLink({
     required FirebaseDynamicLinkType type,
-    required int id,
-    required bool short,
+    required String id,
+    required String title,
+    required String description,
+    bool short = true,
   }) async {
     String linkMessage;
 
@@ -25,6 +27,10 @@ class FirebaseDynamicLinkService {
       iosParameters: IOSParameters(
         bundleId: "com.sstreltsov.movie-night",
         fallbackUrl: Uri.parse('https://t.me/+xKKzRO6CUak0ZTRi'),
+      ),
+      socialMetaTagParameters: SocialMetaTagParameters(
+        title: title.isEmpty ? null : title,
+        description: description.isEmpty ? null : description,
       ),
     );
 
@@ -61,7 +67,8 @@ class FirebaseDynamicLinkService {
     bool isMovie = deepLink.pathSegments.contains(FirebaseDynamicLinkType.movie.name);
     bool isTv = deepLink.pathSegments.contains(FirebaseDynamicLinkType.tv.name);
     bool isPerson = deepLink.pathSegments.contains(FirebaseDynamicLinkType.person.name);
-    if (isMovie || isTv || isPerson) {
+    bool isUser = deepLink.pathSegments.contains(FirebaseDynamicLinkType.user.name);
+    if (isMovie || isTv || isPerson || isUser) {
       try {
         String? id = deepLink.queryParameters['id'];
         if (id == null) return;
@@ -80,6 +87,11 @@ class FirebaseDynamicLinkService {
           Navigator.of(context).pushNamed(
             Screens.actorDetails,
             arguments: int.parse(id),
+          );
+        } else if (isUser) {
+          Navigator.of(context).pushNamed(
+            Screens.userDetails,
+            arguments: id,
           );
         }
       } catch (e) {

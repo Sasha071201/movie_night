@@ -690,6 +690,16 @@ class S {
     );
   }
 
+  /// `Empty`
+  String get empty {
+    return Intl.message(
+      'Empty',
+      name: 'empty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Empty. Write a review first!`
   String get empty_write_review_first {
     return Intl.message(
@@ -775,6 +785,16 @@ class S {
     return Intl.message(
       'Favorite',
       name: 'favorite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get save {
+    return Intl.message(
+      'Save',
+      name: 'save',
       desc: '',
       args: [],
     );
@@ -1175,6 +1195,26 @@ class S {
     return Intl.message(
       'Enter movie, TV show, person',
       name: 'enter_movie_tv_show_person',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter name`
+  String get enter_name {
+    return Intl.message(
+      'Enter name',
+      name: 'enter_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the name you are looking for`
+  String get enter_name_you_are_looking_for {
+    return Intl.message(
+      'Enter the name you are looking for',
+      name: 'enter_name_you_are_looking_for',
       desc: '',
       args: [],
     );
@@ -1830,11 +1870,171 @@ class S {
     );
   }
 
+  /// `Subscribers`
+  String get subscribers {
+    return Intl.message(
+      'Subscribers',
+      name: 'subscribers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscriptions`
+  String get subscriptions {
+    return Intl.message(
+      'Subscriptions',
+      name: 'subscriptions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Change`
+  String get change {
+    return Intl.message(
+      'Change',
+      name: 'change',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Find people`
+  String get find_people {
+    return Intl.message(
+      'Find people',
+      name: 'find_people',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings`
+  String get settings {
+    return Intl.message(
+      'Settings',
+      name: 'settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Social`
+  String get social {
+    return Intl.message(
+      'Social',
+      name: 'social',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Allow to show everyone`
+  String get allow_show_all {
+    return Intl.message(
+      'Allow to show everyone',
+      name: 'allow_show_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `favorite movies`
+  String get favorite_movies {
+    return Intl.message(
+      'favorite movies',
+      name: 'favorite_movies',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `favorites and not watched movies`
+  String get favorites_and_not_watched_movies {
+    return Intl.message(
+      'favorites and not watched movies',
+      name: 'favorites_and_not_watched_movies',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `the movies you've watched`
+  String get movies_you_have_watched {
+    return Intl.message(
+      'the movies you\'ve watched',
+      name: 'movies_you_have_watched',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `favorite tv shows`
+  String get favorite_tv_shows {
+    return Intl.message(
+      'favorite tv shows',
+      name: 'favorite_tv_shows',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `favorites and have not watched TV shows`
+  String get favorites_and_have_not_watched_tv_shows {
+    return Intl.message(
+      'favorites and have not watched TV shows',
+      name: 'favorites_and_have_not_watched_tv_shows',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `TV shows you've watched`
+  String get tv_show_you_have_watched {
+    return Intl.message(
+      'TV shows you\'ve watched',
+      name: 'tv_show_you_have_watched',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `favorite people`
+  String get favorite_people {
+    return Intl.message(
+      'favorite people',
+      name: 'favorite_people',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Watch online`
+  String get watch_online {
+    return Intl.message(
+      'Watch online',
+      name: 'watch_online',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Request has been sent`
   String get request_has_been_sent {
     return Intl.message(
       'Request has been sent',
       name: 'request_has_been_sent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User`
+  String get user {
+    return Intl.message(
+      'User',
+      name: 'user',
       desc: '',
       args: [],
     );

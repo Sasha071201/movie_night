@@ -35,6 +35,7 @@ class AppTheme {
     ),
     textSelectionTheme: const TextSelectionThemeData(
       cursorColor: AppColors.colorFFFFFF,
+      selectionColor: AppColors.colorSplash,
       selectionHandleColor: AppColors.colorMainText,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(

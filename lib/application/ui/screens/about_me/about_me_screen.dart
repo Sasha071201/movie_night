@@ -86,21 +86,20 @@ class _SaveButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<AboutMeViewModel>();
-    final isLoadingSave =
-        context.select((AboutMeViewModel vm) => vm.isLoadingSave);
+    final isLoadingSave = context.select((AboutMeViewModel vm) => vm.isLoadingSave);
     return ElevatedButtonWidget(
       child: !isLoadingSave
           ? Text(
-              'Save',
+              S.of(context).save,
               style: AppTextStyle.button.copyWith(
                 color: AppColors.colorPrimary,
               ),
             )
           : const RepaintBoundary(
-            child: CircularProgressIndicator(
+              child: CircularProgressIndicator(
                 color: AppColors.colorPrimary,
               ),
-          ),
+            ),
       onPressed: !isLoadingSave ? vm.save : null,
       backgroundColor: AppColors.colorSecondary,
       overlayColor: AppColors.colorSplash,
@@ -128,8 +127,7 @@ class _NameTextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<AboutMeViewModel>();
-    final isLoadingSave =
-        context.select((AboutMeViewModel vm) => vm.isLoadingSave);
+    final isLoadingSave = context.select((AboutMeViewModel vm) => vm.isLoadingSave);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -172,7 +170,7 @@ class _AvatarImageWidget extends StatelessWidget {
               height: 30,
               child: Center(
                   child: Text(
-                'Change',
+                S.of(context).change,
                 style: AppTextStyle.button,
               )),
             ),

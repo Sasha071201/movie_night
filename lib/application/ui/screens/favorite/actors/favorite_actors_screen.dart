@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_night/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 import '../../../themes/app_colors.dart';
@@ -13,8 +14,8 @@ class FavoriteActorsScreen extends StatefulWidget {
   State<FavoriteActorsScreen> createState() => _FavoriteActorsScreenState();
 }
 
-class _FavoriteActorsScreenState extends State<FavoriteActorsScreen> with AutomaticKeepAliveClientMixin {
-  
+class _FavoriteActorsScreenState extends State<FavoriteActorsScreen>
+    with AutomaticKeepAliveClientMixin {
   @override
   void didChangeDependencies() {
     context.read<FavoriteActorsViewModel>().setupLocale(context);
@@ -24,11 +25,12 @@ class _FavoriteActorsScreenState extends State<FavoriteActorsScreen> with Automa
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final isLoaded =
-        context.select((FavoriteActorsViewModel vm) => vm.state.isLoaded);
+    final userId = context.select((FavoriteActorsViewModel vm) => vm.userId);
+    final isLoaded = context.select((FavoriteActorsViewModel vm) => vm.state.isLoaded);
     return Stack(
       children: [
         CustomScrollView(
+          physics: userId != null ? const NeverScrollableScrollPhysics() : null,
           slivers: [
             SliverList(
               delegate: SliverChildListDelegate(
@@ -63,10 +65,10 @@ class _ActorsWithCategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final actorsWithHeader = context
-        .select((FavoriteActorsViewModel vm) => vm.state.actorsWithHeader);
-    final isLoaded =
-        context.select((FavoriteActorsViewModel vm) => vm.state.isLoaded);
+    final userId = context.read<FavoriteActorsViewModel>().userId;
+    final actorsWithHeader =
+        context.select((FavoriteActorsViewModel vm) => vm.state.actorsWithHeader);
+    final isLoaded = context.select((FavoriteActorsViewModel vm) => vm.state.isLoaded);
     return isLoaded
         ? actorsWithHeader.isNotEmpty
             ? SliverList(
@@ -76,6 +78,7 @@ class _ActorsWithCategoryWidget extends StatelessWidget {
                       children: [
                         ActorsWithHeaderWidget(
                           actorData: actorsWithHeader[index],
+                          userId: userId,
                         ),
                       ],
                     );
@@ -86,7 +89,7 @@ class _ActorsWithCategoryWidget extends StatelessWidget {
             : SliverToBoxAdapter(
                 child: Center(
                   child: Text(
-                    'Пусто',
+                    S.of(context).empty,
                     style: AppTextStyle.header2,
                   ),
                 ),

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:movie_night/application/domain/firebase/firebase_dynamic_link.dart';
+import 'package:movie_night/application/ui/navigation/app_navigation.dart';
+import 'package:movie_night/application/ui/widgets/button_tile_widget.dart';
+import 'package:movie_night/application/ui/widgets/icon_button_widget.dart';
 import 'package:provider/provider.dart';
 
 import 'package:movie_night/application/resources/resources.dart';
 import 'package:movie_night/application/ui/screens/profile/profile_view_model.dart';
 import 'package:movie_night/application/ui/themes/app_colors.dart';
 import 'package:movie_night/application/ui/themes/app_text_style.dart';
-import 'package:movie_night/application/ui/widgets/inkwell_material_widget.dart';
 import 'package:movie_night/application/ui/widgets/text_button_widget.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../generated/l10n.dart';
 
@@ -22,22 +26,108 @@ class ProfileScreen extends StatelessWidget {
         Column(
           children: [
             const _SignOutButtonWidget(),
-            const _AvatarImageWidget(),
+            SizedBox(
+              width: double.infinity,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  const _AvatarImageWidget(),
+                  Positioned(
+                    right: 24,
+                    top: 0,
+                    child: Column(
+                      children: [
+                        IconButtonWidget(
+                          icon: const Icon(
+                            Icons.share,
+                            color: AppColors.colorSecondary,
+                            size: 32,
+                          ),
+                          onPressed: () async {
+                            final userId = context.read<ProfileViewModel>().userId;
+                            final userName = context.read<ProfileViewModel>().nameFromDB;
+                            if (userId == null) return;
+                            final url = await FirebaseDynamicLinkService.createDynamicLink(
+                              type: FirebaseDynamicLinkType.person,
+                              id: userId,
+                              short: true,
+                              title: userName,
+                              description: '',
+                            );
+                            Share.share(url);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 8),
             const _NameWidget(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             _ButtonMenuWidget(
               title: S.of(context).about_me,
               onPressed: () => vm.openAboutMe(context),
             ),
             const SizedBox(height: 1),
-            // _ButtonMenuWidget(
-            //   title: 'Subscription',
-            //   onPressed: () => vm.openSubscription(context),
-            // ),
+            const _SubscriberButtonsWidget(),
+            const SizedBox(height: 1),
+            _ButtonMenuWidget(
+              title: S.of(context).find_people,
+              onPressed: () => vm.openUsers(context),
+            ),
+            const SizedBox(height: 1),
+            _ButtonMenuWidget(
+              title: S.of(context).settings,
+              onPressed: () => Navigator.of(context).pushNamed(Screens.settings),
+            ),
           ],
         ),
         const RepaintBoundary(child: _CircularProgressIndicatorWidget()),
+      ],
+    );
+  }
+}
+
+class _SubscriberButtonsWidget extends StatelessWidget {
+  const _SubscriberButtonsWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: ButtonTileWidget(
+            onPressed: () => Navigator.of(context).pushNamed(Screens.subscribers),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  S.of(context).subscribers,
+                  style: AppTextStyle.header3,
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 1),
+        Expanded(
+          child: ButtonTileWidget(
+            onPressed: () => Navigator.of(context).pushNamed(Screens.subscriptions),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  S.of(context).subscriptions,
+                  style: AppTextStyle.header3,
+                ),
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
@@ -50,8 +140,7 @@ class _CircularProgressIndicatorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLoadingProgress =
-        context.select((ProfileViewModel vm) => vm.isLoadingProgress);
+    final isLoadingProgress = context.select((ProfileViewModel vm) => vm.isLoadingProgress);
     return isLoadingProgress
         ? const CircularProgressIndicator(
             color: AppColors.colorMainText,
@@ -68,7 +157,7 @@ class _NameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final name = context.select((ProfileViewModel vm) => vm.nameFromDB);
-    return Text(
+    return SelectableText(
       name,
       style: AppTextStyle.header2.copyWith(
         color: AppColors.colorSecondary,
@@ -88,27 +177,16 @@ class _ButtonMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWellMaterialWidget(
-      borderRadius: 0,
-      color: AppColors.colorSplash,
-      onTap: onPressed,
-      child: Container(
-        height: 56,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        color: AppColors.colorPrimary,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: AppTextStyle.header3,
-            ),
-            const Icon(
-              Icons.arrow_forward_rounded,
-              color: AppColors.colorSecondary,
-            ),
-          ],
-        ),
+    return ButtonTileWidget(
+      onPressed: onPressed,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: AppTextStyle.header3,
+          ),
+        ],
       ),
     );
   }

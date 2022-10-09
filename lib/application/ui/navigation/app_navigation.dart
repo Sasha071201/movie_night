@@ -11,7 +11,12 @@ abstract class Screens {
   Screens._();
   static const initial = "/";
   static const aboutMe = "/about_me";
+  static const users = "/users";
+  static const userDetails = "/users_details";
   static const subscription = "/subscription";
+  static const subscriptions = "/subscriptions";
+  static const subscribers = "/subscribers";
+  static const settings = "/settings";
   static const signUp = "/sign_in/sign_up";
   static const resetPassword = "/sign_in/reset_password";
   static const viewAllMovies = "/view_all_movies";
@@ -38,6 +43,17 @@ class AppNavigation {
         return _getScreenRoute(_screenFactory.makeInitial());
       case Screens.signUp:
         return _getScreenRoute(_screenFactory.makeSignUp());
+      case Screens.subscriptions:
+        return _getScreenRoute(_screenFactory.makeSubscriptions());
+      case Screens.subscribers:
+        return _getScreenRoute(_screenFactory.makeSubscribers());
+      case Screens.users:
+        return _getScreenRoute(_screenFactory.makeUsers());
+      case Screens.settings:
+        return _getScreenRoute(_screenFactory.makeSettings());
+      case Screens.userDetails:
+        final userId = settings.arguments as String;
+        return _getScreenRoute(_screenFactory.makeUserDetails(userId));
       case Screens.resetPassword:
         return _getScreenRoute(_screenFactory.makeResetPassword());
       case Screens.aboutMe:
@@ -47,6 +63,7 @@ class AppNavigation {
       case Screens.movieDetails:
         final movieId = settings.arguments as int;
         return _getScreenRoute(_screenFactory.makeMovieDetails(movieId));
+
       case Screens.tvShowDetails:
         final tvShowId = settings.arguments as int;
         return _getScreenRoute(_screenFactory.makeTvShowDetails(tvShowId));
@@ -79,8 +96,7 @@ class AppNavigation {
         ));
       case Screens.actorDetails:
         final actorId = settings.arguments as int;
-        return _getScreenRoute(
-            _screenFactory.makeActorDetails(actorId: actorId));
+        return _getScreenRoute(_screenFactory.makeActorDetails(actorId: actorId));
       case Screens.viewAllMovies:
         final listData = settings.arguments as List;
         final data = listData[0] as ViewAllMoviesData;

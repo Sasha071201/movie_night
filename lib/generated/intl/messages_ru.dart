@@ -29,6 +29,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "actor_details_not_saved": MessageLookupByLibrary.simpleMessage(
             "Детальная информация актера не сохранена"),
         "adventure": MessageLookupByLibrary.simpleMessage("Приключения"),
+        "allow_show_all":
+            MessageLookupByLibrary.simpleMessage("Разрешить показывать всем"),
         "animation": MessageLookupByLibrary.simpleMessage("Мультфильм"),
         "appeared": MessageLookupByLibrary.simpleMessage("Появился"),
         "apply": MessageLookupByLibrary.simpleMessage("Применить"),
@@ -42,6 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "cast": MessageLookupByLibrary.simpleMessage("В главных ролях"),
         "cast_actor_details":
             MessageLookupByLibrary.simpleMessage("Актёрское искусство"),
+        "change": MessageLookupByLibrary.simpleMessage("Изменить"),
         "checking_data_for_updates": MessageLookupByLibrary.simpleMessage(
             "Проверяем данные на обновление"),
         "click_to_open_the_application": MessageLookupByLibrary.simpleMessage(
@@ -66,6 +69,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "drama": MessageLookupByLibrary.simpleMessage("Драма"),
         "email_entered_incorrectly":
             MessageLookupByLibrary.simpleMessage("Почта введена некорректно"),
+        "empty": MessageLookupByLibrary.simpleMessage("Пусто"),
         "empty_write_review_first":
             MessageLookupByLibrary.simpleMessage("Пусто. Напиши отзыв первым!"),
         "enter_confirm_password": MessageLookupByLibrary.simpleMessage(
@@ -73,6 +77,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "enter_email": MessageLookupByLibrary.simpleMessage("Введите почту"),
         "enter_movie_tv_show_person": MessageLookupByLibrary.simpleMessage(
             "Введите фильм, сериал, человека"),
+        "enter_name": MessageLookupByLibrary.simpleMessage("Введите имя"),
+        "enter_name_you_are_looking_for": MessageLookupByLibrary.simpleMessage(
+            "Введите имя пользователя, которое вы ищете"),
         "enter_password":
             MessageLookupByLibrary.simpleMessage("Введите пароль"),
         "enter_your_name":
@@ -87,12 +94,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "favorite": MessageLookupByLibrary.simpleMessage("Избранное"),
         "favorite_and_not_watched":
             MessageLookupByLibrary.simpleMessage("Избранное и не смотрел"),
+        "favorite_movies":
+            MessageLookupByLibrary.simpleMessage("избранные фильмы"),
+        "favorite_people":
+            MessageLookupByLibrary.simpleMessage("избранных людей"),
+        "favorite_tv_shows":
+            MessageLookupByLibrary.simpleMessage("избранные сериалы"),
+        "favorites_and_have_not_watched_tv_shows":
+            MessageLookupByLibrary.simpleMessage(
+                "избранное и не смотрел сериалы"),
+        "favorites_and_not_watched_movies":
+            MessageLookupByLibrary.simpleMessage(
+                "избранное и не смотрел фильмы"),
         "female": MessageLookupByLibrary.simpleMessage("Женщина"),
         "fill_in_the_mail":
             MessageLookupByLibrary.simpleMessage("Заполните почту"),
         "fill_in_the_password":
             MessageLookupByLibrary.simpleMessage("Заполните пароль"),
         "filter": MessageLookupByLibrary.simpleMessage("Фильтр"),
+        "find_people": MessageLookupByLibrary.simpleMessage("Найти людей"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Забыли пароль?"),
         "from": MessageLookupByLibrary.simpleMessage("От"),
@@ -117,6 +137,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "movie_details_not_saved": MessageLookupByLibrary.simpleMessage(
             "Детальная информация фильма не сохранена"),
         "movies": MessageLookupByLibrary.simpleMessage("Фильмы"),
+        "movies_you_have_watched":
+            MessageLookupByLibrary.simpleMessage("фильмы, которые смотрел"),
         "music": MessageLookupByLibrary.simpleMessage("Музыка"),
         "mystery": MessageLookupByLibrary.simpleMessage("Детектив"),
         "name": MessageLookupByLibrary.simpleMessage("Имя"),
@@ -187,6 +209,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Доход по убыванию"),
         "reviews": MessageLookupByLibrary.simpleMessage("Отзывы"),
         "romance": MessageLookupByLibrary.simpleMessage("Мелодрама"),
+        "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "sciFiAndFantasy": MessageLookupByLibrary.simpleMessage(
             "Научная фантастика и фэнтези"),
         "science_fiction": MessageLookupByLibrary.simpleMessage("Фантастика"),
@@ -207,6 +230,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "serial_details_not_saved": MessageLookupByLibrary.simpleMessage(
             "Детальная информация сериала не сохранена"),
         "series": MessageLookupByLibrary.simpleMessage("Сериал"),
+        "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
         "share": MessageLookupByLibrary.simpleMessage("Поделиться"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Войти"),
         "sign_in_label": MessageLookupByLibrary.simpleMessage("Вход"),
@@ -215,12 +239,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "sign_up_label": MessageLookupByLibrary.simpleMessage("Регистрация"),
         "similar": MessageLookupByLibrary.simpleMessage("Похожие"),
         "soap": MessageLookupByLibrary.simpleMessage("Мыльная опера"),
+        "social": MessageLookupByLibrary.simpleMessage("Социальные"),
         "something_went_wrong":
             MessageLookupByLibrary.simpleMessage("Что-то пошло не так"),
         "sort_by": MessageLookupByLibrary.simpleMessage("Сортировать по"),
         "status": MessageLookupByLibrary.simpleMessage("Статус"),
         "status_changed_to":
             MessageLookupByLibrary.simpleMessage("Статус изменился на"),
+        "subscribers": MessageLookupByLibrary.simpleMessage("Подписчики"),
+        "subscriptions": MessageLookupByLibrary.simpleMessage("Подписки"),
         "tagline": MessageLookupByLibrary.simpleMessage("Слоган"),
         "talk": MessageLookupByLibrary.simpleMessage("Ток-шоу"),
         "text_of_complaint": MessageLookupByLibrary.simpleMessage(
@@ -250,10 +277,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "tv": MessageLookupByLibrary.simpleMessage("ТВ"),
         "tv_movie": MessageLookupByLibrary.simpleMessage("ТВ фильм"),
         "tv_show": MessageLookupByLibrary.simpleMessage("Сериал"),
+        "tv_show_you_have_watched":
+            MessageLookupByLibrary.simpleMessage("сериалы, которые смотрел"),
         "tv_shows": MessageLookupByLibrary.simpleMessage("Сериалы"),
         "unknown": MessageLookupByLibrary.simpleMessage("Неизвестный"),
         "unknown_error_write_to_support": MessageLookupByLibrary.simpleMessage(
             "Неизвестная ошибка. Напишите в поддержку"),
+        "user": MessageLookupByLibrary.simpleMessage("Пользователь"),
         "view_all": MessageLookupByLibrary.simpleMessage("Посмотреть все"),
         "vote_average": MessageLookupByLibrary.simpleMessage("Средний балл"),
         "vote_average_asc":
@@ -267,6 +297,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "war": MessageLookupByLibrary.simpleMessage("Военный"),
         "war_and_politics":
             MessageLookupByLibrary.simpleMessage("Война и политика"),
+        "watch_online": MessageLookupByLibrary.simpleMessage("Смотреть онлайн"),
         "watched": MessageLookupByLibrary.simpleMessage("Смотрел"),
         "western": MessageLookupByLibrary.simpleMessage("Вестерн"),
         "with_genres": MessageLookupByLibrary.simpleMessage("С жанрами"),

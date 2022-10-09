@@ -29,8 +29,26 @@ class FavoriteActorsViewModel extends ChangeNotifier {
   StreamSubscription? _streamNeedUpdateSubscription;
   AppConnectivityReactor? _appConnectivityReactor;
   Timer? _timer;
+  String? userId;
 
-  FavoriteActorsViewModel(BuildContext context) {
+  bool isAllowShowFavoriteActors = false;
+
+  Future<void> _initIsAllowShow() async {
+    await Future.wait<void>([
+      _isAllowShowFavoriteActors(),
+    ]);
+    notifyListeners();
+  }
+
+  Future<void> _isAllowShowFavoriteActors() async {
+    final newIsAllowShowFavoriteActors = await _repository.isAllowShowFavoriteActors(userId);
+    if (newIsAllowShowFavoriteActors != null) {
+      isAllowShowFavoriteActors = newIsAllowShowFavoriteActors;
+      notifyListeners();
+    }
+  }
+
+  FavoriteActorsViewModel(BuildContext context, [this.userId]) {
     _context = context;
     _listenNeedUpdate();
     _listenChanges();
@@ -62,8 +80,7 @@ class FavoriteActorsViewModel extends ChangeNotifier {
 
   void _listenNeedUpdate() {
     _streamNeedUpdateSubscription?.cancel();
-    _streamNeedUpdateSubscription =
-        _controllerNeedUpdate.stream.listen((needUpdate) {
+    _streamNeedUpdateSubscription = _controllerNeedUpdate.stream.listen((needUpdate) {
       if (needUpdate) _refresh();
     });
   }
@@ -82,6 +99,9 @@ class FavoriteActorsViewModel extends ChangeNotifier {
     _timer = Timer(const Duration(milliseconds: 1000), () async {
       state.isLoaded = false;
       notifyListeners();
+      if (userId != null) {
+        await _initIsAllowShow();
+      }
       await resetAll();
       state.isLoaded = true;
       notifyListeners();
@@ -110,14 +130,15 @@ class FavoriteActorsViewModel extends ChangeNotifier {
   Future<void> _fillActorsWithHeader() async {
     final tempActors = <ActorWithHeaderData>[];
     try {
-      final actorsFavoriteResult =
-          await _repository.fetchFavoritePeople(_locale, 10);
-      if (actorsFavoriteResult.isNotEmpty) {
-        tempActors.add(ActorWithHeaderData(
-          title: S.of(_context).favorite,
-          list: actorsFavoriteResult,
-          viewFavoriteType: ViewFavoriteType.favorite,
-        ));
+      if (userId == null || isAllowShowFavoriteActors) {
+        final actorsFavoriteResult = await _repository.fetchFavoritePeople(_locale, 10, userId);
+        if (actorsFavoriteResult.isNotEmpty) {
+          tempActors.add(ActorWithHeaderData(
+            title: S.of(_context).favorite,
+            list: actorsFavoriteResult,
+            viewFavoriteType: ViewFavoriteType.favorite,
+          ));
+        }
       }
     } on ApiClientException catch (e) {
       if (e.solution == ExceptionSolution.update) {

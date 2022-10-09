@@ -67,8 +67,7 @@ class _BodyWidget extends StatelessWidget {
                       color: AppColors.colorSecondary,
                     ),
                   ),
-                  onPressed: () =>
-                      Navigator.of(context).pushNamed(Screens.signUp),
+                  onPressed: () => Navigator.of(context).pushNamed(Screens.signUp),
                 ),
                 const InsetsBottomWidget(),
               ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:movie_night/application/domain/api_client/media_type.dart';
 import 'package:movie_night/application/domain/firebase/firebase_dynamic_link.dart';
+import 'package:movie_night/application/utils/url_launcher_helper.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../generated/l10n.dart';
@@ -14,8 +16,12 @@ class ButtonsWidget extends StatelessWidget {
   final bool isWatched;
   final bool showWatched;
   final bool showShare;
+  final bool showSearch;
   final FirebaseDynamicLinkType? dynamicLinkType;
   final int id;
+  final MediaType? mediaType;
+  final String title;
+  final String description;
   const ButtonsWidget({
     Key? key,
     required this.videos,
@@ -23,8 +29,12 @@ class ButtonsWidget extends StatelessWidget {
     this.isWatched = false,
     this.showWatched = true,
     this.showShare = false,
+    this.showSearch = false,
     this.dynamicLinkType,
+    this.mediaType,
     this.id = -1,
+    this.title = '',
+    this.description = '',
   }) : super(key: key);
 
   @override
@@ -89,13 +99,14 @@ class ButtonsWidget extends StatelessWidget {
         if (showShare)
           TextButtonWidget(
             onPressed: () async {
-              if (id != -1 && dynamicLinkType == null) return;
+              if (id == -1 || dynamicLinkType == null) return;
               final url = await FirebaseDynamicLinkService.createDynamicLink(
                 type: dynamicLinkType!,
-                id: id,
-                short: true,
+                id: id.toString(),
+                title: title,
+                description: description,
               );
-              Share.share(url);
+              await Share.share(url);
             },
             backgroundColor: AppColors.colorPrimary,
             child: Row(
@@ -108,6 +119,32 @@ class ButtonsWidget extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   S.of(context).share,
+                  style: AppTextStyle.small,
+                ),
+              ],
+            ),
+          ),
+        if (showSearch && title.isNotEmpty && mediaType != null)
+          TextButtonWidget(
+            onPressed: () async {
+              if (title.isEmpty || mediaType == null) return;
+              await UrlLauncherHelper.openSearchLink(
+                type: mediaType!,
+                context: context,
+                title: title,
+              );
+            },
+            backgroundColor: AppColors.colorPrimary,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.theaters,
+                  color: AppColors.colorSecondary,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  S.of(context).watch_online,
                   style: AppTextStyle.small,
                 ),
               ],

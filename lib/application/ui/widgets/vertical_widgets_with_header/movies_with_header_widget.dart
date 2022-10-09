@@ -35,11 +35,13 @@ class MovieWithHeaderData {
 class MoviesWithHeaderWidget extends StatelessWidget {
   final MovieWithHeaderData movieData;
   final void Function()? onPressed;
+  final String? userId;
 
   const MoviesWithHeaderWidget({
     Key? key,
     required this.movieData,
     this.onPressed,
+    this.userId,
   }) : super(key: key);
 
   @override
@@ -56,15 +58,12 @@ class MoviesWithHeaderWidget extends StatelessWidget {
             context.read<MainViewModel>().showAdIfAvailable();
           } catch (e) {}
           if (movieData.movieGenres != null) {
-            await Navigator.of(context)
-                .pushNamed(Screens.viewAllMovies, arguments: [
-              ViewAllMoviesData(
-                  withGenres: [Genre(genre: movieData.movieGenres)]),
+            await Navigator.of(context).pushNamed(Screens.viewAllMovies, arguments: [
+              ViewAllMoviesData(withGenres: [Genre(genre: movieData.movieGenres)]),
               MediaType.movie,
             ]);
-            if(onPressed != null) onPressed!();
-          } else if (movieData.viewMediaType != null &&
-              movieData.movieId != null) {
+            if (onPressed != null) onPressed!();
+          } else if (movieData.viewMediaType != null && movieData.movieId != null) {
             await Navigator.of(context).pushNamed(
               Screens.viewMovies,
               arguments: ViewMoviesData(
@@ -73,16 +72,17 @@ class MoviesWithHeaderWidget extends StatelessWidget {
                 mediaId: movieData.movieId!,
               ),
             );
-            if(onPressed != null) onPressed!();
+            if (onPressed != null) onPressed!();
           } else if (movieData.viewFavoriteType != null) {
             await Navigator.of(context).pushNamed(
               Screens.viewFavorite,
               arguments: ViewFavoriteData(
                 mediaType: MediaType.movie,
                 favoriteType: movieData.viewFavoriteType!,
+                userId: userId,
               ),
             );
-            if(onPressed != null) onPressed!();
+            if (onPressed != null) onPressed!();
           }
         });
   }

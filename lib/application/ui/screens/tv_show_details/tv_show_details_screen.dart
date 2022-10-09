@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:movie_night/application/domain/firebase/firebase_dynamic_link.dart';
 import 'package:provider/provider.dart';
 
@@ -473,7 +474,9 @@ class _ProductionCompaniesWidget extends StatelessWidget {
     return ChipsWithHeaderWidget(
       title: S.of(context).production_companies,
       data: productionCompanies.map((data) => data.name).toList(),
-      onPressed: (index) {},
+      onPressed: (index) {
+        Clipboard.setData(ClipboardData(text: productionCompanies[index].name));
+      },
     );
   }
 }
@@ -490,7 +493,9 @@ class _ProductionCountriesWidget extends StatelessWidget {
     return ChipsWithHeaderWidget(
       title: S.of(context).production_countries,
       data: productionCountries.map((data) => data.name).toList(),
-      onPressed: (index) {},
+      onPressed: (index) {
+        Clipboard.setData(ClipboardData(text: productionCountries[index].name));
+      },
     );
   }
 }
@@ -507,7 +512,10 @@ class _KeywordsWidget extends StatelessWidget {
     return ChipsWithHeaderWidget(
       title: 'Keywords',
       data: keywords?.keywords?.map((keyword) => keyword.name).toList(),
-      onPressed: (index) {},
+      onPressed: (index) {
+        if (keywords?.keywords == null) return;
+        Clipboard.setData(ClipboardData(text: keywords!.keywords![index].name));
+      },
     );
   }
 }
@@ -705,8 +713,12 @@ class _ButtonsWidget extends StatelessWidget {
       onPressedWatch: vm.watchTvShow,
       isWatched: isWatched,
       showShare: true,
+      showSearch: true,
+      mediaType: MediaType.tv,
       dynamicLinkType: FirebaseDynamicLinkType.tv,
       id: vm.tvShowId,
+      title: vm.state.tvShowDetails?.name ?? '',
+      description: vm.state.tvShowDetails?.overview ?? '',
     );
   }
 }

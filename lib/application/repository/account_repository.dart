@@ -12,6 +12,7 @@ import 'package:movie_night/application/domain/entities/movie/movie_details.dart
 import 'package:movie_night/application/domain/entities/review.dart';
 import 'package:movie_night/application/domain/entities/tv_shows/tv_show.dart';
 import 'package:movie_night/application/domain/entities/tv_shows/tv_show_details.dart';
+import 'package:movie_night/application/domain/entities/user.dart';
 import 'package:movie_night/application/ui/screens/view_favorite/view_favorite_view_model.dart';
 
 import '../../main.dart';
@@ -84,6 +85,10 @@ class AccountRepository {
     await _accountApiClient.favoritePerson(personId);
   }
 
+  Future<void> favoriteUser(String userId) async {
+    await _accountApiClient.favoriteUser(userId);
+  }
+
   Future<bool?> isFavoriteMovie(String movieId) async {
     return await _accountApiClient.isFavoriteMovie(movieId);
   }
@@ -94,6 +99,10 @@ class AccountRepository {
 
   Future<bool?> isFavoritePerson(String personId) async {
     return await _accountApiClient.isFavoritePerson(personId);
+  }
+
+  Future<bool?> isFavoriteUser(String userId) async {
+    return await _accountApiClient.isFavoriteUser(userId);
   }
 
   Future<void> watchMovie(String movieId) async {
@@ -112,13 +121,71 @@ class AccountRepository {
     return await _accountApiClient.isWatchedTvShow(tvShowId);
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> favoriteStream() =>
-      _accountApiClient.favoriteStream();
+  Future<void> allowShowFavoriteMovies() async {
+    return await _accountApiClient.allowShowFavoriteMovies();
+  }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> watchedStream() =>
-      _accountApiClient.watchedStream();
+  Future<void> allowShowFavoriteAndNotWatchedMovies() async {
+    return await _accountApiClient.allowShowFavoriteAndNotWatchedMovies();
+  }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> userStream() => _accountApiClient.userStream();
+  Future<void> allowShowWatchedMovies() async {
+    return await _accountApiClient.allowShowWatchedMovies();
+  }
+
+  Future<void> allowShowFavoriteTvShows() async {
+    return await _accountApiClient.allowShowFavoriteTvShows();
+  }
+
+  Future<void> allowShowFavoriteAndNotWatchedTvShows() async {
+    return await _accountApiClient.allowShowFavoriteAndNotWatchedTvShows();
+  }
+
+  Future<void> allowShowWatchedTvShows() async {
+    return await _accountApiClient.allowShowWatchedTvShows();
+  }
+
+  Future<void> allowShowFavoriteActors() async {
+    return await _accountApiClient.allowShowFavoriteActors();
+  }
+
+  Future<bool?> isAllowShowFavoriteMovies([String? userId]) async {
+    return await _accountApiClient.isAllowShowFavoriteMovies(userId);
+  }
+
+  Future<bool?> isAllowShowFavoriteAndNotWatchedMovies([String? userId]) async {
+    return await _accountApiClient.isAllowShowFavoriteAndNotWatchedMovies(userId);
+  }
+
+  Future<bool?> isAllowShowWatchedMovies([String? userId]) async {
+    return await _accountApiClient.isAllowShowWatchedMovies(userId);
+  }
+
+  Future<bool?> isAllowShowFavoriteTvShows([String? userId]) async {
+    return await _accountApiClient.isAllowShowFavoriteTvShows(userId);
+  }
+
+  Future<bool?> isAllowShowFavoriteAndNotWatchedTvShows([String? userId]) async {
+    return await _accountApiClient.isAllowShowFavoriteAndNotWatchedTvShows(userId);
+  }
+
+  Future<bool?> isAllowShowWatchedTvShows([String? userId]) async {
+    return await _accountApiClient.isAllowShowWatchedTvShows(userId);
+  }
+
+  Future<bool?> isAllowShowFavoriteActors([String? userId]) async {
+    return await _accountApiClient.isAllowShowFavoriteActors(userId);
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> favoriteStream([String? userId]) =>
+      _accountApiClient.favoriteStream(userId);
+
+  Stream<List<User>> usersStream([String query = '']) => _accountApiClient.usersStream(query);
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> watchedStream([String? userId]) =>
+      _accountApiClient.watchedStream(userId);
+
+  Stream<User> userStream([String? userId]) => _accountApiClient.userStream(userId);
 
   Stream<List<Review>> reviewsStream(String id) =>
       _accountApiClient.reviewsStream(id).asyncMap((event) async {
@@ -140,10 +207,10 @@ class AccountRepository {
         return listResult..sort((a, b) => a.date.compareTo(b.date));
       });
 
-  Future<List<Movie>> fetchWatchedMovies(String locale, int? maxLength) async {
+  Future<List<Movie>> fetchWatchedMovies(String locale, int? maxLength, [String? userId]) async {
     return ConnectivityHelper.connectivity<List<Movie>>(
       onConnectionYes: () async {
-        final ids = await _accountApiClient.fetchWatchedMovies();
+        final ids = await _accountApiClient.fetchWatchedMovies(userId);
         final movies = <Movie>[];
         final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
@@ -153,14 +220,17 @@ class AccountRepository {
           final movie = response.movieResults.first;
           movies.add(movie);
           await Future.delayed(Duration.zero);
+          if (userId != null) continue;
           _addMovieToDatabaseAndCheckUpdates(locale, movie, ViewFavoriteType.watched);
         }
         if (maxLength == null || maxLength > ids.length) {
+          if (userId != null) return movies;
           _deleteOldMediaFromDB(movies, MediaType.movie, ViewFavoriteType.watched);
         }
         return movies;
       },
       onConnectionNo: () async {
+        if (userId != null) return [];
         return await _fetchMappedMediaFromDB<Movie>(
           MediaType.movie,
           ViewFavoriteType.watched,
@@ -169,13 +239,10 @@ class AccountRepository {
     );
   }
 
-  Future<List<TvShow>> fetchWatchedTvShows(
-    String locale,
-    int? maxLength,
-  ) async {
+  Future<List<TvShow>> fetchWatchedTvShows(String locale, int? maxLength, [String? userId]) async {
     return ConnectivityHelper.connectivity<List<TvShow>>(
       onConnectionYes: () async {
-        final ids = await _accountApiClient.fetchWatchedTvShows();
+        final ids = await _accountApiClient.fetchWatchedTvShows(userId);
         final tvShows = <TvShow>[];
         final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
@@ -185,14 +252,17 @@ class AccountRepository {
           final tvShow = response.tvResults.first;
           tvShows.add(tvShow);
           await Future.delayed(Duration.zero);
+          if (userId != null) continue;
           _addTvShowToDatabaseAndCheckUpdates(locale, tvShow, ViewFavoriteType.watched);
         }
         if (maxLength == null || maxLength > ids.length) {
+          if (userId != null) return tvShows;
           _deleteOldMediaFromDB(tvShows, MediaType.tv, ViewFavoriteType.watched);
         }
         return tvShows;
       },
       onConnectionNo: () async {
+        if (userId != null) return [];
         return await _fetchMappedMediaFromDB<TvShow>(
           MediaType.tv,
           ViewFavoriteType.watched,
@@ -201,10 +271,10 @@ class AccountRepository {
     );
   }
 
-  Future<List<Movie>> fetchFavoriteMovies(String locale, int? maxLength) async {
+  Future<List<Movie>> fetchFavoriteMovies(String locale, int? maxLength, [String? userId]) async {
     return ConnectivityHelper.connectivity<List<Movie>>(
       onConnectionYes: () async {
-        final ids = await _accountApiClient.fetchFavoriteMovies();
+        final ids = await _accountApiClient.fetchFavoriteMovies(userId);
         final movies = <Movie>[];
         final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
@@ -214,14 +284,18 @@ class AccountRepository {
           final movie = response.movieResults.first;
           movies.add(movie);
           await Future.delayed(Duration.zero);
+          if (userId != null) continue;
           _addMovieToDatabaseAndCheckUpdates(locale, movie, ViewFavoriteType.favorite);
         }
         if (maxLength == null || maxLength > ids.length) {
+          if (userId != null) return movies;
           _deleteOldMediaFromDB(movies, MediaType.movie, ViewFavoriteType.favorite);
         }
         return movies;
       },
       onConnectionNo: () async {
+        if (userId != null) return [];
+
         return await _fetchMappedMediaFromDB<Movie>(
           MediaType.movie,
           ViewFavoriteType.favorite,
@@ -292,13 +366,10 @@ class AccountRepository {
     }
   }
 
-  Future<List<TvShow>> fetchFavoriteTvShows(
-    String locale,
-    int? maxLength,
-  ) async {
+  Future<List<TvShow>> fetchFavoriteTvShows(String locale, int? maxLength, [String? userId]) async {
     return ConnectivityHelper.connectivity<List<TvShow>>(
       onConnectionYes: () async {
-        final ids = await _accountApiClient.fetchFavoriteTvShows();
+        final ids = await _accountApiClient.fetchFavoriteTvShows(userId);
         final tvShows = <TvShow>[];
         final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
@@ -308,14 +379,17 @@ class AccountRepository {
           final tvShow = response.tvResults.first;
           tvShows.add(tvShow);
           await Future.delayed(Duration.zero);
+          if (userId != null) continue;
           _addTvShowToDatabaseAndCheckUpdates(locale, tvShow, ViewFavoriteType.favorite);
         }
         if (maxLength == null || maxLength > ids.length) {
+          if (userId != null) return tvShows;
           _deleteOldMediaFromDB(tvShows, MediaType.tv, ViewFavoriteType.favorite);
         }
         return tvShows;
       },
       onConnectionNo: () async {
+        if (userId != null) return [];
         return await _fetchMappedMediaFromDB<TvShow>(
           MediaType.tv,
           ViewFavoriteType.favorite,
@@ -324,10 +398,10 @@ class AccountRepository {
     );
   }
 
-  Future<List<Actor>> fetchFavoritePeople(String locale, int? maxLength) async {
+  Future<List<Actor>> fetchFavoritePeople(String locale, int? maxLength, [String? userId]) async {
     return ConnectivityHelper.connectivity<List<Actor>>(
       onConnectionYes: () async {
-        final ids = await _accountApiClient.fetchFavoritePeople();
+        final ids = await _accountApiClient.fetchFavoritePeople(userId);
         final people = <Actor>[];
         final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
@@ -337,14 +411,17 @@ class AccountRepository {
           final person = response.personResults.first;
           people.add(person);
           await Future.delayed(Duration.zero);
+          if (userId != null) continue;
           _addPersonToDatabaseAndCheckUpdates(locale, person, ViewFavoriteType.favorite);
         }
         if (maxLength == null || maxLength > ids.length) {
+          if (userId != null) return people;
           _deleteOldMediaFromDB(people, MediaType.person, ViewFavoriteType.favorite);
         }
         return people;
       },
       onConnectionNo: () async {
+        if (userId != null) return [];
         return await _fetchMappedMediaFromDB<Actor>(
           MediaType.person,
         );
@@ -352,13 +429,58 @@ class AccountRepository {
     );
   }
 
+  Future<List<User>> fetchSubscriptions([int? maxLength, String? userId]) async {
+    return ConnectivityHelper.connectivity<List<User>>(
+      onConnectionYes: () async {
+        final ids = await _accountApiClient.fetchFavoriteUsers(userId);
+        final users = <User>[];
+        final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
+        for (var i = 0; i < length; i++) {
+          await Future.delayed(Duration.zero);
+          final user = await _accountApiClient.userStream(ids[i]).first;
+          if (user.name == null || user.name?.isEmpty == true) continue;
+          users.add(user);
+          await Future.delayed(Duration.zero);
+        }
+        return users;
+      },
+      onConnectionNo: () async {
+        if (userId != null) return [];
+        return [];
+      },
+    );
+  }
+
+  Future<List<User>> fetchSubscribers([int? maxLength, String? userId]) async {
+    return ConnectivityHelper.connectivity<List<User>>(
+      onConnectionYes: () async {
+        final ids = await _accountApiClient.fetchSubscribers(userId);
+        final users = <User>[];
+        final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
+        for (var i = 0; i < length; i++) {
+          await Future.delayed(Duration.zero);
+          final user = await _accountApiClient.userStream(ids[i]).first;
+          if (user.name == null || user.name?.isEmpty == true) continue;
+          users.add(user);
+          await Future.delayed(Duration.zero);
+        }
+        return users;
+      },
+      onConnectionNo: () async {
+        if (userId != null) return [];
+        return [];
+      },
+    );
+  }
+
   Future<List<Movie>> fetchFavoriteAndNotWatchedMovies(
     String locale,
-    int? maxLength,
-  ) async {
+    int? maxLength, [
+    String? userId,
+  ]) async {
     return ConnectivityHelper.connectivity<List<Movie>>(
       onConnectionYes: () async {
-        final ids = await _accountApiClient.fetchFavoriteAndNotWatchedMovies();
+        final ids = await _accountApiClient.fetchFavoriteAndNotWatchedMovies(userId);
         final movies = <Movie>[];
         final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
@@ -368,14 +490,17 @@ class AccountRepository {
           final movie = response.movieResults.first;
           movies.add(movie);
           await Future.delayed(Duration.zero);
+          if (userId != null) continue;
           _addMovieToDatabaseAndCheckUpdates(locale, movie, ViewFavoriteType.favoriteAndNotWatched);
         }
         if (maxLength == null || maxLength > ids.length) {
+          if (userId != null) return movies;
           _deleteOldMediaFromDB(movies, MediaType.movie, ViewFavoriteType.favoriteAndNotWatched);
         }
         return movies;
       },
       onConnectionNo: () async {
+        if (userId != null) return [];
         return await _fetchMappedMediaFromDB<Movie>(
           MediaType.movie,
           ViewFavoriteType.favoriteAndNotWatched,
@@ -386,11 +511,12 @@ class AccountRepository {
 
   Future<List<TvShow>> fetchFavoriteAndNotWatchedTvShows(
     String locale,
-    int? maxLength,
-  ) async {
+    int? maxLength, [
+    String? userId,
+  ]) async {
     return ConnectivityHelper.connectivity<List<TvShow>>(
       onConnectionYes: () async {
-        final ids = await _accountApiClient.fetchFavoriteAndNotWatchedTvShows();
+        final ids = await _accountApiClient.fetchFavoriteAndNotWatchedTvShows(userId);
         final tvShows = <TvShow>[];
         final length = maxLength != null && maxLength < ids.length ? maxLength : ids.length;
         for (var i = 0; i < length; i++) {
@@ -400,15 +526,18 @@ class AccountRepository {
           final tvShow = response.tvResults.first;
           tvShows.add(tvShow);
           await Future.delayed(Duration.zero);
+          if (userId != null) continue;
           _addTvShowToDatabaseAndCheckUpdates(
               locale, tvShow, ViewFavoriteType.favoriteAndNotWatched);
         }
         if (maxLength == null || maxLength > ids.length) {
+          if (userId != null) return tvShows;
           _deleteOldMediaFromDB(tvShows, MediaType.tv, ViewFavoriteType.favoriteAndNotWatched);
         }
         return tvShows;
       },
       onConnectionNo: () async {
+        if (userId != null) return [];
         return await _fetchMappedMediaFromDB<TvShow>(
           MediaType.tv,
           ViewFavoriteType.favoriteAndNotWatched,

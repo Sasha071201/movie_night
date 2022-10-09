@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_night/application/ui/themes/app_text_style.dart';
+import 'package:movie_night/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 import '../../../themes/app_colors.dart';
@@ -24,11 +25,12 @@ class _FavoriteMoviesScreenState extends State<FavoriteMoviesScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final isLoaded =
-        context.select((FavoriteMoviesViewModel vm) => vm.state.isLoaded);
+    final userId = context.select((FavoriteMoviesViewModel vm) => vm.userId);
+    final isLoaded = context.select((FavoriteMoviesViewModel vm) => vm.state.isLoaded);
     return Stack(
       children: [
         CustomScrollView(
+          physics: userId != null ? const NeverScrollableScrollPhysics() : null,
           slivers: [
             SliverList(
               delegate: SliverChildListDelegate(
@@ -63,10 +65,10 @@ class _MoviesWithCategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final moviesWithHeader = context
-        .select((FavoriteMoviesViewModel vm) => vm.state.moviesWithHeader);
-    final isLoaded =
-        context.select((FavoriteMoviesViewModel vm) => vm.state.isLoaded);
+    final userId = context.read<FavoriteMoviesViewModel>().userId;
+    final moviesWithHeader =
+        context.select((FavoriteMoviesViewModel vm) => vm.state.moviesWithHeader);
+    final isLoaded = context.select((FavoriteMoviesViewModel vm) => vm.state.isLoaded);
     return isLoaded
         ? moviesWithHeader.isNotEmpty
             ? SliverList(
@@ -76,6 +78,7 @@ class _MoviesWithCategoryWidget extends StatelessWidget {
                       children: [
                         MoviesWithHeaderWidget(
                           movieData: moviesWithHeader[index],
+                          userId: userId,
                         ),
                       ],
                     );
@@ -86,7 +89,7 @@ class _MoviesWithCategoryWidget extends StatelessWidget {
             : SliverToBoxAdapter(
                 child: Center(
                   child: Text(
-                    'Пусто',
+                    S.of(context).empty,
                     style: AppTextStyle.header2,
                   ),
                 ),
